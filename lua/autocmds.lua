@@ -31,10 +31,3 @@ vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = { "*.zsh", ".zshrc", ".zimrc" },
 	command = "setfiletype sh",
 })
-
-vim.api.nvim_create_augroup("carbon", {})
-vim.api.nvim_create_autocmd("WinEnter", {
-	group = "carbon",
-	pattern = { "carbon" },
-	command = "set nonumber",
-})
