@@ -21,15 +21,6 @@ local function vmap(key, action, desc)
 	})
 end
 
--- Terminal mode map, same as nmap
-local function tmap(key, action, desc)
-	vim.keymap.set("t", key, action, {
-		desc = desc,
-		silent = true,
-		noremap = true,
-	})
-end
-
 -- Wraps string in <CMD> & <CR>
 local function cmd(command)
 	return "<CMD>" .. command .. "<CR>"
@@ -66,24 +57,26 @@ nmap("<C-.>", vim.lsp.buf.hover, "[LSP] Peek")
 nmap("<C-Space>", vim.lsp.buf.code_action, "[LSP] Actions")
 
 -- Terminal
-tmap("<Esc>", cmd("ToggleTerm"), "Toggle terminal")
+-- tmap("<Esc>", cmd("ToggleTerm"), "Toggle terminal")
 
 -- Leader > other
 nmap("<Leader>?", cmd("WhichKey"), "Help")
 nmap("<Leader>c", cmd("e ~/.config/nvim/init.lua"), "Settings")
 nmap("<Leader>d", cmd("bd"), "Close")
 nmap("<Leader>D", cmd("%bd|e#|bd#"), "Close all")
-nmap("<Leader>e", cmd("Dirbuf"), "Dirbuf")
+nmap("<Leader>e", cmd("NvimTreeToggle"), "Explorer")
+nmap("<Leader>E", cmd("Dirbuf"), "Dirbuf")
 nmap("<Leader>n", cmd("enew"), "New")
+nmap("<Leader>P", cmd("Telescope projects"), "Projects")
 nmap("<Leader>s", cmd("split"), "Split")
 nmap("<Leader>S", cmd("vsplit"), "Split vertically")
 nmap("<Leader>w", cmd("w!"), "Save")
 nmap("<Leader>W", cmd("wa!"), "Save all")
 nmap("<Leader>q", utils.smart_quit, "Quit")
 nmap("<Leader>b", telescope("buffers"), "Find")
-nmap("<Leader>/", telescope("keymaps"), "Keymaps")
 nmap("<Leader>f", telescope("fd"), "Find files")
 nmap("<Leader>g", telescope("live_grep"), "Live grep")
+nmap("<Leader>/", telescope("keymaps"), "Keymaps")
 
 -- Git
 wk_register("<Leader>g", "Git...")

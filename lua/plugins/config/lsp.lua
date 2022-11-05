@@ -40,8 +40,6 @@ M.setup_server = function(server, opts)
 	server.manager.try_add_wrapper(vim.api.nvim_get_current_buf())
 end
 
-M.diagnostics_format = "[#{c}] #{m} (#{s})"
-
 M.prettier_config = {
 	only_local = "node_modules/.bin",
 	condition = function(utils)
@@ -55,6 +53,8 @@ M.eslint_config = {
 		return utils.root_has_file({ "node_modules" })
 	end,
 }
+
+M.diagnostics_format = "[#{c}] #{m} (#{s})"
 
 M.setup_null_ls = function(sources)
 	local null_ls = require("null-ls")

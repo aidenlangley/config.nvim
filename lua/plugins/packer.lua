@@ -63,23 +63,23 @@ packer.use({
 		branch = "master",
 	},
 	-- Notifications
-	{
-		"rcarriga/nvim-notify",
-		config = function()
-			local notify = require("notify")
-			notify.setup({
-				icons = {
-					ERROR = "✗",
-					INFO = "כֿ",
-					WARN = "",
-				},
-				min_width = 24,
-				max_width = 48,
-			})
-			vim.notify = notify
-			require("telescope").load_extension("notify")
-		end,
-	},
+	-- {
+	-- 	"rcarriga/nvim-notify",
+	-- 	config = function()
+	-- 		local notify = require("notify")
+	-- 		notify.setup({
+	-- 			icons = {
+	-- 				ERROR = "✗",
+	-- 				INFO = "כֿ",
+	-- 				WARN = "",
+	-- 			},
+	-- 			min_width = 24,
+	-- 			max_width = 48,
+	-- 		})
+	-- 		vim.notify = notify
+	-- 		require("telescope").load_extension("notify")
+	-- 	end,
+	-- },
 	-- Status line:
 	"feline-nvim/feline.nvim",
 	-- Terminal:
@@ -89,6 +89,7 @@ packer.use({
 		config = function()
 			require("toggleterm").setup({
 				autochdir = false,
+				direction = "float",
 				open_mapping = "<C-t>",
 			})
 		end,
@@ -102,7 +103,25 @@ packer.use({
 		end,
 	},
 	-- File explorer:
-	-- "SidOfc/carbon.nvim",
+	{
+		"nvim-tree/nvim-tree.lua",
+		requires = { "nvim-tree/nvim-web-devicons", opt = true },
+		config = function()
+			vim.g.loaded_netrw = 1
+			vim.g.loaded_netrwPlugin = 1
+			require("nvim-tree").setup({
+				view = {
+					adaptive_size = true,
+					side = "right",
+				},
+				renderer = {
+					icons = {
+						git_placement = "after",
+					},
+				},
+			})
+		end,
+	},
 	-- LSP:
 	"williamboman/mason.nvim",
 	"williamboman/mason-lspconfig.nvim",
@@ -183,7 +202,6 @@ packer.use({
 					"package.json",
 				},
 			})
-			require("telescope").load_extension("projects")
 		end,
 	},
 	{
