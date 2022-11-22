@@ -1,51 +1,75 @@
-vim.cmd([[filetype plugin on]])
-vim.cmd([[let mapleader=" "]])
-vim.opt.autoindent = true
-vim.opt.background = "dark"
-vim.opt.backup = true
-vim.opt.backupdir = vim.fn.stdpath("cache") .. "/backup"
-vim.opt.clipboard = "unnamedplus"
-vim.opt.cmdheight = 1
-vim.opt.colorcolumn = "80"
-vim.opt.conceallevel = 0
-vim.opt.cursorline = true
-vim.opt.expandtab = true
-vim.opt.fileencoding = "UTF-8"
-vim.opt.filetype.plugin = "true"
-vim.opt.hidden = true
-vim.opt.hlsearch = false
-vim.opt.ignorecase = true
-vim.opt.mouse = "a"
-vim.opt.number = true
-vim.opt.pumheight = 8
-vim.opt.relativenumber = true
-vim.opt.scrolloff = 2
-vim.opt.shell = "/usr/bin/zsh"
-vim.opt.shiftwidth = 2
-vim.opt.showmode = false
-vim.opt.showtabline = 2
-vim.opt.sidescrolloff = 4
-vim.opt.signcolumn = "yes"
-vim.opt.smartcase = true
-vim.opt.smartindent = true
-vim.opt.spell = false
-vim.opt.splitbelow = true
-vim.opt.splitright = true
-vim.opt.swapfile = false
-vim.opt.tabstop = 2
-vim.opt.termguicolors = true
-vim.opt.timeoutlen = 250
-vim.opt.title = true
-vim.opt.titlestring = "%<%F%="
-vim.opt.undodir = vim.fn.stdpath("cache") .. "/undo"
-vim.opt.undofile = true
-vim.opt.whichwrap:append("<,>,[,],h,l")
-vim.opt.wrap = false
-vim.opt.writebackup = false
+local set = vim.opt
+local wo = vim.wo
 
-require("plugins")
-require("keymaps")
-require("autocmds")
+vim.cmd([[let mapleader=" "]]) -- Set leader key to <Space>
+vim.cmd([[set nocompatible]]) -- Disable vi compatibility, this isn't the 70's
 
+-- General:
+set.conceallevel = 0 -- Shows  in markdown
+set.cursorline = true -- Highlight the line that the cursor is currently on
+set.fileencoding = "UTF-8"
+set.filetype.plugin = "true"
+set.hidden = true -- Keeps multiple buffers open
+set.mouse = "a" -- Enable the mouse
+set.pumheight = 16 -- Pop up menu height
+set.shell = "/usr/bin/sh"
+set.showmode = false -- Hide default mode indicator
+set.spell = false -- Spell check
+set.splitbelow = true
+set.splitright = true
+set.termguicolors = true
+set.timeoutlen = 350
+set.title = true
+set.titlestring = "%<%F%="
+set.updatetime = 0
+set.whichwrap:append("<,>,[,],h,l") -- Moving to the end of the line will move to the next line
+set.wrap = false -- Don't wrap lines longer than the window width
+
+-- Line numbers/ruler:
+set.colorcolumn = "80,100"
+set.number = true
+set.relativenumber = true
+set.scrolloff = 4
+set.showtabline = 1
+set.sidescrolloff = 8
+set.signcolumn = "auto"
+
+-- Indenting:
+set.autoindent = true
+set.expandtab = true
+set.shiftwidth = 2
+set.smartindent = true
+set.tabstop = 2
+
+-- Backups:
+set.backup = true
+set.backupdir = vim.fn.stdpath("cache") .. "/backup"
+set.swapfile = false
+set.undodir = vim.fn.stdpath("cache") .. "/undo"
+set.undofile = true
+
+-- Clipboard:
+set.clipboard = "unnamedplus"
+
+-- Folding:
+set.foldexpr = "nvim_treesitter#foldexpr()"
+set.foldmethod = "expr"
+wo.foldenable = true
+wo.foldlevel = 99
+
+-- UI:
+set.cmdheight = 1
+
+-- Completion:
+vim.cmd([[set complete+=kspell]])
+vim.cmd([[set completeopt=menuone,longest]])
+
+-- Search:
+set.hlsearch = false
+set.ignorecase = true
+set.smartcase = true
+
+-- Theme:
 vim.g.gruvbox_material_background = "hard"
+set.background = "dark"
 vim.cmd([[colorscheme gruvbox-material]])

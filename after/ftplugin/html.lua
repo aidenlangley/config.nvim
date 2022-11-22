@@ -1,4 +1,4 @@
-local lsp = require("plugins.config.lsp")
+local lsp = require("lsp")
 lsp.setup_server("html", {})
 lsp.setup_server("emmet_ls", {})
 

@@ -1,35 +1,3 @@
-require("mason").setup({
-	ui = {
-		icons = {
-			package_installed = "✓",
-			package_pending = "➜",
-			package_uninstalled = "✗",
-		},
-	},
-})
-
-local mlspconfig = require("mason-lspconfig")
-mlspconfig.setup({
-	automatic_installation = true,
-	ensure_installed = {
-		"bashls",
-		"cssls",
-		"emmet_ls",
-		"gopls",
-		"html",
-		"jsonls",
-		"pyright",
-		"rust_analyzer",
-		"sumneko_lua",
-		"svelte",
-		"tailwindcss",
-		"taplo",
-		"tsserver",
-		"volar",
-		"yamlls",
-	},
-})
-
 local M = {}
 
 M.setup_server = function(server, opts)

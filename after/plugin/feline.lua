@@ -23,21 +23,15 @@ local MODES = {
 	OP = "red",
 	COMMAND = "red",
 	INSERT = "green",
-	VISUAL = "magenta",
+	VISUAL = "blue",
 	TERM = "yellow",
 }
 
 local function get_sep(str, fg, bg)
 	local sep = { str = str }
-	if bg or fg then
-		sep["hl"] = {}
-		if bg then
-			sep.hl["bg"] = bg
-		end
-		if fg then
-			sep.hl["fg"] = fg
-		end
-	end
+	sep["hl"] = {}
+	sep.hl["bg"] = bg
+	sep.hl["fg"] = fg
 
 	return sep
 end
@@ -120,51 +114,48 @@ local position_provider = {
 local git_branch_provider = {
 	provider = "git_branch",
 	right_sep = "block",
+	left_sep = "block",
 	priority = 3,
 }
 
 local git_diff_added_provider = {
 	provider = "git_diff_added",
-	right_sep = "block",
 	priority = 3,
+	hl = { fg = "green" },
 }
 
 local git_diff_removed_provider = {
 	provider = "git_diff_removed",
-	right_sep = "block",
 	priority = 3,
+	hl = { fg = "red" },
 }
 
 local git_diff_changed_provider = {
 	provider = "git_diff_changed",
-	right_sep = "block",
 	priority = 3,
+	hl = { fg = "yellow" },
 }
 
 local diag_errors_provider = {
 	provider = "diagnostic_errors",
 	hl = { fg = "red" },
-	right_sep = "block",
 	priority = 2,
 }
 
 local diag_warnings_provider = {
 	provider = "diagnostic_warnings",
 	hl = { fg = "yellow" },
-	right_sep = "block",
 	priority = 2,
 }
 
 local diag_hints_provider = {
 	provider = "diagnostic_hints",
-	right_sep = "block",
 	priority = 2,
 }
 
 local diag_info_provider = {
 	provider = "diagnostic_info",
 	hl = { fg = "light-grey" },
-	right_sep = "block",
 	priority = 2,
 }
 

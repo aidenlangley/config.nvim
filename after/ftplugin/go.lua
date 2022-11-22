@@ -1,4 +1,4 @@
-local lsp = require("plugins.config.lsp")
+local lsp = require("lsp")
 lsp.setup_server("gopls", { settings = { gopls = { gofumpt = true } } })
 
 local null_ls = require("null-ls")
