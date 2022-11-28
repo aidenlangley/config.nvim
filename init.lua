@@ -13,6 +13,7 @@ set.fileencoding = "UTF-8"
 set.filetype.plugin = "true"
 set.hidden = true -- Keeps multiple buffers open
 set.mouse = "a" -- Enable the mouse
+set.mousemodel = "extend" -- Right mouse extends selection
 set.pumheight = 16 -- Pop up menu height
 set.shell = "/usr/bin/sh"
 set.showmode = false -- Hide default mode indicator

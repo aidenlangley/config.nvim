@@ -9,7 +9,7 @@ local function keymap(modes, key, action, desc, opts)
 	opts.desc = desc
 	opts.silent = opts.silent or true
 	opts.noremap = opts.noremap or opts.remap ~= true or true
-	opts.remap = opts.remap or opts.noremap ~= false or false
+	-- opts.remap = opts.remap or opts.noremap ~= false or false
 	vim.keymap.set(modes, key, action, opts)
 end
 
@@ -67,15 +67,14 @@ keymap("n", "<C-b>l", cmd("bn"), "Previous buffer")
 keymap("n", "<C-s>", cmd("w"), "Save")
 keymap("n", "<C-q>", utils.smart_quit, "Quit")
 
--- LSP
--- Allow remapping, sometimes individual language server wants to do things
--- differently.
-keymap("n", "<C-.>", vim.lsp.buf.hover, "[LSP] Hover")
-keymap("n", "<C-Space>", vim.lsp.buf.code_action, "[LSP] Actions")
-keymap("n", "<F2>", vim.lsp.buf.rename, "[LSP] Rename")
+-- Move lines up & down (aka swap with above or below)
+keymap("n", "<C-S-j>", cmd("move +1"), "Move line down")
+keymap("n", "<C-S-k>", cmd("move -1"), "Move line up")
+keymap("n", "<C-S-Down>", cmd("move +1"), "Move line down")
+keymap("n", "<C-S-Up>", cmd("move -1"), "Move line up")
 
 -- Treehopper
-keymap("v", "m", require("tsht").nodes, "Treehopper nodes")
+-- keymap("v", "m", require("tsht").nodes, "Treehopper nodes")
 
 -- Telescope
 wk.register({ ["t"] = { name = "Telescope..." } })
@@ -118,19 +117,22 @@ keymap("n", "T", require("trouble").toggle, "Trouble")
 -- Leader > other
 keymap("n", "<Leader>?", cmd("WhichKey"), "Help")
 keymap("n", "<Leader>;", cmd("Alpha"), "Dashboard")
+keymap("n", "<Leader>c", toggle_term_ctop, "ctop")
 keymap("n", "<Leader>C", cmd("ColorizerToggle"), "Highlight colours")
 keymap("n", "<Leader>d", cmd("bd"), "Close")
 keymap("n", "<Leader>D", cmd("%bd|e#|bd#"), "Close all")
 keymap("n", "<Leader>e", cmd("NvimTreeToggle"), "Explorer")
 keymap("n", "<Leader>E", cmd("Dirbuf"), "Dirbuf")
+keymap("n", "<Leader>l", cmd("LspInfo"), "LSP info")
+keymap("n", "<Leader>m", cmd("Mason"), "Mason")
 keymap("n", "<Leader>n", cmd("enew"), "New")
+keymap("n", "<Leader>N", cmd("NullLsInfo"), "null-ls info")
 keymap("n", "<Leader>s", cmd("split"), "Split")
 keymap("n", "<Leader>S", cmd("e ~/.config/nvim/init.lua"), "Settings")
 keymap("n", "<Leader>v", cmd("vsplit"), "Split vertically")
 keymap("n", "<Leader>w", cmd("w!"), "Save")
 keymap("n", "<Leader>W", cmd("wa!"), "Save all")
 keymap("n", "<Leader>q", utils.smart_quit, "Quit")
-keymap("n", "<Leader>c", toggle_term_ctop, "ctop")
 keymap({ "n", "v" }, "<Leader>R", cmd("SnipRun"), "Run code")
 
 -- Git
@@ -151,24 +153,30 @@ keymap({ "n", "v" }, "<Leader>gr", cmd("Gitsigns reset_hunk"), "Reset selection"
 keymap({ "n", "v" }, "<Leader>gs", cmd("Gitsigns stage_hunk"), "Stage selection")
 
 -- LSP
-wk.register({ ["<Leader>l"] = { name = "LSP..." } })
-keymap("n", "<Leader>la", vim.lsp.buf.code_action, "Actions")
-keymap("n", "<Leader>ld", vim.lsp.buf.definition, "Definition")
-keymap("n", "<Leader>lD", vim.lsp.buf.declaration, "Declaration")
-keymap("n", "<Leader>li", vim.lsp.buf.implementation, "Implementation")
-keymap("n", "<Leader>lf", vim.lsp.buf.format, "Format")
-keymap("n", "<Leader>lh", vim.lsp.buf.hover, "Hover")
-keymap("n", "<Leader>lr", vim.lsp.buf.references, "References")
-keymap("n", "<Leader>lR", vim.lsp.buf.rename, "Rename")
-keymap("n", "<Leader>ls", vim.lsp.buf.signature_help, "Signature")
-keymap("n", "<Leader>lt", vim.lsp.buf.type_definition, "Type")
-keymap("n", "<Leader>lg", vim.diagnostic.open_float, "Diagnostic")
-keymap("n", "<Leader>lh", vim.diagnostic.goto_prev, "Previous diagnostic")
-keymap("n", "<Leader>ll", vim.diagnostic.goto_next, "Next diagnostic")
-keymap("n", "<Leader>lI", cmd("LspInfo"), "LSP info")
-keymap("n", "<Leader>lM", cmd("Mason"), "Mason")
-keymap("n", "<Leader>lN", cmd("NullLsInfo"), "null-ls info")
-keymap("n", "<Leader>lS", cmd("SymbolsOutline"), "Symbols")
+keymap("n", "ma", vim.lsp.buf.code_action, "Code actions", { noremap = false })
+keymap("n", "<C-Space>", vim.lsp.buf.code_action, "[LSP] Code actions")
+keymap("n", "md", vim.lsp.buf.definition, "Go to definition", { noremap = false })
+keymap("n", "mD", vim.lsp.buf.declaration, "Go to declaration", { noremap = false })
+keymap("n", "mf", vim.lsp.buf.format, "Format", { noremap = false })
+keymap("v", "mf", vim.lsp.buf.range_formatting, "Format selection", { noremap = false })
+keymap("n", "<C-.>", vim.lsp.buf.hover, "[LSP] Show hover", { noremap = false })
+keymap("n", "mH", vim.lsp.buf.hover, "Show hover", { noremap = false })
+keymap("n", "mi", vim.lsp.buf.implementation, "List implementations", { noremap = false })
+keymap("n", "mr", vim.lsp.buf.references, "List references", { noremap = false })
+keymap("n", "mR", vim.lsp.buf.rename, "Rename", { noremap = false })
+keymap("n", "<F2>", vim.lsp.buf.rename, "[LSP] Rename")
+keymap("n", "ms", vim.lsp.buf.signature_help, "Show signature", { noremap = false })
+keymap("n", "mS", cmd("SymbolsOutline"), "Symbols", { noremap = false })
+keymap("n", "mt", vim.lsp.buf.type_definition, "Go to type definition", { noremap = false })
+
+-- Treesitter (configured @ after/plugin/treesitter.lua)
+wk.register({ ["mx"] = { name = "Swap..." } })
+wk.register({ ["mp"] = { name = "Peek..." } })
+
+-- Diagnostics
+keymap("n", "gd", vim.diagnostic.open_float, "Go to diagnostic", { noremap = false })
+keymap("n", "gi", vim.diagnostic.goto_prev, "Previous diagnostic", { noremap = false })
+keymap("n", "go", vim.diagnostic.goto_next, "Next diagnostic", { noremap = false })
 
 --- [TODO:description]
 local function ng_gen()
@@ -196,18 +204,12 @@ local function ng_gen_type()
 end
 
 -- Neogen
-wk.register({ ["gd"] = { name = "Document..." } })
-keymap("n", "gdd", ng_gen, "Generate documentation")
-keymap("n", "gdc", ng_gen_class, "Document class")
-keymap("n", "gdf", ng_gen_func, "Document function")
-keymap("n", "gdF", ng_gen_file, "Document file")
-keymap("n", "gdt", ng_gen_type, "Document type")
-
--- Treesitter
-wk.register({ ["<Leader>t"] = { name = "Treesitter..." } })
-wk.register({ ["<Leader>tx"] = { name = "Swap..." } })
-wk.register({ ["<Leader>tp"] = { name = "Peek..." } })
-keymap("n", "<Leader>t", "", "")
+wk.register({ ["gD"] = { name = "Document..." } })
+keymap("n", "gDd", ng_gen, "Generate documentation")
+keymap("n", "gDc", ng_gen_class, "Document class")
+keymap("n", "gDf", ng_gen_func, "Document function")
+keymap("n", "gDF", ng_gen_file, "Document file")
+keymap("n", "gDt", ng_gen_type, "Document type")
 
 --- [TODO:description]
 local function sts_move_up()

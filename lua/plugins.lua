@@ -24,10 +24,7 @@ return {
 			require("colorizer").setup()
 		end,
 	},
-	{
-		"mg979/vim-visual-multi",
-		branch = "master",
-	},
+	{ "mg979/vim-visual-multi", branch = "master" },
 	{
 		"folke/zen-mode.nvim",
 		config = function()
@@ -85,13 +82,6 @@ return {
 		end,
 	},
 	{
-		"glepnir/lspsaga.nvim",
-		branch = "main",
-		config = function()
-			require("lspsaga").init_lsp_saga({})
-		end,
-	},
-	{
 		"folke/trouble.nvim",
 		requires = { "nvim-tree/nvim-web-devicons", opt = true },
 		config = function()
@@ -132,19 +122,13 @@ return {
 	{ "L3MON4D3/LuaSnip", tag = "v1.1.*" },
 	"hrsh7th/nvim-cmp",
 	-- mini:
-	{
-		"echasnovski/mini.nvim",
-		branch = "stable",
-	},
+	{ "echasnovski/mini.nvim", branch = "stable" },
 	-- Languages/syntax:
 	"b0o/schemastore.nvim",
 	"simrat39/rust-tools.nvim",
 	"jose-elias-alvarez/typescript.nvim",
 	"fladson/vim-kitty",
-	{
-		"danymat/neogen",
-		requires = "nvim-treesitter/nvim-treesitter",
-	},
+	{ "danymat/neogen", requires = "nvim-treesitter/nvim-treesitter" },
 	-- Formatting
 	{
 		"mcauley-penney/tidy.nvim",

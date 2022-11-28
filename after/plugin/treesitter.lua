@@ -41,8 +41,6 @@ require("nvim-treesitter.configs").setup({
 				["if"] = "@function.inner",
 				["ac"] = "@class.outer",
 				["ic"] = "@class.inner",
-				["aa"] = "@attribute.outer",
-				["ia"] = "@attribute.inner",
 			},
 		},
 		move = {
@@ -67,15 +65,15 @@ require("nvim-treesitter.configs").setup({
 		},
 		swap = {
 			enable = true,
-			swap_next = { ["<Leader>txp"] = "@parameter.inner" },
-			swap_previous = { ["<Leader>txP"] = "@parameter.inner" },
+			swap_next = { ["mxp"] = "@parameter.inner" },
+			swap_previous = { ["mxP"] = "@parameter.inner" },
 		},
 		lsp_interop = {
 			enable = true,
 			border = "none",
 			peek_definition_code = {
-				["<Leader>tpf"] = "@function.outer",
-				["<Leader>tpc"] = "@class.outer",
+				["mpf"] = "@function.outer",
+				["mpc"] = "@class.outer",
 			},
 		},
 	},
