@@ -35,20 +35,3 @@ create_autocmd("BufEnter", {
 	pattern = { "*.zsh", ".zshrc", ".zimrc" },
 	command = "setfiletype sh",
 })
-
--- Whenever we save init.lua, re-compile packer.
-create_autocmd("BufWritePost", {
-	group = "packer",
-	pattern = vim.fn.expand("$MYVIMRC"),
-	command = "source <afile> | PackerCompile",
-})
-
--- Twilight - toggle on insert enter & leave
-create_autocmd("InsertEnter", {
-	group = "twilight",
-	command = "TwilightEnable",
-})
-create_autocmd("InsertLeave", {
-	group = "twilight",
-	command = "TwilightDisable",
-})

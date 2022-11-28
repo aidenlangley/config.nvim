@@ -23,7 +23,7 @@ require("nvim-treesitter.configs").setup({
 		enable = true,
 		disable = {
 			"txt",
-			"vue",
+			-- "vue",
 		},
 	},
 	incremental_selection = {
@@ -67,15 +67,15 @@ require("nvim-treesitter.configs").setup({
 		},
 		swap = {
 			enable = true,
-			swap_next = { ["<Leader>lxp"] = "@parameter.inner" },
-			swap_previous = { ["<Leader>lxP"] = "@parameter.inner" },
+			swap_next = { ["<Leader>txp"] = "@parameter.inner" },
+			swap_previous = { ["<Leader>txP"] = "@parameter.inner" },
 		},
 		lsp_interop = {
 			enable = true,
 			border = "none",
 			peek_definition_code = {
-				["<Leader>lpf"] = "@function.outer",
-				["<Leader>lpc"] = "@class.outer",
+				["<Leader>tpf"] = "@function.outer",
+				["<Leader>tpc"] = "@class.outer",
 			},
 		},
 	},

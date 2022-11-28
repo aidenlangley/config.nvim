@@ -1,3 +1,5 @@
+require("typescript").setup()
+
 local lsp = require("lsp")
 lsp.setup_server("tsserver", {})
 
@@ -6,5 +8,6 @@ null_ls.setup({
 	sources = {
 		null_ls.builtins.formatting.prettier.with(lsp.prettier_config),
 		null_ls.builtins.diagnostics.eslint.with(lsp.eslint_config),
+		require("typescript.extensions.null-ls.code-actions"),
 	},
 })

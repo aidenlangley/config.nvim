@@ -33,6 +33,9 @@ packer.reset()
 -- Register plugins, avoid configuring plugins here
 packer.use(require("plugins"))
 
+-- Call impatient first to speed things along
+pcall(require, "impatient")
+
 -- Now sync plugins - packer has been installed, so packer_bootstrap will
 -- return true when called a second time.
 if packer_bootstrap then

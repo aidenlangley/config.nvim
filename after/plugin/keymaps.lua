@@ -1,233 +1,306 @@
-local utils = require("utils")
-local tsb_status, tsb = pcall(require, "telescope.builtin")
-local wk_status, wk = pcall(require, "which-key")
-local _, gs = pcall(require, "gitsigns")
-
--- Normal mode map, with silent & noremap flags.
-local function nmap(key, action, desc)
-	vim.keymap.set("n", key, action, {
-		desc = desc,
-		silent = true,
-		noremap = true,
-	})
+--- [TODO:description]
+-- @tparam [TODO:parameter] modes
+-- @tparam [TODO:parameter] key
+-- @tparam [TODO:parameter] action
+-- @tparam [TODO:parameter] desc
+-- @tparam [TODO:parameter] opts
+local function keymap(modes, key, action, desc, opts)
+	opts = opts or {}
+	opts.desc = desc
+	opts.silent = opts.silent or true
+	opts.noremap = opts.noremap or opts.remap ~= true or true
+	opts.remap = opts.remap or opts.noremap ~= false or false
+	vim.keymap.set(modes, key, action, opts)
 end
 
--- Visual mode map, same as nmap.
-local function vmap(key, action, desc)
-	vim.keymap.set("v", key, action, {
-		desc = desc,
-		silent = true,
-		noremap = true,
-	})
-end
-
-local function xmap(key, action, desc)
-	vim.keymap.set("x", key, action, {
-		desc = desc,
-		silent = true,
-		noremap = true,
-	})
-end
-
--- Wraps string in <CMD> & <CR>
+--- Wraps string in <CMD> & <CR>
+-- @tparam [TODO:parameter] command
+-- @treturn [TODO:return]
 local function cmd(command)
 	return "<CMD>" .. command .. "<CR>"
 end
 
--- Wraps wk.register(). Checks if pcall was successful, just in case we're not
--- using which-key.
-local function wk_register(prefix, name)
-	if wk_status ~= false then
-		wk.register({ [prefix] = { name = name } })
-	end
+--- Spawn a terminal - doesn't run `cmd` until it's opened.
+-- @tparam string Command to run when opened
+-- @treturn Terminal
+local function term(command)
+	return require("toggleterm.terminal").Terminal:new({
+		hidden = true,
+		direction = "float",
+		dir = "git_dir",
+		cmd = command,
+	})
 end
 
--- Wraps telescope.builtin. Checks if pcall was successful, in case we're not
--- running telescope.
-local function telescope(builtin)
-	if tsb_status ~= false then
-		return tsb[builtin]
-	end
+-- Terminals
+local term_ctop = term("ctop")
+local term_lazygit = term("lazygit")
+
+--- [TODO:description]
+local function toggle_term_ctop()
+	term_ctop:toggle()
 end
+
+--- [TODO:description]
+local function toggle_term_git()
+	term_lazygit:toggle()
+end
+
+-- The maps start after requiring dependencies
+local wk = require("which-key")
+local ng = require("neogen")
+local gs = require("gitsigns")
+local sts = require("syntax-tree-surfer")
+local utils = require("utils")
 
 -- Movement
-nmap("<C-h>", cmd("bp"), "Next buffer")
-nmap("<C-j>", cmd("wincmd W"), "Next window")
-nmap("<C-k>", cmd("wincmd w"), "Previous window")
-nmap("<C-l>", cmd("bn"), "Previous buffer")
+keymap("n", "<C-h>", cmd("bp"), "Next buffer")
+keymap("n", "<C-l>", cmd("bn"), "Previous buffer")
+keymap("n", "<C-Left>", cmd("bp"), "Next buffer")
+keymap("n", "<C-Right>", cmd("bn"), "Previous buffer")
+
+wk.register({ ["<C-b>"] = "Buffers..." })
+keymap("n", "<C-b>h", cmd("bp"), "Next buffer")
+keymap("n", "<C-b>l", cmd("bn"), "Previous buffer")
 
 -- Save/close/quit buffers/windows
-nmap("<C-s>", cmd("w"), "Save")
-nmap("<C-q>", utils.smart_quit, "Quit")
+keymap("n", "<C-s>", cmd("w"), "Save")
+keymap("n", "<C-q>", utils.smart_quit, "Quit")
 
 -- LSP
-nmap("<C-.>", vim.lsp.buf.hover, "[LSP] Peek")
-nmap("<C-Space>", vim.lsp.buf.code_action, "[LSP] Actions")
+-- Allow remapping, sometimes individual language server wants to do things
+-- differently.
+keymap("n", "<C-.>", vim.lsp.buf.hover, "[LSP] Hover")
+keymap("n", "<C-Space>", vim.lsp.buf.code_action, "[LSP] Actions")
+keymap("n", "<F2>", vim.lsp.buf.rename, "[LSP] Rename")
 
 -- Treehopper
-vmap("m", require("tsht").nodes, "Treehopper nodes")
+keymap("v", "m", require("tsht").nodes, "Treehopper nodes")
 
 -- Telescope
-nmap("ta", telescope("autocommands"), "Autocommands")
-nmap("tb", cmd("JABSOpen"), "JABS")
-nmap("tB", telescope("buffers"), "Buffers")
-nmap("tc", telescope("commands"), "Commands")
-nmap("tC", telescope("colorscheme"), "Colourschemes")
-nmap("tf", telescope("fd"), "Find files")
-nmap("tF", telescope("filetypes"), "Set filetype")
-nmap("tgG", telescope("grep_string"), "Grep string")
-nmap("tgb", telescope("git_branches"), "Git branches")
-nmap("tgc", telescope("git_commits"), "Git commits")
-nmap("tgg", telescope("live_grep"), "Live grep")
-nmap("tgs", telescope("git_stash"), "Git stash")
-nmap("tH", telescope("highlights"), "[TS] Highlights")
-nmap("thc", telescope("command_history"), "Command history")
-nmap("ths", telescope("search_history"), "Search history")
-nmap("tht", telescope("help_tags"), "Help tags")
-nmap("tj", telescope("jumplist"), "Jump list")
-nmap("tk", telescope("keymaps"), "Keymaps")
-nmap("tlr", telescope("lsp_references"), "References")
-nmap("tld", telescope("lsp_definitions"), "Definitions")
-nmap("tli", telescope("lsp_implementations"), "Implementations")
-nmap("tlt", telescope("lsp_type_definitions"), "Type definitions")
-nmap("to", telescope("oldfiles"), "Recent files")
-nmap("tO", telescope("vim_options"), "Vim options")
-nmap("tp", cmd("Telescope projects"), "Projects")
-nmap("tr", telescope("registers"), "Registers")
-nmap("tsd", telescope("lsp_document_symbols"), "Document symbols")
-nmap("tsw", telescope("lsp_workspace_symbols"), "Workspace symbols")
-nmap("tt", telescope("builtin"), "Telescope")
-nmap("tT", telescope("treesitter"), "Treesitter")
+wk.register({ ["t"] = { name = "Telescope..." } })
+keymap("n", "ta", cmd("Telescope autocommands"), "Autocommands")
+keymap("n", "tb", cmd("JABSOpen"), "JABS")
+keymap("n", "tB", cmd("Telescope buffers"), "Buffers")
+keymap("n", "tc", cmd("Telescope commands"), "Commands")
+keymap("n", "tC", cmd("Telescope colorscheme"), "Colourschemes")
+keymap("n", "tf", cmd("Telescope fd"), "Find files")
+keymap("n", "tF", cmd("Telescope filetypes"), "Set filetype")
+keymap("n", "tgG", cmd("Telescope grep_string"), "Grep string")
+keymap("n", "tgb", cmd("Telescope git_branches"), "Git branches")
+keymap("n", "tgc", cmd("Telescope git_commits"), "Git commits")
+keymap("n", "tgg", cmd("Telescope live_grep"), "Live grep")
+keymap("n", "tgs", cmd("Telescope git_stash"), "Git stash")
+keymap("n", "tH", cmd("Telescope highlights"), "Highlights")
+keymap("n", "thc", cmd("Telescope command_history"), "Command history")
+keymap("n", "ths", cmd("Telescope search_history"), "Search history")
+keymap("n", "tht", cmd("Telescope help_tags"), "Help tags")
+keymap("n", "tj", cmd("Telescope jumplist"), "Jump list")
+keymap("n", "tk", cmd("Telescope keymaps"), "Keymaps")
+keymap("n", "tlr", cmd("Telescope lsp_references"), "References")
+keymap("n", "tld", cmd("Telescope lsp_definitions"), "Definitions")
+keymap("n", "tli", cmd("Telescope lsp_implementations"), "Implementations")
+keymap("n", "tlt", cmd("Telescope lsp_type_definitions"), "Type definitions")
+keymap("n", "tm", cmd("Telescope man_pages"), "Man pages")
+keymap("n", "to", cmd("Telescope oldfiles"), "Recent files")
+keymap("n", "tO", cmd("Telescope vim_options"), "Vim options")
+keymap("n", "tp", cmd("Telescope projects theme=dropdown"), "Projects")
+keymap("n", "tsd", cmd("Telescope lsp_document_symbols"), "Document symbols")
+keymap("n", "tsw", cmd("Telescope lsp_workspace_symbols"), "Workspace symbols")
+keymap("n", "tS", cmd("SearchSession"), "Sessions")
+keymap("n", "tt", cmd("Telescope builtin"), "Telescope")
+keymap("n", "tT", cmd("Telescope treesitter"), "Treesitter")
+keymap({ "n", "v" }, "tr", cmd("Telescope registers"), "Registers")
 
 -- Trouble
-nmap("T", require("trouble").toggle, "Trouble")
+keymap("n", "T", require("trouble").toggle, "Trouble")
 
 -- Leader > other
-nmap("<Leader>?", cmd("WhichKey"), "Help")
-nmap("<Leader>;", cmd("Alpha"), "Dashboard")
-nmap("<Leader>C", cmd("ColorizerToggle"), "Highlight colours")
-nmap("<Leader>d", cmd("bd"), "Close")
-nmap("<Leader>D", cmd("%bd|e#|bd#"), "Close all")
-nmap("<Leader>e", cmd("NvimTreeToggle"), "Explorer")
-nmap("<Leader>E", cmd("Dirbuf"), "Dirbuf")
-nmap("<Leader>n", cmd("enew"), "New")
-nmap("<Leader>s", cmd("split"), "Split")
-nmap("<Leader>S", cmd("e ~/.config/nvim/init.lua"), "Settings")
-nmap("<Leader>v", cmd("vsplit"), "Split vertically")
-nmap("<Leader>w", cmd("w!"), "Save")
-nmap("<Leader>W", cmd("wa!"), "Save all")
-nmap("<Leader>q", utils.smart_quit, "Quit")
+keymap("n", "<Leader>?", cmd("WhichKey"), "Help")
+keymap("n", "<Leader>;", cmd("Alpha"), "Dashboard")
+keymap("n", "<Leader>C", cmd("ColorizerToggle"), "Highlight colours")
+keymap("n", "<Leader>d", cmd("bd"), "Close")
+keymap("n", "<Leader>D", cmd("%bd|e#|bd#"), "Close all")
+keymap("n", "<Leader>e", cmd("NvimTreeToggle"), "Explorer")
+keymap("n", "<Leader>E", cmd("Dirbuf"), "Dirbuf")
+keymap("n", "<Leader>n", cmd("enew"), "New")
+keymap("n", "<Leader>s", cmd("split"), "Split")
+keymap("n", "<Leader>S", cmd("e ~/.config/nvim/init.lua"), "Settings")
+keymap("n", "<Leader>v", cmd("vsplit"), "Split vertically")
+keymap("n", "<Leader>w", cmd("w!"), "Save")
+keymap("n", "<Leader>W", cmd("wa!"), "Save all")
+keymap("n", "<Leader>q", utils.smart_quit, "Quit")
+keymap("n", "<Leader>c", toggle_term_ctop, "ctop")
+keymap({ "n", "v" }, "<Leader>R", cmd("SnipRun"), "Run code")
 
 -- Git
-wk_register("<Leader>g", "Git...")
-nmap("<Leader>gb", gs.toggle_current_line_blame, "Blame")
-nmap("<Leader>gd", gs.diffthis, "Diff selection")
-nmap("<Leader>gh", gs.prev_hunk, "Previous hunk")
-nmap("<Leader>gl", gs.next_hunk, "Next hunk")
-nmap("<Leader>gp", gs.preview_hunk, "Preview")
-nmap("<Leader>gr", gs.reset_hunk, "Reset hunk")
-nmap("<Leader>gR", gs.reset_buffer, "Reset")
-nmap("<Leader>gs", gs.stage_hunk, "Stage hunk")
-nmap("<Leader>gS", gs.stage_buffer, "Stage")
-nmap("<Leader>gu", gs.undo_stage_hunk, "Undo stage")
-nmap("<Leader>gx", gs.toggle_deleted, "Show deleted")
-vmap("<Leader>gr", cmd("Gitsigns reset_hunk"), "Reset selection")
-vmap("<Leader>gs", cmd("Gitsigns stage_hunk"), "Stage selection")
-nmap("<Leader>gB", function()
-	gs.blame_line({ full = true })
-end, "Blame (file)")
-nmap("<Leader>gD", function()
-	gs.diffthis("~")
-end, "Diff (file)")
-nmap("<Leader>gg", function()
-	require("FTerm")
-		:new({
-			ft = "fterm_lazygit",
-			cmd = "lazygit",
-		})
-		:toggle()
-end, "Diff selection")
+wk.register({ ["<Leader>g"] = { name = "Git..." } })
+keymap("n", "<Leader>gb", gs.toggle_current_line_blame, "Blame")
+keymap("n", "<Leader>gd", gs.diffthis, "Diff")
+keymap("n", "<Leader>gh", gs.prev_hunk, "Previous hunk")
+keymap("n", "<Leader>gl", gs.next_hunk, "Next hunk")
+keymap("n", "<Leader>gp", gs.preview_hunk, "Preview")
+keymap("n", "<Leader>gr", gs.reset_hunk, "Reset hunk")
+keymap("n", "<Leader>gR", gs.reset_buffer, "Reset")
+keymap("n", "<Leader>gs", gs.stage_hunk, "Stage hunk")
+keymap("n", "<Leader>gS", gs.stage_buffer, "Stage")
+keymap("n", "<Leader>gu", gs.undo_stage_hunk, "Undo stage")
+keymap("n", "<Leader>gx", gs.toggle_deleted, "Show deleted")
+keymap("n", "<Leader>gg", toggle_term_git, "lazygit")
+keymap({ "n", "v" }, "<Leader>gr", cmd("Gitsigns reset_hunk"), "Reset selection")
+keymap({ "n", "v" }, "<Leader>gs", cmd("Gitsigns stage_hunk"), "Stage selection")
 
 -- LSP
-wk_register("<Leader>l", "LSP...")
-nmap("<Leader>la", vim.lsp.buf.code_action, "Actions")
-nmap("<Leader>ld", vim.lsp.buf.definition, "Definition")
-nmap("<Leader>lD", vim.lsp.buf.declaration, "Declaration")
-nmap("<Leader>li", vim.lsp.buf.implementation, "Implementation")
-nmap("<Leader>lf", vim.lsp.buf.format, "Format")
-nmap("<Leader>lh", vim.lsp.buf.hover, "Hover")
-nmap("<Leader>lr", vim.lsp.buf.references, "References")
-nmap("<Leader>lR", vim.lsp.buf.rename, "Rename")
-nmap("<Leader>ls", vim.lsp.buf.signature_help, "Signature")
-nmap("<Leader>lt", vim.lsp.buf.type_definition, "Type")
-nmap("<Leader>lg", vim.diagnostic.open_float, "Diagnostic")
-nmap("<Leader>lh", vim.diagnostic.goto_prev, "Previous diagnostic")
-nmap("<Leader>ll", vim.diagnostic.goto_next, "Next diagnostic")
-nmap("<Leader>lI", cmd("LspInfo"), "LSP Info")
-nmap("<Leader>lM", cmd("Mason"), "Mason")
-nmap("<Leader>lN", cmd("NullLsInfo"), "NullLs Info")
-nmap("<Leader>lS", cmd("SymbolsOutline"), "Symbols")
+wk.register({ ["<Leader>l"] = { name = "LSP..." } })
+keymap("n", "<Leader>la", vim.lsp.buf.code_action, "Actions")
+keymap("n", "<Leader>ld", vim.lsp.buf.definition, "Definition")
+keymap("n", "<Leader>lD", vim.lsp.buf.declaration, "Declaration")
+keymap("n", "<Leader>li", vim.lsp.buf.implementation, "Implementation")
+keymap("n", "<Leader>lf", vim.lsp.buf.format, "Format")
+keymap("n", "<Leader>lh", vim.lsp.buf.hover, "Hover")
+keymap("n", "<Leader>lr", vim.lsp.buf.references, "References")
+keymap("n", "<Leader>lR", vim.lsp.buf.rename, "Rename")
+keymap("n", "<Leader>ls", vim.lsp.buf.signature_help, "Signature")
+keymap("n", "<Leader>lt", vim.lsp.buf.type_definition, "Type")
+keymap("n", "<Leader>lg", vim.diagnostic.open_float, "Diagnostic")
+keymap("n", "<Leader>lh", vim.diagnostic.goto_prev, "Previous diagnostic")
+keymap("n", "<Leader>ll", vim.diagnostic.goto_next, "Next diagnostic")
+keymap("n", "<Leader>lI", cmd("LspInfo"), "LSP info")
+keymap("n", "<Leader>lM", cmd("Mason"), "Mason")
+keymap("n", "<Leader>lN", cmd("NullLsInfo"), "null-ls info")
+keymap("n", "<Leader>lS", cmd("SymbolsOutline"), "Symbols")
+
+--- [TODO:description]
+local function ng_gen()
+	ng.generate({})
+end
+
+--- [TODO:description]
+local function ng_gen_class()
+	ng.generate({ type = "class" })
+end
+
+--- [TODO:description]
+local function ng_gen_func()
+	ng.generate({ type = "func" })
+end
+
+--- [TODO:description]
+local function ng_gen_file()
+	ng.generate({ type = "file" })
+end
+
+--- [TODO:description]
+local function ng_gen_type()
+	ng.generate({ type = "type" })
+end
+
+-- Neogen
+wk.register({ ["gd"] = { name = "Document..." } })
+keymap("n", "gdd", ng_gen, "Generate documentation")
+keymap("n", "gdc", ng_gen_class, "Document class")
+keymap("n", "gdf", ng_gen_func, "Document function")
+keymap("n", "gdF", ng_gen_file, "Document file")
+keymap("n", "gdt", ng_gen_type, "Document type")
 
 -- Treesitter
-nmap("<Leader>t", "", "")
+wk.register({ ["<Leader>t"] = { name = "Treesitter..." } })
+wk.register({ ["<Leader>tx"] = { name = "Swap..." } })
+wk.register({ ["<Leader>tp"] = { name = "Peek..." } })
+keymap("n", "<Leader>t", "", "")
+
+--- [TODO:description]
+local function sts_move_up()
+	sts.move("n", true)
+end
+
+--- [TODO:description]
+local function sts_move_down()
+	sts.move("n", false)
+end
+
+--- [TODO:description]
+local function sts_select()
+	sts.select()
+end
+
+--- [TODO:description]
+local function sts_select_current()
+	sts.select_current_node()
+end
+
+--- [TODO:description]
+local function sts_top_node()
+	sts.go_to_top_node_and_execute_commands(false, {
+		"normal! O",
+		"normal! O",
+		"startinsert",
+	})
+end
+
+--- [TODO:description]
+local function sts_surf_next()
+	sts.surf("next", "visual")
+end
+
+--- [TODO:description]
+local function sts_surf_prev()
+	sts.surf("prev", "visual")
+end
+
+--- [TODO:description]
+local function sts_surf_child()
+	sts.surf("child", "visual")
+end
+
+--- [TODO:description]
+local function sts_surf_parent()
+	sts.surf("parent", "visual")
+end
+
+--- [TODO:description]
+local function sts_surf_next_swap()
+	sts.surf("next", "visual", true)
+end
+
+--- [TODO:description]
+local function sts_surf_prev_swap()
+	sts.surf("prev", "visual", true)
+end
 
 -- Syntax tree surfer
 -- Selection
-nmap("vu", function()
-	require("syntax-tree-surfer").move("n", true)
-end, "Move node up")
-nmap("vd", function()
-	require("syntax-tree-surfer").move("n", false)
-end, "Move node down")
-nmap("vx", function()
-	require("syntax-tree-surfer").select()
-end, "Swap node")
-nmap("vn", function()
-	require("syntax-tree-surfer").select_current_node()
-end, "Select current node")
-nmap("vo", function()
-	require("syntax-tree-surfer").go_to_top_node_and_execute_commands(
-		false,
-		{ "normal! O", "normal! O", "startinsert" }
-	)
-end, "?")
+keymap("n", "vu", sts_move_up, "Move node up")
+keymap("n", "vd", sts_move_down, "Move node down")
+keymap("n", "vx", sts_select, "Select node")
+keymap("n", "vn", sts_select_current, "Select current node")
+keymap("n", "vo", sts_top_node, "Go to top node & insert")
 
 -- Navigation
-xmap("J", function()
-	require("syntax-tree-surfer").surf("next", "visual")
-end, "Move to next")
-xmap("K", function()
-	require("syntax-tree-surfer").surf("prev", "visual")
-end, "Move to previous")
-xmap("H", function()
-	require("syntax-tree-surfer").surf("parent", "visual")
-end, "Move to parent")
-xmap("L", function()
-	require("syntax-tree-surfer").surf("child", "visual")
-end, "Move to child")
+keymap("x", "J", sts_surf_next, "Move to next")
+keymap("x", "K", sts_surf_prev, "Move to previous")
+keymap("x", "H", sts_surf_child, "Move to child")
+keymap("x", "L", sts_surf_parent, "Move to parent")
 
 -- Swapping
-xmap("<C-j>", function()
-	require("syntax-tree-surfer").surf("next", "visual", true)
-end, "Swap with next")
-xmap("<C-k>", function()
-	require("syntax-tree-surfer").surf("prev", "visual", true)
-end, "Swap with previous")
+keymap("x", "<C-j>", sts_surf_next_swap, "Swap with next")
+keymap("x", "<C-k>", sts_surf_prev_swap, "Swap with previous")
 
 -- Packer
-wk_register("<Leader>p", "Packer...")
-nmap("<Leader>pc", cmd("PackerClean"), "Clean")
-nmap("<Leader>pC", cmd("PackerCompile"), "Compile")
-nmap("<Leader>pi", cmd("PackerInstall"), "Install")
-nmap("<Leader>ps", cmd("PackerSync"), "Sync")
-nmap("<Leader>pS", cmd("PackerStatus"), "Status")
+wk.register({ ["<Leader>p"] = { name = "Packer..." } })
+keymap("n", "<Leader>pc", cmd("PackerClean"), "Clean")
+keymap("n", "<Leader>pC", cmd("PackerCompile"), "Compile")
+keymap("n", "<Leader>pi", cmd("PackerInstall"), "Install")
+keymap("n", "<Leader>ps", cmd("PackerSync"), "Sync")
+keymap("n", "<Leader>pS", cmd("PackerStatus"), "Status")
+keymap("n", "<Leader>pu", cmd("PackerUpdate --preview"), "Update")
 
 -- Zen mode
-nmap("Z", cmd("ZenMode"), "Toggle zen mode")
+keymap("n", "Z", cmd("ZenMode"), "Toggle zen mode")
 
 -- Terminal
-nmap("<C-t>", require("FTerm").toggle, "Toggle terminal")
-vim.keymap.set("t", "<C-t>", require("FTerm").toggle, {
+keymap("n", "<C-t>", cmd("ToggleTerm"), "Toggle terminal")
+keymap("t", "<C-t>", cmd("ToggleTerm"), {
 	desc = "Toggle terminal",
 	silent = true,
 	noremap = true,

@@ -1,11 +1,13 @@
 return {
 	-- The package manager manages itself
-	"wbthomuson/packer.nvim",
+	"wbthomason/packer.nvim",
 	-- Libraries / utilities
 	"nvim-lua/plenary.nvim",
 	"nvim-tree/nvim-web-devicons",
 	"jghauser/mkdir.nvim",
 	"nathom/filetype.nvim",
+	-- Performance:
+	"lewis6991/impatient.nvim",
 	-- UI:
 	"sainnhe/gruvbox-material",
 	"Yazeed1s/minimal.nvim",
@@ -58,24 +60,19 @@ return {
 		end,
 	},
 	-- File explorer:
+	"elihunter173/dirbuf.nvim",
 	{
 		"nvim-tree/nvim-tree.lua",
 		requires = { "nvim-tree/nvim-web-devicons", opt = true },
 	},
-	-- Buffers:
 	{
-		"matbme/JABS.nvim",
+		"prichrd/netrw.nvim",
 		config = function()
-			require("jabs").setup({
-				position = "center",
-				width = 64,
-				border = "solid",
-				preview = {
-					border = "single",
-				},
-			})
+			require("netrw").setup({})
 		end,
 	},
+	-- Buffers:
+	"matbme/JABS.nvim",
 	-- LSP:
 	"williamboman/mason.nvim",
 	"williamboman/mason-lspconfig.nvim",
@@ -108,9 +105,7 @@ return {
 	{
 		"nvim-treesitter/nvim-treesitter",
 		run = function()
-			require("nvim-treesitter.install").update({
-				with_sync = true,
-			})
+			require("nvim-treesitter.install").update({ with_sync = true })
 		end,
 	},
 	"nvim-treesitter/playground",
@@ -124,21 +119,13 @@ return {
 		event = "BufReadPre",
 		module = { "syntax-tree-surfer" },
 	},
-	{
-		"folke/twilight.nvim",
-		config = function()
-			require("twilight").setup({
-				dimming = {
-					alpha = 0.5,
-				},
-				context = 16,
-			})
-		end,
-	},
+	"folke/twilight.nvim",
 	-- Completions:
 	"hrsh7th/cmp-buffer",
+	"hrsh7th/cmp-calc",
 	"hrsh7th/cmp-emoji",
 	"chrisgrieser/cmp-nerdfont",
+	"hrsh7th/cmp-nvim-lua",
 	"hrsh7th/cmp-nvim-lsp",
 	"hrsh7th/cmp-path",
 	"onsails/lspkind.nvim",
@@ -149,42 +136,34 @@ return {
 		"echasnovski/mini.nvim",
 		branch = "stable",
 	},
-	-- File management:
-	"elihunter173/dirbuf.nvim",
 	-- Languages/syntax:
 	"b0o/schemastore.nvim",
 	"simrat39/rust-tools.nvim",
+	"jose-elias-alvarez/typescript.nvim",
 	"fladson/vim-kitty",
 	{
 		"danymat/neogen",
 		requires = "nvim-treesitter/nvim-treesitter",
-		config = function()
-			require("neogen").setup({
-				enabled = true,
-			})
-		end,
 	},
 	-- Formatting
 	{
 		"mcauley-penney/tidy.nvim",
 		config = function()
-			require("tidy").setup({
-				filetype_exclude = { "markdown", "diff" },
-			})
+			require("tidy").setup({ filetype_exclude = { "markdown", "diff" } })
 		end,
 	},
 	-- Projects/Sessions
 	{
 		"ahmedkhalf/project.nvim",
 		requires = { "nvim-telescope/telescope.nvim" },
-	},
-	{
-		"folke/persistence.nvim",
-		event = "BufReadPre",
-		module = "persistence",
 		config = function()
-			require("persistence").setup()
+			require("telescope").load_extension("projects")
 		end,
+	},
+	"rmagatti/auto-session",
+	{
+		"rmagatti/session-lens",
+		requires = { "rmagatti/auto-session", "nvim-telescope/telescope.nvim" },
 	},
 	-- Git
 	{
@@ -210,10 +189,19 @@ return {
 	},
 	-- Terminal
 	{
-		"numToStr/FTerm.nvim",
+		"akinsho/toggleterm.nvim",
+		tag = "*",
 		config = function()
-			require("FTerm").setup({
-				border = "single",
+			require("toggleterm").setup({ shell = "/usr/bin/fish" })
+		end,
+	},
+	-- Code runner
+	{
+		"michaelb/sniprun",
+		run = "bash install.sh",
+		config = function()
+			require("sniprun").setup({
+				display = { "Classic", "VirtualTextOk", "TempFloatingWindow" },
 			})
 		end,
 	},
