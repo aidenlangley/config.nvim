@@ -69,6 +69,9 @@ set.cmdheight = 1
 vim.cmd([[set complete+=kspell]])
 vim.cmd([[set completeopt=menuone,longest]])
 
+-- Command completion:
+vim.cmd([[set wildchar=<Tab>]])
+
 -- Search:
 set.hlsearch = false
 set.ignorecase = true

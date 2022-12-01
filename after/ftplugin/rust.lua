@@ -1,48 +1,57 @@
 local rt = require("rust-tools")
-rt.setup({
+local opts = {
 	hover_actions = {
-		border = "single",
+		border = "none",
 		auto_focus = true,
 	},
+	crate_graph = {
+		backend = "gtk",
+	},
 	server = {
+		standalone = false,
 		on_attach = function(_, bufnr)
 			-- Enable/disable features
 			rt.inlay_hints.enable()
 
-			vim.keymap.set("n", "<C-a>", rt.hover_actions.hover_actions, {
-				desc = "[Rust] Hover actions",
+			require("which-key").register({ ["gr"] = { name = "Rust..." } })
+			vim.keymap.set("n", "grg", rt.crate_graph.view_crate_graph, {
+				desc = "View crate graph",
+				silent = true,
 				buffer = bufnr,
-				noremap = true,
 			})
-			vim.keymap.set("n", "<C-Space>", rt.code_action_group.code_action_group, {
-				desc = "[Rust] Code actions",
+			vim.keymap.set("n", "grj", rt.join_lines.join_lines, {
+				desc = "Join lines",
+				silent = true,
 				buffer = bufnr,
-				noremap = true,
-			})
-
-			require("which-key").register("gr", "Rust...")
-			vim.keymap.set("n", "grr", rt.runnables.runnables, {
-				desc = "Runnables",
-				buffer = bufnr,
-				noremap = true,
 			})
 			vim.keymap.set("n", "grm", rt.expand_macro.expand_macro, {
 				desc = "Expand macro",
+				silent = true,
 				buffer = bufnr,
-				noremap = true,
-			})
-			vim.keymap.set("n", "grt", rt.open_cargo_toml.open_cargo_toml, {
-				desc = "Open cargo.toml",
-				buffer = bufnr,
-				noremap = true,
 			})
 			vim.keymap.set("n", "grp", rt.parent_module.parent_module, {
 				desc = "Parent module",
+				silent = true,
 				buffer = bufnr,
-				noremap = true,
+			})
+			vim.keymap.set("n", "grr", rt.runnables.runnables, {
+				desc = "Runnables",
+				silent = true,
+				buffer = bufnr,
+			})
+			vim.keymap.set("n", "grR", rt.ssr.ssr, {
+				desc = "Structural search replace",
+				silent = true,
+				buffer = bufnr,
+			})
+			vim.keymap.set("n", "grt", rt.open_cargo_toml.open_cargo_toml, {
+				desc = "Open cargo.toml",
+				silent = true,
+				buffer = bufnr,
 			})
 		end,
 	},
-})
+}
+rt.setup(opts)
 
-require("lsp").setup_server("rust_analyzer", {})
+require("lsp").setup_server("rust_analyzer", opts.server)

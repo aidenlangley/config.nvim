@@ -15,7 +15,7 @@ end
 
 --- Wraps string in <CMD> & <CR>
 -- @tparam [TODO:parameter] command
--- @treturn [TODO:return]
+-- @treturn string
 local function cmd(command)
 	return "<CMD>" .. command .. "<CR>"
 end
@@ -62,19 +62,11 @@ keymap("n", "<C-Right>", cmd("bn"), "Previous buffer")
 wk.register({ ["<C-b>"] = "Buffers..." })
 keymap("n", "<C-b>h", cmd("bp"), "Next buffer")
 keymap("n", "<C-b>l", cmd("bn"), "Previous buffer")
+keymap("n", "<C-b>d", cmd("bd"), "Close buffer")
 
 -- Save/close/quit buffers/windows
 keymap("n", "<C-s>", cmd("w"), "Save")
 keymap("n", "<C-q>", utils.smart_quit, "Quit")
-
--- Move lines up & down (aka swap with above or below)
-keymap("n", "<C-S-j>", cmd("move +1"), "Move line down")
-keymap("n", "<C-S-k>", cmd("move -1"), "Move line up")
-keymap("n", "<C-S-Down>", cmd("move +1"), "Move line down")
-keymap("n", "<C-S-Up>", cmd("move -1"), "Move line up")
-
--- Treehopper
--- keymap("v", "m", require("tsht").nodes, "Treehopper nodes")
 
 -- Telescope
 wk.register({ ["t"] = { name = "Telescope..." } })
@@ -119,14 +111,14 @@ keymap("n", "<Leader>?", cmd("WhichKey"), "Help")
 keymap("n", "<Leader>;", cmd("Alpha"), "Dashboard")
 keymap("n", "<Leader>c", toggle_term_ctop, "ctop")
 keymap("n", "<Leader>C", cmd("ColorizerToggle"), "Highlight colours")
-keymap("n", "<Leader>d", cmd("bd"), "Close")
-keymap("n", "<Leader>D", cmd("%bd|e#|bd#"), "Close all")
+keymap("n", "<Leader>d", cmd("bd"), "Close buffer")
+keymap("n", "<Leader>D", cmd("%bd|e#|bd#"), "Close all buffers")
 keymap("n", "<Leader>e", cmd("NvimTreeToggle"), "Explorer")
 keymap("n", "<Leader>E", cmd("Dirbuf"), "Dirbuf")
 keymap("n", "<Leader>l", cmd("LspInfo"), "LSP info")
 keymap("n", "<Leader>m", cmd("Mason"), "Mason")
 keymap("n", "<Leader>n", cmd("enew"), "New")
-keymap("n", "<Leader>N", cmd("NullLsInfo"), "null-ls info")
+keymap("n", "<Leader>N", cmd("NullLsInfo"), "NullLs info")
 keymap("n", "<Leader>s", cmd("split"), "Split")
 keymap("n", "<Leader>S", cmd("e ~/.config/nvim/init.lua"), "Settings")
 keymap("n", "<Leader>v", cmd("vsplit"), "Split vertically")

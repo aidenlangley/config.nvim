@@ -36,6 +36,7 @@ if cmp ~= nil then
 	end
 
 	cmp.setup({
+		completion = { completeopt = "menu,menuone,noinsert" },
 		view = { entries = "native" },
 		formatting = {
 			source_names = {},
@@ -81,12 +82,12 @@ if cmp ~= nil then
 			["<S-Tab>"] = cmp.mapping(select_prev, { "i", "s", "c" }),
 
 			-- Vim style movement:
-			["<C-j>"] = cmp.mapping(select_next, { "i", "s", "c" }),
-			["<C-K>"] = cmp.mapping(select_prev, { "i", "s", "c" }),
+			["<C-j>"] = cmp.mapping.select_next_item(),
+			["<C-K>"] = cmp.mapping.select_prev_item(),
 
 			-- Arrow keys:
-			["<Down>"] = cmp.mapping(select_next, { "i", "s", "c" }),
-			["<Up>"] = cmp.mapping(select_prev, { "i", "s", "c" }),
+			["<Down>"] = cmp.mapping.select_next_item(),
+			["<Up>"] = cmp.mapping.select_prev_item(),
 
 			-- Complete:
 			["<CR>"] = cmp.mapping.confirm(),
@@ -100,5 +101,15 @@ if cmp ~= nil then
 				return not context.in_treesitter_capture("comment") and not context.in_syntax_group("Comment")
 			end
 		end,
+	})
+
+	-- Sets up Tab completion in command mode! More important than it first seems.
+	cmp.setup.cmdline(":", {
+		mapping = cmp.mapping.preset.cmdline(),
+		sources = cmp.config.sources({
+			{ name = "path" },
+		}, {
+			{ name = "cmdline" },
+		}),
 	})
 end

@@ -33,5 +33,12 @@ create_autocmd("BufWritePre", {
 create_autocmd("BufEnter", {
 	group = "zsh_to_sh",
 	pattern = { "*.zsh", ".zshrc", ".zimrc" },
-	command = "setfiletype sh",
+	command = "set filetype sh",
+})
+
+-- .service files are incorrectly set to filetype service
+create_autocmd("BufEnter", {
+	group = "systemd_service",
+	pattern = { "*.service" },
+	command = "set filetype systemd",
 })

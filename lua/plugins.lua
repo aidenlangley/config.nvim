@@ -18,6 +18,7 @@ return {
 		tag = "0.1.0",
 		requires = { "nvim-lua/plenary.nvim" },
 	},
+	"feline-nvim/feline.nvim",
 	{
 		"norcalli/nvim-colorizer.lua",
 		config = function()
@@ -46,8 +47,7 @@ return {
 			require("fidget").setup({})
 		end,
 	},
-	-- Status line:
-	"feline-nvim/feline.nvim",
+	"folke/twilight.nvim",
 	-- Dashboard:
 	{
 		"goolord/alpha-nvim",
@@ -78,7 +78,10 @@ return {
 	{
 		"ray-x/lsp_signature.nvim",
 		config = function()
-			require("lsp_signature").setup({})
+			require("lsp_signature").setup({
+				handler_opts = { border = "none" },
+				zindex = 50,
+			})
 		end,
 	},
 	{
@@ -100,16 +103,15 @@ return {
 	},
 	"nvim-treesitter/playground",
 	"nvim-treesitter/nvim-treesitter-textobjects",
+	"windwp/nvim-ts-autotag",
 	"JoosepAlviste/nvim-ts-context-commentstring",
 	"p00f/nvim-ts-rainbow",
 	"simrat39/symbols-outline.nvim",
-	"mfussenegger/nvim-treehopper",
 	{
 		"ziontee113/syntax-tree-surfer",
 		event = "BufReadPre",
 		module = { "syntax-tree-surfer" },
 	},
-	"folke/twilight.nvim",
 	-- Completions:
 	"hrsh7th/cmp-buffer",
 	"hrsh7th/cmp-calc",
@@ -121,6 +123,7 @@ return {
 	"onsails/lspkind.nvim",
 	{ "L3MON4D3/LuaSnip", tag = "v1.1.*" },
 	"hrsh7th/nvim-cmp",
+	"windwp/nvim-autopairs",
 	-- mini:
 	{ "echasnovski/mini.nvim", branch = "stable" },
 	-- Languages/syntax:
@@ -158,13 +161,6 @@ return {
 		end,
 	},
 	-- Movement
-	{
-		"phaazon/hop.nvim",
-		branch = "v2",
-		config = function()
-			require("hop").setup()
-		end,
-	},
 	{
 		"ggandor/leap.nvim",
 		config = function()
