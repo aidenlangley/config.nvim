@@ -1,84 +1,102 @@
-local set = vim.opt
-local opt = vim.o
-local win = vim.wo
-local global = vim.g
+-- NOTE: Must happen before plugins are required, otherwise wrong leader will
+-- be used
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
-vim.cmd([[let mapleader=" "]]) -- Set leader key to <Space>
-vim.cmd([[set nocompatible]]) -- Disable vi compatibility, this isn't the 70's
+-- Handle plugins, return bootstrap status
+local is_bootstrap = require("bootstrap")
 
--- General:
-set.conceallevel = 0 -- Shows  in markdown
-set.cursorline = true -- Highlight the line that the cursor is currently on
-set.fileencoding = "UTF-8"
-set.filetype.plugin = "true"
-set.hidden = true -- Keeps multiple buffers open
-set.mouse = "a" -- Enable the mouse
-set.mousemodel = "extend" -- Right mouse extends selection
-set.pumheight = 16 -- Pop up menu height
-set.shell = "/usr/bin/sh"
-set.showmode = false -- Hide default mode indicator
-set.spell = false -- Spell check
-set.spelllang = { "en_us", "en_gb", "en_nz" } -- Spell check
-set.splitbelow = true
-set.splitright = true
-set.termguicolors = true
-set.timeoutlen = 350
-set.title = true
-set.titlestring = "%<%F%="
-set.updatetime = 0
-set.whichwrap:append("<,>,[,],h,l") -- Moving to the end of the line will move to the next line
-set.wrap = false -- Don't wrap lines longer than the window width
-opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+-- When we are bootstrapping a configuration, it doesn't
+-- make sense to execute the rest of the init.lua.
+--
+-- You'll need to restart nvim, and then it will work.
+if is_bootstrap then
+	vim.notify("Plugins installing. Once Packer is finished, restart nvim.", vim.log.levels.INFO)
+	return
+end
 
--- Line numbers/ruler:
-set.colorcolumn = "80,100"
-set.number = true
-set.relativenumber = true
-set.scrolloff = 4
-set.showtabline = 1
-set.sidescrolloff = 8
-set.signcolumn = "auto"
+-- Set highlight on search
+vim.o.hlsearch = false
 
--- Indenting:
-set.autoindent = true
-set.expandtab = true
-set.shiftwidth = 2
-set.smartindent = true
-set.tabstop = 2
+-- Make line numbers default, and have them relative to current line
+vim.wo.number = true
+vim.wo.relativenumber = true
 
--- Backups:
-set.backup = true
-set.backupdir = vim.fn.stdpath("cache") .. "/backup"
-set.swapfile = false
-set.undodir = vim.fn.stdpath("cache") .. "/undo"
-set.undofile = true
+-- Enable mouse mode
+vim.o.mouse = "a"
 
--- Clipboard:
-set.clipboard = "unnamedplus"
+-- Right mouse extends selection
+vim.o.mousemodel = "extend"
 
--- Folding:
-set.foldexpr = "nvim_treesitter#foldexpr()"
-set.foldmethod = "expr"
-win.foldenable = true
-win.foldlevel = 99
+-- Enable break indent
+vim.o.breakindent = true
 
--- UI:
-set.cmdheight = 1
+-- Save undo history
+vim.o.undofile = true
 
--- Completion:
-vim.cmd([[set complete+=kspell]])
-vim.cmd([[set completeopt=menuone,longest]])
+-- Case insensitive searching UNLESS /C or capital in search
+vim.o.ignorecase = true
+vim.o.smartcase = true
 
--- Command completion:
-vim.cmd([[set wildchar=<Tab>]])
+-- Decrease update time & timeout length
+vim.o.updatetime = 250
+vim.o.timeoutlen = 500
 
--- Search:
-set.hlsearch = false
-set.ignorecase = true
-set.smartcase = true
-vim.cmd([[set path+=**]])
+-- Add diagnostic symbols to left-hand column
+vim.wo.signcolumn = "yes"
 
--- Theme:
-global.gruvbox_material_background = "hard"
-set.background = "dark"
+-- Set completeopt to have a better completion experience
+vim.o.completeopt = "menuone,noselect"
+
+-- Highlight current line
+vim.o.cursorline = true
+
+-- Split logically - not before the current window, but afterwards
+vim.o.splitbelow = true
+vim.o.splitright = true
+
+-- Disable line wrapping
+vim.o.wrap = false
+
+-- Moving to the end of the line will wrap the cursor
+vim.opt.whichwrap:append("<,>,[,],h,l")
+
+-- Completion menu height
+vim.o.pumheight = 16
+
+-- Add a ruler at 80 & 100 lines
+vim.o.colorcolumn = "80,100"
+
+-- Share clipboard with system
+vim.o.clipboard = "unnamedplus"
+
+-- Indenting, doesn't impact the file itself, just displays 2 spaces for a tab
+vim.o.autoindent = true
+vim.o.expandtab = true
+vim.o.shiftwidth = 2
+vim.o.smartindent = true
+vim.o.tabstop = 2
+
+-- Enable lazy loading filetype specific code
+vim.opt.filetype.plugin = "true"
+
+-- Use terminal colours
+vim.o.termguicolors = true
+
+-- Status line shows mode so we can stop showing the tradition mode
+vim.o.showmode = false
+
+-- Title string
+vim.o.title = true
+vim.o.titlestring = "%<%F%="
+
+-- Plugins, LSP, important UI components, etc.
+require("core")
+
+-- Superfluous plugins or configuration.
+require("extra")
+
+-- Set colorscheme
+vim.o.background = "dark"
+vim.g.gruvbox_material_background = "hard"
 vim.cmd([[colorscheme gruvbox-material]])
