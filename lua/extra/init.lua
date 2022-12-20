@@ -9,6 +9,7 @@ require("extra.config.neogen")
 require("extra.config.project")
 require("extra.config.tidy")
 require("extra.config.todo_comments")
+require("extra.config.toggleterm")
 require("extra.config.which_key")
 
 require("extra.autocmds")

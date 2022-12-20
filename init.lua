@@ -11,8 +11,11 @@ local is_bootstrap = require("bootstrap")
 --
 -- You'll need to restart nvim, and then it will work.
 if is_bootstrap then
-	vim.notify("Plugins installing. Once Packer is finished, restart nvim.", vim.log.levels.INFO)
-	return
+  vim.notify(
+    "Plugins installing. Once Packer is finished, restart nvim.",
+    vim.log.levels.INFO
+  )
+  return
 end
 
 -- Set highlight on search

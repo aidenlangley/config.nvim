@@ -1,19 +1,22 @@
 -- Install packer
-local install_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
+local install_path = vim.fn.stdpath("data")
+  .. "/site/pack/packer/start/packer.nvim"
 local is_bootstrap = false
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-	is_bootstrap = true
-	vim.fn.execute("!git clone https://github.com/wbthomason/packer.nvim " .. install_path)
-	vim.cmd([[packadd packer.nvim]])
+  is_bootstrap = true
+  vim.fn.execute(
+    "!git clone https://github.com/wbthomason/packer.nvim " .. install_path
+  )
+  vim.cmd([[packadd packer.nvim]])
 end
 
 local packer = require("packer")
 packer.init({
-	display = {
-		open_fn = function()
-			return require("packer.util").float({ border = "single" })
-		end,
-	},
+  display = {
+    open_fn = function()
+      return require("packer.util").float({ border = "single" })
+    end,
+  },
 })
 
 -- Use core plugins
@@ -24,19 +27,19 @@ packer.use(require("core.plugins"))
 -- we're okay with passing on them if they are unavailable for w/e reason.
 local has_plugins, plugins = pcall(require, "extra.plugins")
 if has_plugins then
-	packer.use(plugins)
+  packer.use(plugins)
 end
 
 if is_bootstrap then
-	require("packer").sync()
+  require("packer").sync()
 end
 
 local nmap = function(keys, func, desc)
-	if desc then
-		desc = "Packer: " .. desc
-	end
+  if desc then
+    desc = "Packer: " .. desc
+  end
 
-	vim.keymap.set("n", keys, func, { desc = desc, silent = true })
+  vim.keymap.set("n", keys, func, { desc = desc, silent = true })
 end
 
 -- Set up some keybindings.
