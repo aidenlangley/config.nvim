@@ -72,6 +72,10 @@ vim.o.termguicolors = true
 -- Status line shows mode so we can stop showing the tradition mode
 vim.o.showmode = false
 
+-- Lines to keep above/below & left/right of cursor
+vim.o.scrolloff = 4
+vim.o.sidescrolloff = 8
+
 -- Title string
 vim.o.title = true
 vim.o.titlestring = "%<%F%="

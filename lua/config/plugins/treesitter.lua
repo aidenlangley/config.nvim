@@ -106,7 +106,10 @@ function M.config()
   }
 
   require("nvim-treesitter.configs").setup(config)
-  require("which-key").register({ d = { name = "[D]efinition..." } }, { prefix = "<Leader>" })
+  require("which-key").register(
+    { d = { name = "[D]efinition..." } },
+    { prefix = "<Leader>", mode = { "n", "v" } }
+  )
 end
 
 return M

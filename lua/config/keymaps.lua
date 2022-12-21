@@ -18,11 +18,13 @@ function M.settings()
 end
 
 function M.buffers()
+  vim.keymap.set("n", "<C-u>", utils.cmd("%bd|e#|bd#"), { desc = "[U]nload other buffers" })
+
   wk.register({
     b = {
       name = "[B]uffers...",
-      d = { utils.cmd("bd"), "Delete" },
-      D = { utils.cmd("%bd|e#|bd#"), "Delete others" },
+      d = { utils.cmd("bd"), "Unload/[D]elete" },
+      D = { utils.cmd("%bd|e#|bd#"), "Unload/[D]elete others" },
       n = { utils.cmd("enew"), "New" },
       w = { utils.cmd("w!"), "Write" },
       W = { utils.cmd("wa!"), "Write all" },
@@ -109,6 +111,7 @@ function M.lsp(_, bufnr)
       i = { vim.lsp.buf.implementation, "Goto [I]mplementation" },
       I = { tsb.lsp_implementations, "View [I]mplementations" },
       r = { tsb.lsp_references, "View [R]eferences" },
+      s = { utils.cmd("SymbolsOutline"), "View [S]ymbols" },
       t = { tsb.lsp_type_definitions, "View [T]ype definitions" },
     },
     t = {
@@ -118,10 +121,10 @@ function M.lsp(_, bufnr)
       N = { vim.diagnostic.goto_prev, "Previous diagnostic" },
       t = { utils.cmd("Trouble"), "[T]rouble" },
     },
-  }, { prefix = "<Leader>" })
+  }, { prefix = "<Leader>", mode = { "n", "v" } })
 
   wk.register({
-    f = { "[F]ormat" },
+    f = { "[F]ormat selection" },
   }, { prefix = "<Leader>c", mode = "v" })
 
   -- Diagnostics
@@ -130,9 +133,13 @@ function M.lsp(_, bufnr)
 end
 
 vim.keymap.set("n", "<C-s>", utils.cmd("w"), { desc = "Write buffer" })
+vim.keymap.set("n", "<C-e>", require("utils").cmd("Neotree toggle"), { desc = "Explorer" })
+
+-- Move through buffers
 vim.keymap.set("n", "<C-h>", utils.cmd("bp"), { desc = "Previous Buffer", silent = true })
 vim.keymap.set("n", "<C-l>", utils.cmd("bn"), { desc = "Next Buffer", silent = true })
-vim.keymap.set("n", "<C-e>", require("utils").cmd("Neotree toggle"), { desc = "Explorer" })
+vim.keymap.set("n", "<C-Left>", utils.cmd("bp"), { desc = "Previous Buffer", silent = true })
+vim.keymap.set("n", "<C-Right>", utils.cmd("bn"), { desc = "Next Buffer", silent = true })
 
 -- Quit if not modified, else request confirmation
 vim.keymap.set("n", "<C-q>", function()

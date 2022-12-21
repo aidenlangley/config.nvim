@@ -64,22 +64,19 @@ end
 function M.rust_analyzer()
   local rt = require("rust-tools")
   rt.setup({
+    tools = {
+      hover_actions = {
+        border = "none",
+      },
+    },
     server = {
       on_attach = function(client, bufnr)
         require("config.keymaps").lsp(client, bufnr)
 
-        local function nmap(keys, func, desc)
-          if desc then
-            desc = "LSP: " .. desc
-          end
-
-          vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
-        end
-
-        nmap("<C-.>", rt.hover_actions.hover_actions, "Hover actions")
         require("which-key").register({
           A = { rt.code_action_group.code_action_group, "Code [A]ction group" },
           e = { rt.expand_macro.expand_macro, "[E]xpand macro" },
+          h = { rt.hover_actions.hover_actions, "[H]over actions" },
         }, { prefix = "<Leader>c" })
       end,
       settings = {

@@ -25,7 +25,7 @@ function M.config()
 
   wk.register({
     { ["<Backspace>"] = { name = "Show all..." } },
-  }, { prefix = "<Leader>" })
+  }, { prefix = "<Leader>", mode = { "n", "v" } })
 end
 
 return M

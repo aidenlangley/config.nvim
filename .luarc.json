@@ -1,22 +1,4 @@
 {
     "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
-    "Lua.workspace.library": [
-        "/home/aiden/.local/share/nvim/lazy/cmp-nvim-lsp",
-        "/home/aiden/.local/share/nvim/lazy/lsp_config",
-        "/home/aiden/.local/share/nvim/lazy/mason-lspconfig.nvim",
-        "/home/aiden/.local/share/nvim/lazy/mason.nvim",
-        "/home/aiden/.local/share/nvim/lazy/plenary.nvim",
-        "/home/aiden/.local/share/nvim/lazy/nui.nvim",
-        "/home/aiden/.local/share/nvim/lazy/neo-tree.nvim",
-        "/home/aiden/.local/share/nvim/lazy/feline.nvim",
-        "/home/aiden/.local/share/nvim/lazy/project.nvim",
-        "/home/aiden/.local/share/nvim/lazy/dressing.nvim",
-        "/home/aiden/.local/share/nvim/lazy/rust-tools.nvim",
-        "/home/aiden/.local/share/nvim/lazy/lazy.nvim",
-        "/usr/share/nvim/runtime",
-        "/usr/lib/nvim",
-        "/home/aiden/.config/nvim",
-        "/home/aiden/.local/state/nvim/lazy/readme",
-        "${3rd}/luassert/library"
-    ]
+    "Lua.workspace.checkThirdParty": false
 }

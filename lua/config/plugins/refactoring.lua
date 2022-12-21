@@ -8,7 +8,7 @@ function M.init()
   end
 
   local wk = require("which-key")
-  wk.register({ r = { name = "Refactor..." } }, { prefix = "<Leader>c" })
+  wk.register({ r = { name = "Refactor..." } }, { prefix = "<Leader>c", mode = { "n", "v" } })
 
   local refactor_prefix = "<Leader>cr"
 

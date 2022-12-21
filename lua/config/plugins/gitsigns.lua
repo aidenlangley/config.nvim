@@ -28,12 +28,6 @@ function M.config()
       end,
       "[B]lame",
     },
-    -- d = {
-    --   function()
-    --     gs.diffthis("~")
-    --   end,
-    --   "Show [D]iff",
-    -- },
     D = { gs.toggle_deleted, "Toggle [D]eleted" },
     p = { gs.preview_hunk, "[P]review" },
     R = { gs.reset_buffer, "[R]eset" },
@@ -42,9 +36,12 @@ function M.config()
   }, { prefix = "<Leader>g" })
 
   wk.register({
-    s = { utils.cmd("Gitsigns stage_hunk"), "[S]tage" },
-    r = { utils.cmd("Gitsigns reset_hunk"), "[R]eset" },
-  }, { prefix = "<Leader>g", mode = "v" })
+    g = {
+      name = "[G]it...",
+      s = { utils.cmd("Gitsigns stage_hunk"), "[S]tage" },
+      r = { utils.cmd("Gitsigns reset_hunk"), "[R]eset" },
+    },
+  }, { prefix = "<Leader>", mode = "v" })
 end
 
 return M
