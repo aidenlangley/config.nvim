@@ -8,10 +8,6 @@ function M.settings()
   wk.register({
     s = {
       name = "[S]ettings...",
-      l = { utils.cmd("Lazy"), "Lazy" },
-      L = { utils.cmd("LspInfo"), "LSP" },
-      m = { utils.cmd("Mason"), "Mason" },
-      n = { utils.cmd("NullLsInfo"), "NullLs" },
       o = { utils.cmd("e ~/.config/nvim/init.lua"), "Open `init.lua`" },
     },
   }, { prefix = "<Leader>" })
@@ -67,16 +63,16 @@ function M.git()
   wk.register({
     g = {
       name = "[G]it...",
-      b = { tsb.git_branches, "Branches" },
-      C = { tsb.git_commits, "Commits" },
+      b = { tsb.git_branches, "[B]ranches" },
+      C = { tsb.git_commits, "[C]ommits" },
       g = {
         function()
           term_lazygit:toggle()
         end,
-        "LazyGit",
+        "Lazy[G]it",
       },
-      s = { tsb.git_status, "Status" },
-      S = { tsb.git_stash, "Stashes" },
+      s = { tsb.git_status, "[S]tatus" },
+      S = { tsb.git_stash, "[S]tashes" },
     },
   }, { prefix = "<Leader>" })
 end
@@ -87,10 +83,9 @@ function M.lsp(_, bufnr)
       desc = "LSP: " .. desc
     end
 
-    vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
+    vim.keymap.set("n", keys, func, { bufnr = bufnr, desc = desc })
   end
 
-  nmap("<C-.>", vim.lsp.buf.code_action, "Actions")
   nmap("<F2>", vim.lsp.buf.rename, "Rename")
   nmap("K", vim.lsp.buf.hover, "Hover")
 
@@ -98,9 +93,6 @@ function M.lsp(_, bufnr)
   wk.register({
     c = {
       name = "[C]ode...",
-      a = { vim.lsp.buf.code_action, "[A]ctions" },
-      f = { require("utils.lsp.auto_format").format, "[F]ormat" },
-      F = { require("utils.lsp.auto_format").toggle, "Toggle [F]ormatting Automatically" },
       K = { vim.lsp.buf.hover, "[H]over" },
       s = { vim.lsp.buf.signature_help, "[S]ignature help" },
     },
@@ -123,17 +115,14 @@ function M.lsp(_, bufnr)
     },
   }, { prefix = "<Leader>", mode = { "n", "v" } })
 
-  wk.register({
-    f = { vim.lsp.buf.range_formatting, "[F]ormat selection" },
-  }, { prefix = "<Leader>c", mode = "v" })
-
   -- Diagnostics
   nmap("]d", vim.diagnostic.goto_next, "Next diagnostic")
   nmap("[d", vim.diagnostic.goto_prev, "Previous diagnostic")
+
+  vim.keymap.set("n", "<Leader>sl", utils.cmd("LspInfo"), { desc = "LSP info" })
 end
 
 vim.keymap.set("n", "<C-s>", utils.cmd("w"), { desc = "Write buffer" })
-vim.keymap.set("n", "<C-e>", require("utils").cmd("Neotree toggle"), { desc = "Explorer" })
 
 -- Copy & paste
 vim.keymap.set("v", "<C-c>", utils.cmd("'<,'>yank"), { desc = "Yank (copy)" })
@@ -146,22 +135,17 @@ vim.keymap.set("n", "<C-Left>", utils.cmd("bp"), { desc = "Previous Buffer", sil
 vim.keymap.set("n", "<C-Right>", utils.cmd("bn"), { desc = "Next Buffer", silent = true })
 
 -- Quit if not modified, else request confirmation
-vim.keymap.set("n", "<C-q>", function()
-  local bufnr = vim.api.nvim_get_current_buf()
-  local modified = vim.api.nvim_buf_get_option(bufnr, "modified")
+vim.keymap.set("n", "<C-q>", utils.smart_quit, { desc = "Quit" })
 
-  if modified then
-    vim.ui.input({
-      prompt = "You have unsaved changes. Quit anyway? (y/N) ",
-    }, function(input)
-      if input == "y" then
-        vim.cmd("q!")
-      end
-    end)
-  else
-    vim.cmd("q!")
-  end
-end, { desc = "Quit" })
+-- Code actions & formatting can function without a language server
+vim.keymap.set("n", "<C-.>", vim.lsp.buf.code_action, { desc = "Code actions" })
+wk.register({
+  c = {
+    name = "[C]ode...",
+    a = { vim.lsp.buf.code_action, "[A]ctions" },
+    f = { require("utils.lsp.auto_format").format, "[F]ormat" },
+  },
+})
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
 vim.keymap.set("n", "n", "'Nn'[v:searchforward]", { desc = "Search forwards", expr = true })
@@ -179,9 +163,9 @@ vim.keymap.set("n", "<S-Up>", ":m .-2<CR>==", { desc = "Move line up" })
 vim.keymap.set("v", "<S-Up>", ":m '<-2<CR>gv=gv", { desc = "move selection up" })
 vim.keymap.set("i", "<S-Up>", "<Esc>:m .-2<CR>==gi", { desc = "move line up" })
 
-M.settings()
 M.buffers()
-M.telescope()
 M.git()
+M.settings()
+M.telescope()
 
 return M

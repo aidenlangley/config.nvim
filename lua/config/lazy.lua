@@ -5,7 +5,7 @@ if not vim.loop.fs_stat(lazypath) then
     "clone",
     "--filter=blob:none",
     "--single-branch",
-    "git@github.com:folke/lazy.nvim.git",
+    "https://github.com/folke/lazy.nvim.git",
     lazypath,
   })
 end
@@ -25,7 +25,7 @@ require("lazy").setup("config.plugins", {
   checker = {
     enabled = true,
     concurrency = 1,
-    frequency = 3600 * 24,
+    frequency = 3600,
   },
   change_detection = {
     enabled = true,
@@ -46,3 +46,18 @@ require("lazy").setup("config.plugins", {
     },
   },
 })
+
+local utils = require("utils")
+vim.keymap.set("n", "<Leader>sL", utils.cmd("Lazy"), { desc = "Lazy" })
+
+local function nmap(keys, func, desc)
+  if desc then
+    desc = "Lazy: " .. desc
+  end
+
+  vim.keymap.set("n", keys, func, { desc = desc })
+end
+
+nmap("<Leader>ss", utils.cmd("Lazy sync"), "Sync")
+nmap("<Leader>sp", utils.cmd("Lazy profile"), "Profile")
+nmap("<Leader>sh", utils.cmd("Lazy help"), "Help")

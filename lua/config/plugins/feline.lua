@@ -56,7 +56,9 @@ function M.config()
   }
 
   local attached_clients_provider = {
-    provider = require("utils.lsp").get_clients,
+    provider = function()
+      return require("utils.lsp").get_clients(vim.api.nvim_get_current_buf())
+    end,
     hl = { fg = "light-grey" },
     icon = "",
     left_sep = "block",

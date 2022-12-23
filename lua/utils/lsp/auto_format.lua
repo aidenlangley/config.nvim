@@ -1,53 +1,40 @@
 local M = {}
 
-M.enabled = true
-
-function M.toggle()
-  M.enabled = not M.enabled
-
-  if M.enabled then
-    vim.notify(
-      "Enabled format on save, please reload buffer to re-attach",
-      vim.log.levels.INFO,
-      ---@diagnostic disable: redundant-parameter
-      { title = "Auto Format" }
-    )
-  else
-    M.disable()
-    ---@diagnostic disable: redundant-parameter
-    vim.notify("Disabled format on save", vim.log.levels.INFO, { title = "Auto Format" })
-  end
-end
-
-function M.format()
+function M.format(opts)
   if vim.lsp.buf.format then
-    vim.lsp.buf.format()
+    vim.lsp.buf.format(opts)
   else
-    vim.lsp.buf.formatting_sync()
+    vim.lsp.buf.formatting_sync(opts)
   end
 end
 
-function M.attach(bufnr)
-  if M.enabled == true then
-    local augroup = vim.api.nvim_create_augroup("LspAutoFormat", { clear = true })
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      group = augroup,
-      buffer = bufnr,
-      callback = function()
-        if #require("null-ls.sources").get_available(
+M.augroup = vim.api.nvim_create_augroup("AutoFormat", { clear = true })
+
+function M.prefer_null_ls()
+  M.format({
+    filter = function(client)
+      if
+        #require("null-ls.sources").get_available(
           vim.bo.filetype,
           require("null-ls").methods.FORMATTING
         ) > 0
-        then
-          M.format()
-        end
-      end,
-    })
-  end
+      then
+        return client.name == "null-ls"
+      else
+        return client.supports_method("textDocument/formatting")
+      end
+    end,
+  })
 end
 
-function M.disable()
-  vim.api.nvim_del_augroup_by_name("LspAutoFormat")
+function M.create_autocmd()
+  local autocmd = {
+    group = M.augroup,
+    pattern = "*",
+    callback = M.prefer_null_ls,
+  }
+
+  vim.api.nvim_create_autocmd("BufWritePre", autocmd)
 end
 
 return M

@@ -1,9 +1,9 @@
 local M = {}
 
-function M.get_clients()
+function M.get_clients(bufnr)
   local clients = {}
 
-  for _, client in ipairs(vim.lsp.get_active_clients()) do
+  for _, client in ipairs(vim.lsp.get_active_clients({ bufnr = bufnr })) do
     -- When handling null-ls clients, we have to further inspect the sources
     if client.name == "null-ls" then
       for _, source in ipairs(require("null-ls.sources").get_available(vim.bo.filetype)) do

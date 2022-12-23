@@ -11,5 +11,6 @@ return {
   "tpope/vim-fugitive",
   "tpope/vim-rhubarb",
 
+  { "fladson/vim-kitty", ft = "kitty" },
   { "stevearc/dressing.nvim", event = "VimEnter" },
 }

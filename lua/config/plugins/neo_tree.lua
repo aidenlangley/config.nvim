@@ -1,10 +1,14 @@
 local M = {
   "nvim-neo-tree/neo-tree.nvim",
-  event = "VimEnter",
+  cmd = { "Neotree" },
 
   branch = "v2.x",
   dependencies = { "MunifTanjim/nui.nvim" },
 }
+
+function M.init()
+  vim.keymap.set("n", "<C-e>", require("utils").cmd("Neotree toggle"), { desc = "Explorer" })
+end
 
 function M.config()
   vim.cmd([[let g:neo_tree_remove_legacy_commands = 1]])
@@ -43,8 +47,8 @@ function M.config()
       },
     },
     filesystem = {
-      bind_to_cwd = false,
-      follow_current_file = false,
+      bind_to_cwd = true,
+      follow_current_file = true,
       hijack_netrw_behavior = "disabled",
       filtered_items = {
         visible = true,

@@ -8,12 +8,11 @@ local M = {
   },
 }
 
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+
 local function on_attach(client, bufnr)
   require("config.keymaps").lsp(client, bufnr)
-  require("utils.lsp.auto_format").attach(bufnr)
 end
-
-local capabilities = vim.lsp.protocol.make_client_capabilities()
 
 local function default_handler(server_name)
   require("lspconfig")[server_name].setup({
@@ -58,13 +57,13 @@ local function rust_analyzer()
     },
     server = {
       on_attach = function(client, bufnr)
-        require("config.keymaps").lsp(client, bufnr)
+        on_attach(client, bufnr)
 
         require("which-key").register({
           A = { rt.code_action_group.code_action_group, "Code [A]ction group" },
           e = { rt.expand_macro.expand_macro, "[E]xpand macro" },
           h = { rt.hover_actions.hover_actions, "[H]over actions" },
-        }, { prefix = "<Leader>c" })
+        }, { prefix = "<Leader>c", buffer = bufnr })
       end,
       settings = {
         ["rust-analyzer"] = {

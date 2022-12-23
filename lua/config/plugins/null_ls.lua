@@ -57,6 +57,8 @@ function M.config()
     },
     diagnostics_format = "[#{c}] #{m} (#{s})",
   })
+
+  vim.keymap.set("n", "<Leader>sn", require("utils").cmd("NullLsInfo"), { desc = "null-ls info" })
 end
 
 return M

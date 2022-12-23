@@ -21,8 +21,8 @@ function M.config()
   mappings["<PageDown>"] = { "scroll", { "vim.wo.scroll", "true", "254" } }
   mappings["<Home>"] = { "scroll", { "-vim.api.nvim_win_get_height(0)", "true", "512" } }
   mappings["<End>"] = { "scroll", { "vim.api.nvim_win_get_height(0)", "true", "512" } }
-  mappings["<ScrollWheelUp>"] = { "scroll", { "-8", "true", "128" } }
-  mappings["<ScrollWheelDown>"] = { "scroll", { "8", "true", "128" } }
+  mappings["<ScrollWheelUp>"] = { "scroll", { "-4", "true", "128" } }
+  mappings["<ScrollWheelDown>"] = { "scroll", { "4", "true", "128" } }
 
   require("neoscroll.config").set_mappings(mappings)
 end

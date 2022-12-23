@@ -45,6 +45,8 @@ function M.config()
       "tsserver",
     },
   })
+
+  vim.keymap.set("n", "<Leader>sm", require("utils").cmd("Mason"), { desc = "Mason" })
 end
 
 return M
