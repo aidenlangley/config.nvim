@@ -6,7 +6,7 @@ local M = {
   },
 }
 
-M.tools = {
+local tools = {
   "black",
   "eslint_d",
   "flake8",
@@ -18,9 +18,9 @@ M.tools = {
   "stylua",
 }
 
-function M.check()
+local function check()
   local mr = require("mason-registry")
-  for _, tool in ipairs(M.tools) do
+  for _, tool in ipairs(tools) do
     local p = mr.get_package(tool)
     if not p:is_installed() then
       p:install()
@@ -30,7 +30,7 @@ end
 
 function M.config()
   require("mason").setup()
-  M.check()
+  check()
 
   require("mason-lspconfig").setup({
     ensure_installed = {

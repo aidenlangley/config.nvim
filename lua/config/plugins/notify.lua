@@ -1,9 +1,8 @@
 local M = {
   "rcarriga/nvim-notify",
-  lazy = false,
 }
 
-function M.config()
+function M.init()
   local notify = require("notify")
   notify.setup({
     level = vim.log.levels.INFO,

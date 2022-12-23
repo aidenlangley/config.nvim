@@ -4,7 +4,15 @@ local M = {
 }
 
 function M.config()
-  require("colorizer").setup({}, { mode = "background" })
+  require("colorizer").setup({
+    ["*"] = {
+      RGB = true,
+      RRGGBB = true,
+      names = true,
+      RRGGBBAA = true,
+      mode = "background",
+    },
+  })
 end
 
 return M

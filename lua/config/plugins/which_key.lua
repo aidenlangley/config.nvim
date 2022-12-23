@@ -2,7 +2,7 @@ local M = {
   "folke/which-key.nvim",
 }
 
-function M.config()
+function M.init()
   local wk = require("which-key")
   wk.setup({
     key_labels = {

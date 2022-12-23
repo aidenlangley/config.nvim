@@ -7,14 +7,12 @@ local M = {
     "<End>",
     "<ScrollWheelUp>",
     "<ScrollWheelDown>",
-    "j",
-    "k",
   },
 }
 
 function M.config()
   require("neoscroll").setup({
-    -- mappings = M.keys,
+    mappings = M.keys,
     easing_function = "sine",
   })
 

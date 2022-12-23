@@ -1,4 +1,3 @@
--- bootstrap from github
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -12,10 +11,26 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.runtimepath:prepend(lazypath)
 
--- load lazy
 require("lazy").setup("config.plugins", {
-  install = { colorscheme = { "gruvbox-material" } },
-  checker = { enabled = false },
+  defaults = {
+    lazy = true,
+  },
+  concurrency = 4,
+  install = {
+    colorscheme = {
+      "gruvbox-material",
+      "habamax",
+    },
+  },
+  checker = {
+    enabled = true,
+    concurrency = 1,
+    frequency = 3600 * 24,
+  },
+  change_detection = {
+    enabled = true,
+    notify = false,
+  },
   performance = {
     rtp = {
       disabled_plugins = {

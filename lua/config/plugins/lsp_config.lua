@@ -4,43 +4,28 @@ local M = {
   event = "BufReadPre",
 
   dependencies = {
-    "williamboman/mason-lspconfig.nvim",
+    "williamboman/mason.nvim",
   },
 }
 
-function M.on_attach(client, bufnr)
+local function on_attach(client, bufnr)
   require("config.keymaps").lsp(client, bufnr)
+  require("utils.lsp.auto_format").attach(bufnr)
 end
 
-M.capabilities = vim.lsp.protocol.make_client_capabilities()
+local capabilities = vim.lsp.protocol.make_client_capabilities()
 
-function M.config()
-  M.capabilities = require("cmp_nvim_lsp").default_capabilities(M.capabilities)
-
-  require("mason-lspconfig").setup_handlers({
-    -- Default handler
-    M.default_handler,
-    ["gopls"] = M.gopls,
-    ["jsonls"] = M.gopls,
-    ["rust_analyzer"] = M.rust_analyzer,
-    ["sumneko_lua"] = M.sumneko_lua,
-    ["volar"] = M.volar,
-  })
-
-  require("fidget").setup()
-end
-
-function M.default_handler(server_name)
+local function default_handler(server_name)
   require("lspconfig")[server_name].setup({
-    capabilities = M.capabilities,
-    on_attach = M.on_attach,
+    capabilities = capabilities,
+    on_attach = on_attach,
   })
 end
 
-function M.gopls()
+local function gopls()
   require("lspconfig").gopls.setup({
-    capabilities = M.capabilities,
-    on_attach = M.on_attach,
+    capabilities = capabilities,
+    on_attach = on_attach,
     settings = {
       gopls = {
         gofumpt = true,
@@ -49,8 +34,10 @@ function M.gopls()
   })
 end
 
-function M.jsonls()
+local function jsonls()
   require("lspconfig").jsonls.setup({
+    capabilities = capabilities,
+    on_attach = on_attach,
     settings = {
       json = {
         format = { enable = true },
@@ -61,7 +48,7 @@ function M.jsonls()
   })
 end
 
-function M.rust_analyzer()
+local function rust_analyzer()
   local rt = require("rust-tools")
   rt.setup({
     tools = {
@@ -88,14 +75,14 @@ function M.rust_analyzer()
   })
 end
 
-function M.sumneko_lua()
+local function sumneko_lua()
   local runtime_path = vim.split(package.path, ";", {})
   table.insert(runtime_path, "lua/?.lua")
   table.insert(runtime_path, "lua/?/init.lua")
 
   require("lspconfig").sumneko_lua.setup({
-    capabilities = M.capabilities,
-    on_attach = M.on_attach,
+    capabilities = capabilities,
+    on_attach = on_attach,
     settings = {
       Lua = {
         runtime = {
@@ -112,10 +99,10 @@ function M.sumneko_lua()
   })
 end
 
-function M.volar()
+local function volar()
   require("lspconfig").volar.setup({
-    capabilities = M.capabilities,
-    on_attach = M.on_attach,
+    capabilities = capabilities,
+    on_attach = on_attach,
     filetypes = {
       "typescript",
       "javascript",
@@ -125,6 +112,22 @@ function M.volar()
       "json",
     },
   })
+end
+
+function M.config()
+  capabilities = require("cmp_nvim_lsp").default_capabilities(M.capabilities)
+
+  require("mason-lspconfig").setup_handlers({
+    -- Default handler
+    default_handler,
+    ["gopls"] = gopls,
+    ["jsonls"] = jsonls,
+    ["rust_analyzer"] = rust_analyzer,
+    ["sumneko_lua"] = sumneko_lua,
+    ["volar"] = volar,
+  })
+
+  require("fidget").setup()
 end
 
 return M

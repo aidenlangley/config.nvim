@@ -8,7 +8,8 @@ return {
   "nvim-lua/plenary.nvim",
   "nvim-tree/nvim-web-devicons",
   "simrat39/rust-tools.nvim",
-  "stevearc/dressing.nvim",
   "tpope/vim-fugitive",
   "tpope/vim-rhubarb",
+
+  { "stevearc/dressing.nvim", event = "VimEnter" },
 }

@@ -1,5 +1,6 @@
 local M = {
   "feline-nvim/feline.nvim",
+  event = "VimEnter",
 }
 
 function M.config()
@@ -14,15 +15,6 @@ function M.config()
     VISUAL = "blue",
     TERM = "yellow",
   }
-
-  local function get_sep(str, fg, bg)
-    local sep = { str = str }
-    sep["hl"] = {}
-    sep.hl["bg"] = bg
-    sep.hl["fg"] = fg
-
-    return sep
-  end
 
   local mode_provider = {
     provider = "vi_mode",
@@ -45,6 +37,7 @@ function M.config()
       return require("feline.providers.file").file_encoding() ~= "UTF-8"
     end,
     provider = "file_encoding",
+    hl = { bg = "grey" },
     left_sep = "block",
     priority = 2,
   }
@@ -57,24 +50,13 @@ function M.config()
         case = "lowercase",
       },
     },
-    hl = { fg = "green" },
+    hl = { bg = "grey" },
     left_sep = "block",
     priority = 2,
   }
 
-  local file_info_provider = {
-    provider = {
-      name = "file_info",
-      opts = { type = "unique-short" },
-    },
-    hl = { fg = "light-grey" },
-    left_sep = "block",
-    icon = "",
-    priority = 3,
-  }
-
   local attached_clients_provider = {
-    provider = "lsp_client_names",
+    provider = require("utils.lsp").get_clients,
     hl = { fg = "light-grey" },
     icon = "",
     left_sep = "block",
@@ -110,18 +92,33 @@ function M.config()
     provider = "git_diff_added",
     priority = 3,
     hl = { fg = "green" },
+    icon = {
+      str = "+",
+      hl = { fg = "green" },
+    },
+    left_sep = "block",
   }
 
   local git_diff_removed_provider = {
     provider = "git_diff_removed",
     priority = 3,
     hl = { fg = "red" },
+    icon = {
+      str = "-",
+      hl = { fg = "red" },
+    },
+    left_sep = "block",
   }
 
   local git_diff_changed_provider = {
     provider = "git_diff_changed",
     priority = 3,
     hl = { fg = "yellow" },
+    icon = {
+      str = "~",
+      hl = { fg = "yellow" },
+    },
+    left_sep = "block",
   }
 
   local diag_errors_provider = {
@@ -153,32 +150,31 @@ function M.config()
         -- LEFT
         {
           mode_provider,
-          file_encoding_provider,
-          file_type_provider,
-          -- file_info_provider,
+          diag_errors_provider,
+          diag_warnings_provider,
+          diag_hints_provider,
+          diag_info_provider,
           attached_clients_provider,
         },
         -- MIDDLE
         {},
         -- RIGHT
         {
-          diag_info_provider,
-          diag_hints_provider,
-          diag_warnings_provider,
-          diag_errors_provider,
           git_diff_changed_provider,
           git_diff_removed_provider,
           git_diff_added_provider,
           git_branch_provider,
+          file_encoding_provider,
+          file_type_provider,
           position_provider,
           scroll_bar_provider,
         },
       },
       inactive = {
         -- LEFT
-        {
-          file_info_provider,
-        },
+        {},
+        -- MIDDLE
+        {},
         -- RIGHT
         {},
       },

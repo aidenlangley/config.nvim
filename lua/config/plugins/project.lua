@@ -2,7 +2,7 @@ local M = {
   "ahmedkhalf/project.nvim",
 }
 
-function M.config()
+function M.init()
   local patterns = {
     ".git",
     ".gitignore",

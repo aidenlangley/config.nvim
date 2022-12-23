@@ -1,7 +1,6 @@
 local M = {
   "sainnhe/gruvbox-material",
-  lazy = false,
-  enabled = true,
+  event = "VimEnter",
 }
 
 function M.config()

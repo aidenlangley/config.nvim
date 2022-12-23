@@ -1,12 +1,13 @@
 local M = {
   "nvim-neo-tree/neo-tree.nvim",
+  event = "VimEnter",
 
   branch = "v2.x",
   dependencies = { "MunifTanjim/nui.nvim" },
 }
 
 function M.config()
-  vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
+  vim.cmd([[let g:neo_tree_remove_legacy_commands = 1]])
 
   local config = {
     close_if_last_window = true,
@@ -25,7 +26,6 @@ function M.config()
         buffers = " buf",
         git_status = " git",
       },
-      content_layout = "center",
     },
     default_component_configs = {
       git_status = {
@@ -33,11 +33,11 @@ function M.config()
           added = "",
           modified = "",
           deleted = "✖",
-          renamed = "",
+          renamed = "R",
           untracked = "?",
-          ignored = "",
-          unstaged = "",
-          staged = "",
+          ignored = "I",
+          unstaged = "U",
+          staged = "S",
           conflict = "",
         },
       },

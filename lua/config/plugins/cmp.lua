@@ -13,17 +13,26 @@ local M = {
   },
 }
 
+local function has_words_before()
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0
+    and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
+local sources = {
+  { name = "buffer" },
+  { name = "luasnip" },
+  { name = "nvim_lsp" },
+  { name = "nvim_lua" },
+  { name = "path" },
+  { name = "emoji" },
+}
+
 function M.config()
   local cmp = require("cmp")
   local luasnip = require("luasnip")
   local lspkind = require("lspkind")
   local has_neogen, neogen = pcall(require, "neogen")
-
-  local has_words_before = function()
-    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-    return col ~= 0
-      and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-  end
 
   if cmp ~= nil then
     local select_next = function(fallback)
@@ -59,8 +68,12 @@ function M.config()
         format = lspkind.cmp_format({
           mode = "symbol_text",
           menu = {
-            nvim_lua = "(Lua)",
+            buffer = "(Buffer)",
+            emoji = "(Emoji)",
+            luasnip = "(LuaSnip)",
             nvim_lsp = "(LSP)",
+            nvim_lua = "(Lua)",
+            path = "(Path)",
           },
         }),
       },
@@ -69,14 +82,7 @@ function M.config()
           luasnip.lsp_expand(args.body)
         end,
       },
-      sources = {
-        { name = "buffer" },
-        { name = "emoji" },
-        { name = "luasnip" },
-        { name = "nvim_lsp" },
-        { name = "nvim_lua" },
-        { name = "path" },
-      },
+      sources = sources,
       mapping = cmp.mapping.preset.insert({
         -- Tab:
         ["<Tab>"] = cmp.mapping(select_next),

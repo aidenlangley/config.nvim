@@ -96,11 +96,11 @@ function M.lsp(_, bufnr)
 
   -- Go to...
   wk.register({
-    [";"] = { utils.cmd("Alpha"), "Dashboard" },
     c = {
       name = "[C]ode...",
       a = { vim.lsp.buf.code_action, "[A]ctions" },
-      f = { "[F]ormat" },
+      f = { require("utils.lsp.auto_format").format, "[F]ormat" },
+      F = { require("utils.lsp.auto_format").toggle, "Toggle [F]ormatting Automatically" },
       K = { vim.lsp.buf.hover, "[H]over" },
       s = { vim.lsp.buf.signature_help, "[S]ignature help" },
     },
@@ -124,7 +124,7 @@ function M.lsp(_, bufnr)
   }, { prefix = "<Leader>", mode = { "n", "v" } })
 
   wk.register({
-    f = { "[F]ormat selection" },
+    f = { vim.lsp.buf.range_formatting, "[F]ormat selection" },
   }, { prefix = "<Leader>c", mode = "v" })
 
   -- Diagnostics
@@ -134,6 +134,10 @@ end
 
 vim.keymap.set("n", "<C-s>", utils.cmd("w"), { desc = "Write buffer" })
 vim.keymap.set("n", "<C-e>", require("utils").cmd("Neotree toggle"), { desc = "Explorer" })
+
+-- Copy & paste
+vim.keymap.set("v", "<C-c>", utils.cmd("'<,'>yank"), { desc = "Yank (copy)" })
+vim.keymap.set("n", "<C-v>", utils.cmd("put"), { desc = "Put (paste)" })
 
 -- Move through buffers
 vim.keymap.set("n", "<C-h>", utils.cmd("bp"), { desc = "Previous Buffer", silent = true })

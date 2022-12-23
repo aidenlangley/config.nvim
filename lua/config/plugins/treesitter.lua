@@ -11,6 +11,13 @@ local M = {
   },
 }
 
+function M.init()
+  require("which-key").register(
+    { d = { name = "[D]efinition..." } },
+    { prefix = "<Leader>", mode = { "n", "v" } }
+  )
+end
+
 function M.config()
   local config = {
     auto_install = true,
@@ -24,6 +31,7 @@ function M.config()
       "rust",
       "svelte",
       "toml",
+      "vim",
       "yaml",
     },
     autotag = { enable = true },
@@ -106,10 +114,6 @@ function M.config()
   }
 
   require("nvim-treesitter.configs").setup(config)
-  require("which-key").register(
-    { d = { name = "[D]efinition..." } },
-    { prefix = "<Leader>", mode = { "n", "v" } }
-  )
 end
 
 return M
