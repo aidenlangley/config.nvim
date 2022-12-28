@@ -21,8 +21,6 @@ function M.config()
       nls.builtins.formatting.prettierd.with({
         only_local = "node_modules/.bin",
         condition = node_filter,
-        extra_filetypes = { "yaml", "yml" },
-        args = { "--no-bracket-spacing" },
       }),
       nls.builtins.diagnostics.eslint_d.with({
         prefer_local = "node_modules/.bin",
@@ -31,7 +29,10 @@ function M.config()
       -- https://github.com/jose-elias-alvarez/typescript.nvim#null-ls
       require("typescript.extensions.null-ls.code-actions"),
       -- CSS linter
-      nls.builtins.diagnostics.stylelint,
+      nls.builtins.diagnostics.stylelint.with({
+        only_local = "node_modules/.bin",
+        condition = node_filter,
+      }),
       -- Fish
       nls.builtins.formatting.fish_indent,
       nls.builtins.diagnostics.fish,
@@ -53,6 +54,10 @@ function M.config()
       nls.builtins.diagnostics.shellcheck,
       nls.builtins.code_actions.shellcheck,
       -- Yaml
+      nls.builtins.formatting.prettierd.with({
+        extra_filetypes = { "yaml", "yml" },
+        args = { "--no-bracket-spacing" },
+      }),
       nls.builtins.diagnostics.yamllint,
     },
     diagnostics_format = "[#{c}] #{m} (#{s})",

@@ -5,7 +5,7 @@ local M = {
 
 function M.config()
   require("symbols-outline").setup({
-    width = 32,
+    width = 28,
   })
 end
 

@@ -5,7 +5,7 @@ local M = {
 
 function M.config()
   require("toggleterm").setup({
-    open_mapping = [[<C-t>]],
+    open_mapping = "<C-t>",
     direction = "horizontal",
     size = 12,
     persist_size = true,

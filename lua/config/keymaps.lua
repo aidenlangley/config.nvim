@@ -83,7 +83,7 @@ function M.lsp(_, bufnr)
       desc = "LSP: " .. desc
     end
 
-    vim.keymap.set("n", keys, func, { bufnr = bufnr, desc = desc })
+    vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
   end
 
   nmap("<F2>", vim.lsp.buf.rename, "Rename")

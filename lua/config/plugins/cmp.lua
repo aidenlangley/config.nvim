@@ -21,11 +21,13 @@ end
 
 local sources = {
   { name = "buffer" },
+  { name = "crates" },
+  { name = "emoji" },
   { name = "luasnip" },
+  { name = "neorg" },
   { name = "nvim_lsp" },
   { name = "nvim_lua" },
   { name = "path" },
-  { name = "emoji" },
 }
 
 function M.config()

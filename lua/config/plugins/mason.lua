@@ -8,8 +8,11 @@ local M = {
 
 local tools = {
   "black",
+  "commitlint",
   "eslint_d",
   "flake8",
+  "gofumpt",
+  "golines",
   "isort",
   "luacheck",
   "prettierd",
