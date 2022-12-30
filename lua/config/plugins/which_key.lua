@@ -3,7 +3,7 @@ local M = {
   event = "VeryLazy",
 }
 
-function M.init()
+function M.config()
   local wk = require("which-key")
   wk.setup({
     key_labels = {
@@ -19,13 +19,13 @@ function M.init()
       ["<Tab>"] = "TAB",
       ["<s-tab>"] = "S-TAB",
       ["<S-Tab>"] = "S-TAB",
-      ["<backspace>"] = "<-",
-      ["<Backspace>"] = "<-",
+      ["<bs>"] = "<-",
+      ["<BS>"] = "<-",
     },
   })
 
   wk.register({
-    { ["<Backspace>"] = { name = "Show all..." } },
+    { ["<BS>"] = { name = "Show all..." } },
   }, { prefix = "<Leader>", mode = { "n", "v" } })
 end
 

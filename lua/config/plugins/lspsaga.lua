@@ -1,6 +1,6 @@
 local M = {
   "glepnir/lspsaga.nvim",
-  event = "BufEnter",
+  event = "BufWinEnter",
 }
 
 function M.config()

@@ -29,7 +29,6 @@ function M.config()
     end,
     left_sep = "block",
     right_sep = "block",
-    priority = 1,
   }
 
   local file_encoding_provider = {
@@ -39,7 +38,6 @@ function M.config()
     provider = "file_encoding",
     hl = { bg = "grey" },
     left_sep = "block",
-    priority = 2,
   }
 
   local file_type_provider = {
@@ -52,7 +50,6 @@ function M.config()
     },
     hl = { bg = "grey" },
     left_sep = "block",
-    priority = 2,
   }
 
   local attached_clients_provider = {
@@ -62,13 +59,12 @@ function M.config()
     hl = { fg = "light-grey" },
     left_sep = "block",
     update = { "FileType" },
-    priority = 1,
+    priority = -1,
   }
 
   local scroll_bar_provider = {
     provider = "scroll_bar",
     hl = { fg = "cyan" },
-    priority = 1,
   }
 
   local position_provider = {
@@ -79,19 +75,16 @@ function M.config()
     hl = { bg = "grey" },
     left_sep = "block",
     right_sep = "block",
-    priority = 1,
   }
 
   local git_branch_provider = {
     provider = "git_branch",
     right_sep = "block",
     left_sep = "block",
-    priority = 3,
   }
 
   local git_diff_added_provider = {
     provider = "git_diff_added",
-    priority = 3,
     hl = { fg = "green" },
     icon = {
       str = "+",
@@ -102,7 +95,6 @@ function M.config()
 
   local git_diff_removed_provider = {
     provider = "git_diff_removed",
-    priority = 3,
     hl = { fg = "red" },
     icon = {
       str = "-",
@@ -113,7 +105,6 @@ function M.config()
 
   local git_diff_changed_provider = {
     provider = "git_diff_changed",
-    priority = 3,
     hl = { fg = "yellow" },
     icon = {
       str = "~",
@@ -125,37 +116,29 @@ function M.config()
   local diag_errors_provider = {
     provider = "diagnostic_errors",
     hl = { fg = "red" },
-    priority = 2,
   }
 
   local diag_warnings_provider = {
     provider = "diagnostic_warnings",
     hl = { fg = "yellow" },
-    priority = 2,
   }
 
   local diag_hints_provider = {
     provider = "diagnostic_hints",
-    priority = 2,
   }
 
   local diag_info_provider = {
     provider = "diagnostic_info",
     hl = { fg = "light-grey" },
-    priority = 2,
   }
 
   local navic = require("nvim-navic")
   local navic_provider = {
-    provider = function()
-      return navic.get_location()
-    end,
-    enabled = function()
-      return navic.is_available()
-    end,
+    provider = navic.get_location,
+    enabled = navic.is_available,
     hl = { fg = "grey" },
     left_sep = "block",
-    priority = 3,
+    priority = -1,
   }
 
   feline.setup({

@@ -1,6 +1,6 @@
 local M = {
   "simrat39/symbols-outline.nvim",
-  cmd = "SymbolsOutline",
+  cmd = { "SymbolsOutline" },
 }
 
 function M.config()

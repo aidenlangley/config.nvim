@@ -1,6 +1,6 @@
 local M = {
   "folke/zen-mode.nvim",
-  cmd = "ZenMode",
+  cmd = { "ZenMode" },
 
   dependencies = {
     "folke/twilight.nvim",

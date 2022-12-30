@@ -1,10 +1,8 @@
 local M = {
   "echasnovski/mini.nvim",
-  event = "BufReadPre",
+  event = "BufWinEnter",
 
-  dependencies = {
-    { "JoosepAlviste/nvim-ts-context-commentstring" },
-  },
+  dependencies = { "JoosepAlviste/nvim-ts-context-commentstring" },
 }
 
 local function surround()
@@ -19,6 +17,8 @@ local function surround()
       highlight = "",
       replace = "cs", -- cs([ will turn brackets to square brackets
       update_n_lines = "",
+      suffix_last = "",
+      suffix_next = "",
     },
   }
 
@@ -27,6 +27,11 @@ end
 
 local function comment()
   local config = {
+    mappings = {
+      comment = "gc",
+      comment_line = "",
+      textobject = "gc",
+    },
     hooks = {
       pre = function()
         require("ts_context_commentstring.internal").update_commentstring({})
@@ -37,13 +42,11 @@ local function comment()
   require("mini.comment").setup(config)
 end
 
-function M.init()
-  vim.keymap.set("n", "<C-d>", function()
-    require("mini.bufremove").delete(0, false)
-  end, { desc = "Delete buffer" })
-end
-
 function M.config()
+  vim.keymap.set("n", "<Leader>d", function()
+    require("mini.bufremove").delete(0, false)
+  end, { desc = "[D]elete buffer", noremap = true })
+
   local enable_these = { "cursorword", "tabline" }
   for _, module in ipairs(enable_these) do
     require("mini." .. module).setup()

@@ -14,7 +14,8 @@ function M.get_clients(bufnr)
     end
   end
 
-  return table.concat(clients, ", "), " "
+  return tostring(#clients), " "
+  -- return table.concat(clients, "|"), " "
 end
 
 return M

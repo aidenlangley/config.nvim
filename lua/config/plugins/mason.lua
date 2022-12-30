@@ -1,9 +1,7 @@
 local M = {
   "williamboman/mason.nvim",
 
-  dependencies = {
-    "williamboman/mason-lspconfig.nvim",
-  },
+  dependencies = { "williamboman/mason-lspconfig.nvim" },
 }
 
 local tools = {
@@ -22,11 +20,11 @@ local tools = {
 }
 
 local function check()
-  local mr = require("mason-registry")
+  local registry = require("mason-registry")
   for _, tool in ipairs(tools) do
-    local p = mr.get_package(tool)
-    if not p:is_installed() then
-      p:install()
+    local pkg = registry.get_package(tool)
+    if not pkg:is_installed() then
+      pkg:install()
     end
   end
 end

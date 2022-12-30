@@ -44,10 +44,40 @@ local function setup_colours()
   vim.api.nvim_set_hl(0, "NavicSeparator", opts(colours["light-grey"]))
 end
 
+local icons = {
+  File = " ",
+  Module = " ",
+  Namespace = " ",
+  Package = " ",
+  Class = " ",
+  Method = " ",
+  Property = " ",
+  Field = " ",
+  Constructor = " ",
+  Enum = " ",
+  Interface = " ",
+  Function = " ",
+  Variable = " ",
+  Constant = " ",
+  String = " ",
+  Number = " ",
+  Boolean = " ",
+  Array = " ",
+  Object = " ",
+  Key = " ",
+  Null = " ",
+  EnumMember = " ",
+  Struct = " ",
+  Event = " ",
+  Operator = " ",
+  TypeParameter = " ",
+}
+
 function M.config()
   require("nvim-navic").setup({
     separator = " ",
     highlight = true,
+    icons = icons,
     depth_limit = 3,
   })
 

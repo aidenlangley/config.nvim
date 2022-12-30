@@ -1,7 +1,7 @@
 local M = {
   "toppair/peek.nvim",
   build = "deno task --quiet build:fast",
-  cmd = "Peek",
+  cmd = { "Peek" },
 }
 
 function M.init()

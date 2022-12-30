@@ -1,10 +1,9 @@
 local M = {
   "ThePrimeagen/refactoring.nvim",
-  event = "BufEnter",
+  event = "BufWinEnter",
 
   dependencies = {
     "nvim-lua/plenary.nvim",
-    "nvim-treesitter/nvim-treesitter",
   },
 }
 

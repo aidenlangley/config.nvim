@@ -1,6 +1,8 @@
 local M = {
   "karb94/neoscroll.nvim",
   keys = {
+    "<C-u>",
+    "<C-d>",
     "<PageUp>",
     "<PageDown>",
     "<Home>",
@@ -17,6 +19,8 @@ function M.config()
   })
 
   local mappings = {}
+  mappings["<C-u>"] = { "scroll", { "-vim.wo.scroll", "true", "254" } }
+  mappings["<C-d>"] = { "scroll", { "vim.wo.scroll", "true", "254" } }
   mappings["<PageUp>"] = { "scroll", { "-vim.wo.scroll", "true", "254" } }
   mappings["<PageDown>"] = { "scroll", { "vim.wo.scroll", "true", "254" } }
   mappings["<Home>"] = { "scroll", { "-vim.api.nvim_win_get_height(0)", "true", "512" } }

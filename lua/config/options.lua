@@ -1,9 +1,6 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
--- Maps <Space> to "no operation"
-vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
-
 -- Set highlight on search
 vim.o.hlsearch = false
 
@@ -65,9 +62,6 @@ vim.o.expandtab = true
 vim.o.shiftwidth = 2
 vim.o.smartindent = true
 vim.o.tabstop = 2
-
--- Enable lazy loading filetype specific code
-vim.opt.filetype.plugin = "true"
 
 -- Use terminal colours
 vim.o.termguicolors = true

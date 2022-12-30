@@ -1,6 +1,6 @@
 local M = {
   "takac/vim-hardtime",
-  event = { "BufEnter" },
+  event = { "BufWinEnter" },
   cmd = { "HardTimeOn", "HardTimeOff", "HardTimeToggle" },
   enabled = true,
 }
@@ -11,7 +11,7 @@ end
 
 function M.config()
   -- Allowed to type again after this many milliseconds
-  vim.g.hardtime_timeout = 500
+  vim.g.hardtime_timeout = 1000
 
   -- With this on, you are allowed to press jl, for example, without interference
   vim.g.hardtime_allow_different_key = true

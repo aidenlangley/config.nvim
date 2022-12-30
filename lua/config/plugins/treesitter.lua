@@ -1,7 +1,7 @@
 local M = {
   "nvim-treesitter/nvim-treesitter",
   build = ":TSUpdate",
-  event = "BufReadPre",
+  event = "BufReadPost",
 
   dependencies = {
     "JoosepAlviste/nvim-ts-context-commentstring",
@@ -42,7 +42,7 @@ function M.config()
         init_selection = "<C-Space>",
         node_incremental = "<C-Space>",
         scope_incremental = "<C-s>",
-        node_decremental = "<C-Backspace>",
+        node_decremental = "<C-BS>",
       },
     },
     indent = { enable = false },
@@ -51,8 +51,8 @@ function M.config()
         enable = true,
         border = "none",
         peek_definition_code = {
-          ["<Leader>df"] = "@function.outer",
-          ["<Leader>dF"] = "@class.outer",
+          ["gdf"] = "@function.outer",
+          ["gdF"] = "@class.outer",
         },
       },
       move = {
@@ -107,11 +107,6 @@ function M.config()
   }
 
   require("nvim-treesitter.configs").setup(config)
-
-  require("which-key").register(
-    { d = { name = "[D]efinition..." } },
-    { prefix = "<Leader>", mode = { "n", "v" } }
-  )
 end
 
 return M

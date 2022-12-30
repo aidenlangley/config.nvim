@@ -8,7 +8,6 @@ function M.config()
     ["*"] = {
       RGB = true,
       RRGGBB = true,
-      names = true,
       RRGGBBAA = true,
       mode = "background",
     },

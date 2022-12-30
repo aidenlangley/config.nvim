@@ -3,9 +3,7 @@ local M = {
   name = "lsp_config",
   event = "BufReadPre",
 
-  dependencies = {
-    "williamboman/mason.nvim",
-  },
+  dependencies = { "williamboman/mason.nvim" },
 }
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()

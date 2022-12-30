@@ -1,6 +1,6 @@
 local M = {
   "jose-elias-alvarez/null-ls.nvim",
-  event = "BufReadPre",
+  event = "BufReadPost",
 }
 
 function M.config()
@@ -51,7 +51,7 @@ function M.config()
       -- Shell
       nls.builtins.formatting.shfmt,
       nls.builtins.diagnostics.shellcheck,
-      nls.builtins.code_actions.shellcheck,
+      -- nls.builtins.code_actions.shellcheck,
       -- Yaml
       nls.builtins.formatting.prettierd.with({
         extra_filetypes = { "yaml", "yml" },
@@ -60,6 +60,7 @@ function M.config()
       nls.builtins.diagnostics.yamllint,
     },
     diagnostics_format = "[#{c}] #{m} (#{s})",
+    root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", ".git"),
   })
 
   vim.keymap.set("n", "<Leader>sn", require("utils").cmd("NullLsInfo"), { desc = "null-ls info" })

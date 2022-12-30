@@ -1,6 +1,6 @@
 local M = {
   "danymat/neogen",
-  event = "BufEnter",
+  event = "BufWinEnter",
 }
 
 function M.config()

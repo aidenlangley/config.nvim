@@ -1,6 +1,6 @@
 local M = {
   "petertriho/nvim-scrollbar",
-  event = "BufEnter",
+  event = "BufWinEnter",
 }
 
 function M.config()

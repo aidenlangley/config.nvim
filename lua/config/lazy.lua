@@ -4,12 +4,11 @@ if not vim.loop.fs_stat(lazypath) then
     "git",
     "clone",
     "--filter=blob:none",
-    "--single-branch",
     "https://github.com/folke/lazy.nvim.git",
     lazypath,
   })
 end
-vim.opt.runtimepath:prepend(lazypath)
+vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup("config.plugins", {
   defaults = {
@@ -61,6 +60,20 @@ local function nmap(keys, func, desc)
   vim.keymap.set("n", keys, func, { desc = desc })
 end
 
+nmap("<Leader>su", utils.cmd("Lazy update"), "Update")
 nmap("<Leader>ss", utils.cmd("Lazy sync"), "Sync")
 nmap("<Leader>sp", utils.cmd("Lazy profile"), "Profile")
 nmap("<Leader>sh", utils.cmd("Lazy help"), "Help")
+
+vim.keymap.set(
+  "n",
+  "<Leader>sg",
+  utils.cmd("Telescope live_grep cwd=~/.local/share/nvim/lazy"),
+  { desc = "Plugins: Grep" }
+)
+vim.keymap.set(
+  "n",
+  "<Leader>sf",
+  utils.cmd("Telescope find_files cwd=~/.local/share/nvim/lazy"),
+  { desc = "Plugins: Find" }
+)

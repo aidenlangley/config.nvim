@@ -7,9 +7,7 @@ return {
   "nvim-lua/plenary.nvim",
   "nvim-tree/nvim-web-devicons",
   "simrat39/rust-tools.nvim",
-  "tpope/vim-fugitive",
-  "tpope/vim-rhubarb",
 
   { "fladson/vim-kitty", ft = "kitty" },
-  { "stevearc/dressing.nvim", event = "VimEnter" },
+  { "stevearc/dressing.nvim", event = "VeryLazy" },
 }

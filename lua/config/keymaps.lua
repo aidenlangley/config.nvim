@@ -2,12 +2,6 @@ local tsb = require("telescope.builtin")
 local wk = require("which-key")
 local utils = require("utils")
 
-local function map(keymaps)
-  for _, keymap in ipairs(keymaps) do
-    vim.keymap.set(keymap[1], keymap[2], keymap[3], keymap[4])
-  end
-end
-
 local M = {}
 
 function M.settings()
@@ -20,18 +14,21 @@ function M.settings()
 end
 
 function M.buffers()
-  vim.keymap.set("n", "<C-u>", utils.cmd("%bd|e#|bd#"), { desc = "[U]nload other buffers" })
+  -- Close buffers
+  vim.keymap.set("n", "<Leader>d", utils.cmd("bd"), { desc = "[D]elete buffer" })
+  vim.keymap.set("n", "<Leader>D", utils.cmd("%bd|e#|bd#"), { desc = "[D]elete others" })
 
-  wk.register({
-    b = {
-      name = "[B]uffers...",
-      d = { utils.cmd("bd"), "Unload/[D]elete" },
-      D = { utils.cmd("%bd|e#|bd#"), "Unload/[D]elete others" },
-      n = { utils.cmd("enew"), "New" },
-      w = { utils.cmd("w!"), "Write" },
-      W = { utils.cmd("wa!"), "Write all" },
-    },
-  }, { prefix = "<Leader>" })
+  -- Write buffers
+  vim.keymap.set("n", "<C-s>", utils.cmd("w"), { desc = "Write buffer" })
+  vim.keymap.set("n", "<Leader>w", utils.cmd("w!"), { desc = "[W]rite buffer" })
+  vim.keymap.set("n", "<Leader>W", utils.cmd("wa!"), { desc = "[W]rite all" })
+
+  -- New buffer
+  vim.keymap.set("n", "<Leader>n", utils.cmd("enew"), { desc = "[N]ew buffer" })
+
+  -- Move through buffers
+  vim.keymap.set("n", "<C-h>", utils.cmd("bp"), { desc = "Previous buffer", silent = true })
+  vim.keymap.set("n", "<C-l>", utils.cmd("bn"), { desc = "Next buffer", silent = true })
 end
 
 function M.telescope()
@@ -58,7 +55,7 @@ function M.telescope()
       k = { tsb.keymaps, "[K]eymaps" },
       m = { tsb.marks, "[M]arks" },
       p = { require("telescope").extensions.projects.projects, "[P]rojects" },
-      r = { tsb.recent_files, "[R]ecent files" },
+      r = { tsb.oldfiles, "[R]ecent files" },
       t = { utils.cmd("Telescope"), "[T]elescope" },
     },
   })
@@ -128,20 +125,13 @@ function M.lsp(_, bufnr)
   vim.keymap.set("n", "<Leader>sl", utils.cmd("LspInfo"), { desc = "LSP info" })
 end
 
-map({
-  { "n", "<C-s>", utils.cmd("w"), { desc = "Write buffer" } },
-})
-
 -- Copy & paste
 vim.keymap.set("v", "<C-c>", utils.cmd("'<,'>yank"), { desc = "Yank (copy)" })
 vim.keymap.set("n", "<C-v>", utils.cmd("put"), { desc = "Put (paste)" })
 
--- Move through buffers
-vim.keymap.set("n", "<C-h>", utils.cmd("bp"), { desc = "Previous Buffer", silent = true })
-vim.keymap.set("n", "<C-l>", utils.cmd("bn"), { desc = "Next Buffer", silent = true })
-
 -- Quit if not modified, else request confirmation
-vim.keymap.set("n", "<C-q>", utils.smart_quit, { desc = "Quit" })
+vim.keymap.set("n", "<Leader>q", utils.smart_quit, { desc = "[Q]uit" })
+vim.keymap.set("n", "<C-q>", utils.smart_quit, { desc = "[Q]uit" })
 
 -- Code actions & formatting can function without a language server
 vim.keymap.set("n", "<C-.>", vim.lsp.buf.code_action, { desc = "Code actions" })

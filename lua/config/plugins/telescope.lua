@@ -31,7 +31,7 @@ function M.config()
     git_commits = { theme = "ivy" },
     git_status = { theme = "ivy" },
     grep_string = { theme = "dropdown" },
-    -- keymaps = { theme = "dropdown" },
+    keymaps = { theme = "ivy" },
     -- help_tags = { theme = "dropdown" },
     live_grep = { theme = "dropdown" },
     lsp_definitions = { theme = "ivy" },
