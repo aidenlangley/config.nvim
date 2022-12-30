@@ -1,6 +1,5 @@
 local M = {
   "jose-elias-alvarez/null-ls.nvim",
-  name = "null_ls",
   event = "BufReadPre",
 }
 

@@ -1,8 +1,16 @@
 local M = {
   "ThePrimeagen/refactoring.nvim",
+  event = "BufEnter",
+
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+    "nvim-treesitter/nvim-treesitter",
+  },
 }
 
-function M.init()
+function M.config()
+  require("refactoring").setup()
+
   local function refactor(op)
     require("refactoring").refactor(op)
   end
@@ -66,10 +74,6 @@ function M.init()
       "Extract [V]ariable",
     },
   }, { prefix = refactor_prefix, mode = "v" })
-end
-
-function M.config()
-  require("refactoring").setup()
 end
 
 return M

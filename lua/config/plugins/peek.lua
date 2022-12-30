@@ -16,7 +16,7 @@ function M.init()
 end
 
 function M.config()
-  require("peek").setup({ theme = "light" })
+  require("peek").setup({ theme = "dark" })
 end
 
 return M

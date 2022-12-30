@@ -1,6 +1,6 @@
 local M = {
   "ggandor/leap.nvim",
-  event = "BufReadPost",
+  event = "VeryLazy",
 }
 
 function M.config()

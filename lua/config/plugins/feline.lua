@@ -1,6 +1,6 @@
 local M = {
   "feline-nvim/feline.nvim",
-  event = "VimEnter",
+  event = "VeryLazy",
 }
 
 function M.config()
@@ -60,7 +60,6 @@ function M.config()
       return require("utils.lsp").get_clients(vim.api.nvim_get_current_buf())
     end,
     hl = { fg = "light-grey" },
-    icon = "",
     left_sep = "block",
     update = { "FileType" },
     priority = 1,
@@ -146,6 +145,19 @@ function M.config()
     priority = 2,
   }
 
+  local navic = require("nvim-navic")
+  local navic_provider = {
+    provider = function()
+      return navic.get_location()
+    end,
+    enabled = function()
+      return navic.is_available()
+    end,
+    hl = { fg = "grey" },
+    left_sep = "block",
+    priority = 3,
+  }
+
   feline.setup({
     components = {
       active = {
@@ -156,12 +168,13 @@ function M.config()
           diag_warnings_provider,
           diag_hints_provider,
           diag_info_provider,
-          attached_clients_provider,
+          navic_provider,
         },
         -- MIDDLE
         {},
         -- RIGHT
         {
+          attached_clients_provider,
           git_diff_changed_provider,
           git_diff_removed_provider,
           git_diff_added_provider,

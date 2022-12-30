@@ -1,5 +1,6 @@
 local M = {
   "ahmedkhalf/project.nvim",
+  event = "VeryLazy",
 }
 
 function M.init()
@@ -14,9 +15,7 @@ function M.init()
     "package.json",
   }
 
-  require("project_nvim").setup({
-    patterns = patterns,
-  })
+  require("project_nvim").setup({ patterns = patterns })
 end
 
 return M

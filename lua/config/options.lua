@@ -1,6 +1,9 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- Maps <Space> to "no operation"
+vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
+
 -- Set highlight on search
 vim.o.hlsearch = false
 
@@ -78,7 +81,7 @@ vim.o.sidescrolloff = 8
 
 -- Title string
 vim.o.title = true
-vim.o.titlestring = "%<%F%="
+vim.o.titlestring = "nvim: %<%F%="
 
 -- Don't load the plugins below
 local builtins = {

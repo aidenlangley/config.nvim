@@ -2,6 +2,12 @@ local tsb = require("telescope.builtin")
 local wk = require("which-key")
 local utils = require("utils")
 
+local function map(keymaps)
+  for _, keymap in ipairs(keymaps) do
+    vim.keymap.set(keymap[1], keymap[2], keymap[3], keymap[4])
+  end
+end
+
 local M = {}
 
 function M.settings()
@@ -122,7 +128,9 @@ function M.lsp(_, bufnr)
   vim.keymap.set("n", "<Leader>sl", utils.cmd("LspInfo"), { desc = "LSP info" })
 end
 
-vim.keymap.set("n", "<C-s>", utils.cmd("w"), { desc = "Write buffer" })
+map({
+  { "n", "<C-s>", utils.cmd("w"), { desc = "Write buffer" } },
+})
 
 -- Copy & paste
 vim.keymap.set("v", "<C-c>", utils.cmd("'<,'>yank"), { desc = "Yank (copy)" })
@@ -131,8 +139,6 @@ vim.keymap.set("n", "<C-v>", utils.cmd("put"), { desc = "Put (paste)" })
 -- Move through buffers
 vim.keymap.set("n", "<C-h>", utils.cmd("bp"), { desc = "Previous Buffer", silent = true })
 vim.keymap.set("n", "<C-l>", utils.cmd("bn"), { desc = "Next Buffer", silent = true })
-vim.keymap.set("n", "<C-Left>", utils.cmd("bp"), { desc = "Previous Buffer", silent = true })
-vim.keymap.set("n", "<C-Right>", utils.cmd("bn"), { desc = "Next Buffer", silent = true })
 
 -- Quit if not modified, else request confirmation
 vim.keymap.set("n", "<C-q>", utils.smart_quit, { desc = "Quit" })
@@ -156,12 +162,12 @@ vim.keymap.set("x", "N", "'nN'[v:searchforward]", { desc = "Search backwards", e
 vim.keymap.set("o", "N", "'nN'[v:searchforward]", { desc = "Search backwards", expr = true })
 
 -- Move lines
-vim.keymap.set("n", "<S-Down>", ":m .+1<CR>==", { desc = "Move line down" })
-vim.keymap.set("v", "<S-Down>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
-vim.keymap.set("i", "<S-Down>", "<Esc>:m .+1<CR>==gi", { desc = "Move line down" })
-vim.keymap.set("n", "<S-Up>", ":m .-2<CR>==", { desc = "Move line up" })
-vim.keymap.set("v", "<S-Up>", ":m '<-2<CR>gv=gv", { desc = "move selection up" })
-vim.keymap.set("i", "<S-Up>", "<Esc>:m .-2<CR>==gi", { desc = "move line up" })
+vim.keymap.set("n", "<M-j>", ":m .+1<CR>==", { desc = "Move line down" })
+vim.keymap.set("v", "<M-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
+vim.keymap.set("i", "<M-j>", "<Esc>:m .+1<CR>==gi", { desc = "Move line down" })
+vim.keymap.set("n", "<M-k>", ":m .-2<CR>==", { desc = "Move line up" })
+vim.keymap.set("v", "<M-k>", ":m '<-2<CR>gv=gv", { desc = "move selection up" })
+vim.keymap.set("i", "<M-k>", "<Esc>:m .-2<CR>==gi", { desc = "move line up" })
 
 M.buffers()
 M.git()

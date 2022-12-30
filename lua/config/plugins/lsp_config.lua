@@ -12,6 +12,7 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 
 local function on_attach(client, bufnr)
   require("config.keymaps").lsp(client, bufnr)
+  require("nvim-navic").attach(client, bufnr)
 end
 
 local function default_handler(server_name)
@@ -51,6 +52,9 @@ local function rust_analyzer()
   local rt = require("rust-tools")
   rt.setup({
     tools = {
+      inlay_hints = {
+        highlight = "LspCodeLens",
+      },
       hover_actions = {
         border = "none",
       },

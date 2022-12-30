@@ -1,6 +1,6 @@
 local M = {
   "mcauley-penney/tidy.nvim",
-  event = "BufReadPost",
+  event = "BufEnter",
 }
 
 function M.config()

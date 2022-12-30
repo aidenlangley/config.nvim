@@ -1,6 +1,6 @@
 local M = {
   "danymat/neogen",
-  event = "BufReadPost",
+  event = "BufEnter",
 }
 
 function M.config()

@@ -11,7 +11,7 @@ function M.init()
 end
 
 function M.config()
-  vim.cmd([[let g:neo_tree_remove_legacy_commands = 1]])
+  vim.g.neo_tree_remove_legacy_commands = 1
 
   local config = {
     close_if_last_window = true,

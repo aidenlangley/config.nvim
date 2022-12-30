@@ -15,11 +15,10 @@ require("lazy").setup("config.plugins", {
   defaults = {
     lazy = true,
   },
-  concurrency = 4,
+  concurrency = 1,
   install = {
     colorscheme = {
       "gruvbox-material",
-      "habamax",
     },
   },
   checker = {
@@ -32,6 +31,10 @@ require("lazy").setup("config.plugins", {
     notify = false,
   },
   performance = {
+    cache = {
+      enabled = true,
+      ttl = 3600 * 24 * 5,
+    },
     rtp = {
       disabled_plugins = {
         "gzip",
