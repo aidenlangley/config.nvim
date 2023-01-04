@@ -50,9 +50,6 @@ local function rust_analyzer()
   local rt = require("rust-tools")
   rt.setup({
     tools = {
-      inlay_hints = {
-        highlight = "LspCodeLens",
-      },
       hover_actions = {
         border = "none",
       },
@@ -60,16 +57,12 @@ local function rust_analyzer()
     server = {
       on_attach = function(client, bufnr)
         on_attach(client, bufnr)
-
-        require("which-key").register({
-          A = { rt.code_action_group.code_action_group, "Code [A]ction group" },
-          e = { rt.expand_macro.expand_macro, "[E]xpand macro" },
-          h = { rt.hover_actions.hover_actions, "[H]over actions" },
-        }, { prefix = "<Leader>c", buffer = bufnr })
+        rt.inlay_hints.enable()
       end,
       settings = {
         ["rust-analyzer"] = {
           checkOnSave = { command = "clippy" },
+          inlayHints = { locationLinks = false },
         },
       },
     },

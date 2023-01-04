@@ -70,8 +70,8 @@ vim.o.termguicolors = true
 vim.o.showmode = false
 
 -- Lines to keep above/below & left/right of cursor
-vim.o.scrolloff = 4
-vim.o.sidescrolloff = 8
+vim.o.scrolloff = 8
+vim.o.sidescrolloff = 16
 
 -- Title string
 vim.o.title = true

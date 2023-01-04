@@ -6,6 +6,16 @@ local M = {
 function M.config()
   local wk = require("which-key")
   wk.setup({
+    plugins = {
+      presets = {
+        operators = true,
+        text_objects = true,
+        windows = true,
+        nav = true,
+        z = true,
+        g = false,
+      },
+    },
     key_labels = {
       ["<leader>"] = "SPC",
       ["<Leader>"] = "SPC",

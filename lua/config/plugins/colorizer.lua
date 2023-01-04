@@ -11,6 +11,8 @@ function M.config()
       RRGGBBAA = true,
       mode = "background",
     },
+    "!neo-tree",
+    "!Telescope",
   })
 end
 

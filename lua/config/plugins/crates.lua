@@ -1,6 +1,7 @@
 local M = {
   "saecki/crates.nvim",
   event = "BufRead Cargo.toml",
+  enabled = false,
 
   dependencies = { "nvim-lua/plenary.nvim" },
 }

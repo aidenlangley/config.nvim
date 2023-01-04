@@ -22,7 +22,7 @@ function M.config()
 
   local pickers = {
     -- buffers = { theme = "ivy" },
-    builtin = { theme = "dropdown" },
+    builtin = { theme = "ivy" },
     -- command_history = { theme = "dropdown" },
     current_buffer_fuzzy_find = { theme = "dropdown" },
     diagnostics = { theme = "ivy" },

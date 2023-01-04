@@ -7,6 +7,8 @@ local M = {
     "JoosepAlviste/nvim-ts-context-commentstring",
     "RRethy/nvim-treesitter-textsubjects",
     "nvim-treesitter/nvim-treesitter-textobjects",
+    "nvim-treesitter/playground",
+    "p00f/nvim-ts-rainbow",
     "windwp/nvim-ts-autotag",
   },
 }
@@ -27,6 +29,8 @@ function M.config()
       "vim",
       "yaml",
     },
+
+    -- Plugins
     autotag = { enable = true },
     context_commentstring = { enable = true },
     highlight = {
@@ -46,6 +50,8 @@ function M.config()
       },
     },
     indent = { enable = false },
+    playground = { enable = true },
+    rainbow = { enable = false },
     textobjects = {
       lsp_interop = {
         enable = true,
@@ -107,6 +113,13 @@ function M.config()
   }
 
   require("nvim-treesitter.configs").setup(config)
+
+  vim.keymap.set(
+    "n",
+    "<Leader>T",
+    require("utils").cmd("TSPlaygroundToggle"),
+    { desc = "Treesitter: Playground" }
+  )
 end
 
 return M

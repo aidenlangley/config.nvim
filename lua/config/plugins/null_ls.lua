@@ -18,6 +18,24 @@ function M.config()
       }),
       -- Web dev
       nls.builtins.formatting.prettierd.with({
+        filetypes = {
+          "javascript",
+          "javascriptreact",
+          "typescript",
+          "typescriptreact",
+          "vue",
+          "css",
+          "scss",
+          "less",
+          "html",
+          "json",
+          "jsonc",
+          -- "yaml",
+          -- "markdown",
+          "markdown.mdx",
+          "graphql",
+          "handlebars",
+        },
         only_local = "node_modules/.bin",
         condition = node_filter,
       }),
@@ -58,6 +76,10 @@ function M.config()
         args = { "--no-bracket-spacing" },
       }),
       nls.builtins.diagnostics.yamllint,
+      -- Markdown
+      nls.builtins.formatting.prettierd.with({
+        filetypes = { "markdown" },
+      }),
     },
     diagnostics_format = "[#{c}] #{m} (#{s})",
     root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", ".git"),

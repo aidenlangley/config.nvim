@@ -19,7 +19,8 @@ function M.init()
     detection_methods = { "pattern" },
     patterns = patterns,
     exclude_dirs = exclude_dirs,
-    -- silent_chdir = false,
+    silent_chdir = true,
+    show_hidden = true,
   })
 end
 

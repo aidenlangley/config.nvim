@@ -152,16 +152,18 @@ function M.config()
     .. "ms  "
 
   local utils = require("utils")
-  layout[8].val[1] = button("n", utils.cmd("ene"), "  New")
-  layout[8].val[2] = button("s", utils.cmd("e ~/.config/nvim/init.lua"), "  Settings")
-  layout[8].val[3] = button("q", utils.cmd("qa"), "  Quit")
+  local menu_index = 8
+  layout[menu_index].val[1] = button("e", utils.cmd("ene"), "  New")
+  layout[menu_index].val[2] = button("s", utils.cmd("e ~/.config/nvim/init.lua"), "  Settings")
+  layout[menu_index].val[3] = button("q", utils.cmd("qa"), "  Quit")
 
-  layout[12].val[1] = button("h", utils.cmd("Lazy home"), "  Home")
-  layout[12].val[2] = button("S", utils.cmd("Lazy sync"), "  Sync")
-  layout[12].val[3] = button("u", utils.cmd("Lazy update"), "  Update")
-  layout[12].val[4] = button("p", utils.cmd("Lazy profile"), "  Profile")
-  layout[12].val[5] = button("c", utils.cmd("Lazy clean"), "  Clean")
-  layout[12].val[6] = button("l", utils.cmd("Lazy log"), "  View Log")
+  local lazy_menu_index = 12
+  layout[lazy_menu_index].val[1] = button("h", utils.cmd("Lazy home"), "  Home")
+  layout[lazy_menu_index].val[2] = button("S", utils.cmd("Lazy sync"), "  Sync")
+  layout[lazy_menu_index].val[3] = button("u", utils.cmd("Lazy update"), "  Update")
+  layout[lazy_menu_index].val[4] = button("p", utils.cmd("Lazy profile"), "  Profile")
+  layout[lazy_menu_index].val[5] = button("c", utils.cmd("Lazy clean"), "  Clean")
+  layout[lazy_menu_index].val[6] = button("l", utils.cmd("Lazy log"), "  View Log")
 
   for _, project_path in ipairs(get_recent_projects()) do
     local index = #layout[16].val + 1

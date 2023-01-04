@@ -5,18 +5,22 @@ local utils = require("utils")
 local M = {}
 
 function M.settings()
-  wk.register({
-    s = {
-      name = "[S]ettings...",
-      o = { utils.cmd("e ~/.config/nvim/init.lua"), "Open `init.lua`" },
-    },
-  }, { prefix = "<Leader>" })
+  local settings_path = "~/.config/nvim/init.lua"
+  vim.keymap.set("n", "<Leader>;", utils.cmd("Alpha"), { desc = "Dashboard" })
+  vim.keymap.set("n", "<Leader>sl", utils.cmd("LspInfo"), { desc = "LSP info" })
+  vim.keymap.set("n", "<Leader>so", utils.cmd("e " .. settings_path), { desc = "Open `init.lua`" })
+
+  wk.register({ s = { name = "[S]ettings..." } }, { prefix = "<Leader>" })
 end
 
 function M.buffers()
+  -- Move through buffers
+  vim.keymap.set("n", "<C-h>", utils.cmd("bp"), { desc = "Previous buffer", silent = true })
+  vim.keymap.set("n", "<C-l>", utils.cmd("bn"), { desc = "Next buffer", silent = true })
+
   -- Close buffers
   vim.keymap.set("n", "<Leader>d", utils.cmd("bd"), { desc = "[D]elete buffer" })
-  vim.keymap.set("n", "<Leader>D", utils.cmd("%bd|e#|bd#"), { desc = "[D]elete others" })
+  vim.keymap.set("n", "<Leader>D", utils.cmd("%bd|e#|bd#"), { desc = "[D]elete other bufferss" })
 
   -- Write buffers
   vim.keymap.set("n", "<C-s>", utils.cmd("w"), { desc = "Write buffer" })
@@ -25,10 +29,6 @@ function M.buffers()
 
   -- New buffer
   vim.keymap.set("n", "<Leader>n", utils.cmd("enew"), { desc = "[N]ew buffer" })
-
-  -- Move through buffers
-  vim.keymap.set("n", "<C-h>", utils.cmd("bp"), { desc = "Previous buffer", silent = true })
-  vim.keymap.set("n", "<C-l>", utils.cmd("bn"), { desc = "Next buffer", silent = true })
 end
 
 function M.telescope()
@@ -40,44 +40,46 @@ function M.telescope()
     vim.keymap.set("n", keys, func, { desc = desc })
   end
 
-  nmap("<C-f>", tsb.current_buffer_fuzzy_find, "Find")
+  nmap("<C-f>", tsb.live_grep, "Grep")
+  nmap("<Leader>/", tsb.current_buffer_fuzzy_find, "Find")
   nmap("<Leader><Space>", tsb.buffers, "Buffers")
+  nmap("ta", tsb.autocommands, "[A]utocommands")
+  nmap("tc", tsb.commands, "[C]ommands")
+  nmap("td", tsb.diagnostics, "[D]iagnostics")
+  nmap("tf", tsb.find_files, "[F]iles")
+  nmap("tg", tsb.live_grep, "[G]rep files")
+  nmap("th", tsb.help_tags, "[H]elp")
+  nmap("tH", tsb.highlights, "[H]ighlights")
+  nmap("tH", tsb.command_history, "Command [H]istory")
+  nmap("tk", tsb.keymaps, "[K]eymaps")
+  nmap("tm", tsb.marks, "[M]arks")
+  nmap("tp", require("telescope").extensions.projects.projects, "[P]rojects")
+  nmap("tr", tsb.oldfiles, "[R]ecent files")
+  nmap("tt", utils.cmd("Telescope"), "[T]elescope")
 
-  wk.register({
-    t = {
-      name = "[T]elescope...",
-      d = { tsb.diagnostics, "[D]iagnostics" },
-      c = { tsb.commands, "[C]ommands" },
-      f = { tsb.find_files, "[F]iles" },
-      g = { tsb.live_grep, "[G]rep files" },
-      h = { tsb.help_tags, "[H]elp" },
-      H = { tsb.command_history, "Command [H]istory" },
-      k = { tsb.keymaps, "[K]eymaps" },
-      m = { tsb.marks, "[M]arks" },
-      p = { require("telescope").extensions.projects.projects, "[P]rojects" },
-      r = { tsb.oldfiles, "[R]ecent files" },
-      t = { utils.cmd("Telescope"), "[T]elescope" },
-    },
-  })
+  wk.register({ t = { name = "[T]elescope..." } })
 end
 
 function M.git()
+  local function nmap(keys, func, desc)
+    if desc then
+      desc = "Git: " .. desc
+    end
+
+    vim.keymap.set("n", keys, func, { desc = desc })
+  end
+
   local term_lazygit = utils.float_term("lazygit")
-  wk.register({
-    g = {
-      name = "[G]it...",
-      b = { tsb.git_branches, "[B]ranches" },
-      C = { tsb.git_commits, "[C]ommits" },
-      g = {
-        function()
-          term_lazygit:toggle()
-        end,
-        "Lazy[G]it",
-      },
-      s = { tsb.git_status, "[S]tatus" },
-      S = { tsb.git_stash, "[S]tashes" },
-    },
-  }, { prefix = "<Leader>" })
+  nmap("<Leader>gg", function()
+    term_lazygit:toggle()
+  end, "Lazy[G]it")
+
+  nmap("<Leader>gb", tsb.git_branches, "[B]ranches")
+  nmap("<Leader>gC", tsb.git_commits, "[C]ommits")
+  nmap("<Leader>gs", tsb.git_status, "[S]tatus")
+  nmap("<Leader>gS", tsb.git_stash, "[S]tash")
+
+  wk.register({ g = { name = "[G]it..." } }, { prefix = "<Leader>", mode = { "n", "v" } })
 end
 
 function M.lsp(_, bufnr)
@@ -92,37 +94,22 @@ function M.lsp(_, bufnr)
   nmap("<F2>", vim.lsp.buf.rename, "Rename")
   nmap("K", vim.lsp.buf.hover, "Hover")
 
-  -- Go to...
-  wk.register({
-    c = {
-      name = "[C]ode...",
-      K = { vim.lsp.buf.hover, "[H]over" },
-      s = { vim.lsp.buf.signature_help, "[S]ignature help" },
-    },
-    l = {
-      name = "[L]SP...",
-      d = { vim.lsp.buf.definition, "Goto [D]efinition" },
-      D = { tsb.lsp_definitions, "View [D]efinitions" },
-      i = { vim.lsp.buf.implementation, "Goto [I]mplementation" },
-      I = { tsb.lsp_implementations, "View [I]mplementations" },
-      r = { tsb.lsp_references, "View [R]eferences" },
-      s = { utils.cmd("SymbolsOutline"), "View [S]ymbols" },
-      t = { tsb.lsp_type_definitions, "View [T]ype definitions" },
-    },
-    t = {
-      name = "[T]rouble...",
-      d = { vim.diagnostic.open_float, "Show [D]iagnostic" },
-      n = { vim.diagnostic.goto_next, "[N]ext diagnostic" },
-      N = { vim.diagnostic.goto_prev, "Previous diagnostic" },
-      t = { utils.cmd("Trouble"), "[T]rouble" },
-    },
-  }, { prefix = "<Leader>", mode = { "n", "v" } })
+  nmap("gd", vim.lsp.buf.definition, "Goto [D]efinition")
+  nmap("gi", vim.lsp.buf.implementation, "Goto [I]mplementation")
+  nmap("gs", vim.lsp.buf.signature_help, "[S]ignature help")
+
+  nmap("<Leader>ld", tsb.lsp_definitions, "View [D]efinitions")
+  nmap("<Leader>li", tsb.lsp_implementations, "View [I]mplementations")
+  nmap("<Leader>lr", tsb.lsp_references, "View [R]eferences")
+  nmap("<Leader>ls", utils.cmd("SymbolsOutline"), "View [S]ymbols")
+  nmap("<Leader>lt", tsb.lsp_type_definitions, "View [T]ype definitions")
+
+  wk.register({ l = { name = "[L]SP..." } }, { prefix = "<Leader>", mode = { "n", "v" } })
 
   -- Diagnostics
+  vim.keymap.set("n", "<Leader>t", utils.cmd("Trouble"), { desc = "[T]rouble" })
   nmap("]d", vim.diagnostic.goto_next, "Next diagnostic")
   nmap("[d", vim.diagnostic.goto_prev, "Previous diagnostic")
-
-  vim.keymap.set("n", "<Leader>sl", utils.cmd("LspInfo"), { desc = "LSP info" })
 end
 
 -- Copy & paste
@@ -130,18 +117,16 @@ vim.keymap.set("v", "<C-c>", utils.cmd("'<,'>yank"), { desc = "Yank (copy)" })
 vim.keymap.set("n", "<C-v>", utils.cmd("put"), { desc = "Put (paste)" })
 
 -- Quit if not modified, else request confirmation
-vim.keymap.set("n", "<Leader>q", utils.smart_quit, { desc = "[Q]uit" })
 vim.keymap.set("n", "<C-q>", utils.smart_quit, { desc = "[Q]uit" })
 
 -- Code actions & formatting can function without a language server
-vim.keymap.set("n", "<C-.>", vim.lsp.buf.code_action, { desc = "Code actions" })
-wk.register({
-  c = {
-    name = "[C]ode...",
-    a = { vim.lsp.buf.code_action, "[A]ctions" },
-    f = { require("utils.lsp.auto_format").format, "[F]ormat" },
-  },
-})
+vim.keymap.set("n", "<C-.>", vim.lsp.buf.code_action, { desc = "LSP: Code actions" })
+vim.keymap.set(
+  "n",
+  "<Leader>f",
+  require("utils.lsp.auto_format").format,
+  { desc = "LSP: [F]ormat" }
+)
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
 vim.keymap.set("n", "n", "'Nn'[v:searchforward]", { desc = "Search forwards", expr = true })
