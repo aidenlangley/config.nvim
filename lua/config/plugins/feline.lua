@@ -58,6 +58,7 @@ function M.config()
     end,
     hl = { fg = "light-grey" },
     left_sep = "block",
+    right_sep = "block",
     update = { "FileType" },
     priority = -1,
   }
@@ -90,7 +91,7 @@ function M.config()
       str = "+",
       hl = { fg = "green" },
     },
-    left_sep = "block",
+    right_sep = "block",
   }
 
   local git_diff_removed_provider = {
@@ -100,7 +101,7 @@ function M.config()
       str = "-",
       hl = { fg = "red" },
     },
-    left_sep = "block",
+    right_sep = "block",
   }
 
   local git_diff_changed_provider = {
@@ -110,7 +111,7 @@ function M.config()
       str = "~",
       hl = { fg = "yellow" },
     },
-    left_sep = "block",
+    right_sep = "block",
   }
 
   local diag_errors_provider = {

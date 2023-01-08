@@ -69,7 +69,7 @@ function M.config()
       -- Shell
       nls.builtins.formatting.shfmt,
       nls.builtins.diagnostics.shellcheck,
-      -- nls.builtins.code_actions.shellcheck,
+      nls.builtins.code_actions.shellcheck,
       -- Yaml
       nls.builtins.formatting.prettierd.with({
         extra_filetypes = { "yaml", "yml" },
