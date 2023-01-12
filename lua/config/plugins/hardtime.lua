@@ -2,7 +2,7 @@ local M = {
   "takac/vim-hardtime",
   event = { "BufWinEnter" },
   cmd = { "HardTimeOn", "HardTimeOff", "HardTimeToggle" },
-  enabled = true,
+  enabled = false,
 }
 
 function M.init()

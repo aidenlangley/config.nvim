@@ -3,6 +3,10 @@ local M = {
   keys = {
     "<C-n>", -- Selects word incrementally
     "<A-n>", -- Selects all words
+    "<C-Down>",
+    "<C-Left>",
+    "<C-Right>",
+    "<C-Up>",
   },
 }
 

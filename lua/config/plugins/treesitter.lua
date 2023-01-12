@@ -8,7 +8,6 @@ local M = {
     "RRethy/nvim-treesitter-textsubjects",
     "nvim-treesitter/nvim-treesitter-textobjects",
     "nvim-treesitter/playground",
-    "p00f/nvim-ts-rainbow",
     "windwp/nvim-ts-autotag",
   },
 }
@@ -51,7 +50,6 @@ function M.config()
     },
     indent = { enable = false },
     playground = { enable = true },
-    rainbow = { enable = false },
     textobjects = {
       lsp_interop = {
         enable = true,
