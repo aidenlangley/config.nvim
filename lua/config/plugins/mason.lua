@@ -45,6 +45,7 @@ function M.config()
       "taplo",
       "tsserver",
     },
+    pip = { upgrade_pip = true },
   })
 
   vim.keymap.set("n", "<Leader>sm", require("utils").cmd("Mason"), { desc = "Mason" })

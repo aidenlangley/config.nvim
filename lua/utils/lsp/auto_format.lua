@@ -8,8 +8,6 @@ function M.format(opts)
   end
 end
 
-M.augroup = vim.api.nvim_create_augroup("AutoFormat", { clear = true })
-
 function M.prefer_null_ls()
   M.format({
     filter = function(client)
@@ -24,8 +22,11 @@ function M.prefer_null_ls()
         return client.supports_method("textDocument/formatting")
       end
     end,
+    timeout_ms = 2000,
   })
 end
+
+M.augroup = vim.api.nvim_create_augroup("AutoFormat", { clear = true })
 
 function M.create_autocmd()
   local autocmd = {

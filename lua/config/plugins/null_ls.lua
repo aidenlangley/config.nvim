@@ -17,44 +17,36 @@ function M.config()
         extra_args = { "--config", ".luacheckrc" },
       }),
       -- Web dev
-      nls.builtins.formatting.prettierd.with({
+      nls.builtins.formatting.prettier.with({
         filetypes = {
+          "css",
+          "graphql",
+          "handlebars",
+          "html",
           "javascript",
           "javascriptreact",
+          "json",
+          "jsonc",
+          "less",
+          "markdown.mdx",
+          "scss",
           "typescript",
           "typescriptreact",
           "vue",
-          "css",
-          "scss",
-          "less",
-          "html",
-          "json",
-          "jsonc",
-          -- "yaml",
-          -- "markdown",
-          "markdown.mdx",
-          "graphql",
-          "handlebars",
         },
         only_local = "node_modules/.bin",
         condition = node_filter,
       }),
-      nls.builtins.diagnostics.eslint_d.with({
-        prefer_local = "node_modules/.bin",
-        condition = node_filter,
-      }),
+      nls.builtins.diagnostics.eslint,
       -- https://github.com/jose-elias-alvarez/typescript.nvim#null-ls
       require("typescript.extensions.null-ls.code-actions"),
       -- CSS linter
-      nls.builtins.diagnostics.stylelint.with({
-        only_local = "node_modules/.bin",
-        condition = node_filter,
-      }),
+      -- nls.builtins.diagnostics.stylelint,
       -- Fish
       nls.builtins.formatting.fish_indent,
       nls.builtins.diagnostics.fish,
       -- Git commits
-      nls.builtins.diagnostics.commitlint,
+      -- nls.builtins.diagnostics.commitlint,
       -- Go
       nls.builtins.formatting.gofumpt,
       nls.builtins.formatting.golines.with({
@@ -69,10 +61,9 @@ function M.config()
       -- Shell
       nls.builtins.formatting.shfmt,
       nls.builtins.diagnostics.shellcheck,
-      nls.builtins.code_actions.shellcheck,
       -- Yaml
       nls.builtins.formatting.prettierd.with({
-        extra_filetypes = { "yaml", "yml" },
+        filetypes = { "yaml", "yml" },
         args = { "--no-bracket-spacing" },
       }),
       nls.builtins.diagnostics.yamllint,

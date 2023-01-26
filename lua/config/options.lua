@@ -73,6 +73,16 @@ vim.o.showmode = false
 vim.o.scrolloff = 8
 vim.o.sidescrolloff = 16
 
+-- Code folding by indent
+vim.o.foldmethod = "syntax"
+vim.o.nofoldenable = true
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
+
+-- Spelling
+-- vim.o.spell = true
+-- vim.o.spelllang = "en-gb"
+
 -- Title string
 vim.o.title = true
 vim.o.titlestring = "nvim: %<%F%="

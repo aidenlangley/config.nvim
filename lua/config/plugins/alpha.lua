@@ -1,6 +1,7 @@
 local M = {
   "goolord/alpha-nvim",
   event = "UIEnter",
+  enabled = true,
 }
 
 local function pad(num_spaces)

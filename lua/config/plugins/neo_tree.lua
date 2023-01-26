@@ -3,12 +3,12 @@ local M = {
   cmd = { "Neotree" },
 
   branch = "v2.x",
-  dependencies = { "MunifTanjim/nui.nvim" },
+  dependencies = {
+    "MunifTanjim/nui.nvim",
+    "nvim-lua/plenary.nvim",
+    "nvim-tree/nvim-web-devicons",
+  },
 }
-
-function M.init()
-  vim.keymap.set("n", "<C-e>", require("utils").cmd("Neotree toggle"), { desc = "Explorer" })
-end
 
 function M.config()
   vim.g.neo_tree_remove_legacy_commands = 1
@@ -22,6 +22,25 @@ function M.config()
     window = {
       position = "left",
       width = 28,
+      mappings = {
+        ["d"] = function(state)
+          local tree = state.tree
+          local node = tree:get_node()
+          if node.type == "message" then
+            return
+          end
+
+          local prompt = string.format("Bin '%s'? (y/N)", node.path)
+          local callback = function(input)
+            if input == "y" then
+              vim.cmd("silent !gio trash " .. node.path)
+            end
+          end
+
+          vim.ui.input({ prompt = prompt }, callback)
+        end,
+        ["D"] = "delete",
+      },
     },
     source_selector = {
       statusline = true,
@@ -59,5 +78,16 @@ function M.config()
 
   require("neo-tree").setup(config)
 end
+
+vim.keymap.set("n", "<C-e>", require("utils").cmd("Neotree toggle"), { desc = "Explorer" })
+
+vim.api.nvim_create_autocmd("BufLeave", {
+  callback = function()
+    vim.cmd("Neotree close")
+    vim.cmd("wincmd =")
+  end,
+  group = vim.api.nvim_create_augroup("NeoTree_FocusLost", { clear = true }),
+  pattern = "neo-tree *",
+})
 
 return M

@@ -34,7 +34,6 @@ function M.config()
   local cmp = require("cmp")
   local luasnip = require("luasnip")
   local lspkind = require("lspkind")
-  local has_neogen, neogen = pcall(require, "neogen")
 
   if cmp ~= nil then
     local select_next = function(fallback)
@@ -42,8 +41,6 @@ function M.config()
         cmp.select_next_item()
       elseif luasnip.expand_or_jumpable() then
         luasnip.expand_or_jump()
-      elseif has_neogen and neogen.jumpable() then
-        neogen.jump_next()
       elseif has_words_before() then
         cmp.complete()
       else

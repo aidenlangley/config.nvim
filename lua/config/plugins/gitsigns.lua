@@ -14,7 +14,7 @@ local function nmap(keys, func, desc)
 end
 
 local function vmap(keys, func, desc)
-  vim.keymap.set("v", keys, func, { desc = get_desc(desc) })
+  vim.keymap.set({ "n", "v" }, keys, func, { desc = get_desc(desc) })
 end
 
 function M.config()
@@ -35,8 +35,8 @@ function M.config()
   nmap("<Leader>gu", gs.undo_stage_hunk, "[U]ndo stage")
 
   local utils = require("utils")
-  vmap("<Leader>gs", utils.cmd("Gitsigns stage_hunk"), "[S]tage")
-  vmap("<Leader>gr", utils.cmd("Gitsigns reset_hunk"), "[R]eset")
+  vmap("<Leader>gs", utils.cmd("Gitsigns stage_hunk"), "[S]tage hunk")
+  vmap("<Leader>gr", utils.cmd("Gitsigns reset_hunk"), "[R]eset hunk")
 end
 
 return M

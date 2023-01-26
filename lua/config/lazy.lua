@@ -14,7 +14,7 @@ require("lazy").setup("config.plugins", {
   defaults = {
     lazy = true,
   },
-  concurrency = 1,
+  -- concurrency = 1,
   install = {
     colorscheme = {
       "gruvbox-material",
@@ -22,7 +22,7 @@ require("lazy").setup("config.plugins", {
   },
   checker = {
     enabled = true,
-    concurrency = 1,
+    -- concurrency = 1,
     frequency = 3600,
   },
   change_detection = {

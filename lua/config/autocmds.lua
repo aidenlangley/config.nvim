@@ -1,12 +1,14 @@
 require("utils.lsp.auto_format").create_autocmd()
 
+-- Write buffer when focus lost
+-- require("utils.auto_save").create_autocmd()
+
 -- Highlight on yank
 -- See `:help vim.highlight.on_yank()`
-local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
 vim.api.nvim_create_autocmd("TextYankPost", {
   callback = function()
-    vim.highlight.on_yank()
+    vim.highlight.on_yank({ timeout = 100 })
   end,
-  group = highlight_group,
+  group = vim.api.nvim_create_augroup("YankHighlight", { clear = true }),
   pattern = "*",
 })

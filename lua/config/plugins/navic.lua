@@ -1,5 +1,6 @@
 local M = {
   "SmiteshP/nvim-navic",
+  enabled = false,
 }
 
 local function setup_colours()
@@ -82,6 +83,9 @@ function M.config()
   })
 
   setup_colours()
+
+  -- This a very verbose plugin, and quite annoying, so we turn it off.
+  vim.g.navic_silence = true
 end
 
 return M

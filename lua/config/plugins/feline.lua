@@ -133,14 +133,17 @@ function M.config()
     hl = { fg = "light-grey" },
   }
 
-  local navic = require("nvim-navic")
-  local navic_provider = {
-    provider = navic.get_location,
-    enabled = navic.is_available,
-    hl = { fg = "grey" },
-    left_sep = "block",
-    priority = -1,
-  }
+  local navic_ok, navic = pcall(require, "nvim-navic")
+  local navic_provider = {}
+  if navic_ok then
+    navic_provider = {
+      provider = navic.get_location,
+      enabled = navic.is_available,
+      hl = { fg = "grey" },
+      left_sep = "block",
+      priority = -1,
+    }
+  end
 
   feline.setup({
     components = {
@@ -152,17 +155,17 @@ function M.config()
           diag_warnings_provider,
           diag_hints_provider,
           diag_info_provider,
-          navic_provider,
+          -- navic_provider,
         },
         -- MIDDLE
         {},
         -- RIGHT
         {
           attached_clients_provider,
+          git_branch_provider,
           git_diff_changed_provider,
           git_diff_removed_provider,
           git_diff_added_provider,
-          git_branch_provider,
           file_encoding_provider,
           file_type_provider,
           position_provider,

@@ -16,6 +16,12 @@ function M.config()
         g = false,
       },
     },
+    disable = {
+      filetypes = {
+        "neo-tree",
+        "TelescopePrompt",
+      },
+    },
     key_labels = {
       ["<leader>"] = "SPC",
       ["<Leader>"] = "SPC",

@@ -1,5 +1,7 @@
 return {
+  "akinsho/flutter-tools.nvim",
   "b0o/SchemaStore.nvim",
+  "evanleck/vim-svelte",
   "folke/neodev.nvim",
   "gpanders/editorconfig.nvim",
   "j-hui/fidget.nvim",

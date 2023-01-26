@@ -13,7 +13,7 @@ function M.float_term(command)
   })
 end
 
-function M.smart_quit()
+function M.smart_quit(buf)
   local prompt = "You have unsaved changes. Quit anyway? (y/N) "
   local callback = function(input)
     if input == "y" then
@@ -21,8 +21,8 @@ function M.smart_quit()
     end
   end
 
-  local bufnr = vim.api.nvim_get_current_buf()
-  local modified = vim.api.nvim_buf_get_option(bufnr, "modified")
+  buf = buf or vim.api.nvim_get_current_buf()
+  local modified = vim.api.nvim_buf_get_option(buf, "modified")
 
   if modified then
     vim.ui.input({ prompt = prompt }, callback)

@@ -3,14 +3,17 @@ local M = {
   name = "lsp_config",
   event = "BufReadPre",
 
-  dependencies = { "williamboman/mason.nvim" },
+  dependencies = {
+    "williamboman/mason.nvim",
+    "folke/lsp-colors.nvim",
+  },
 }
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 
 local function on_attach(client, bufnr)
   require("config.keymaps").lsp(client, bufnr)
-  require("nvim-navic").attach(client, bufnr)
+  -- require("nvim-navic").attach(client, bufnr)
 end
 
 local function default_handler(server_name)
@@ -103,7 +106,6 @@ local function volar()
       "javascriptreact",
       "typescriptreact",
       "vue",
-      "json",
     },
   })
 end
@@ -118,7 +120,7 @@ function M.config()
     ["jsonls"] = jsonls,
     ["rust_analyzer"] = rust_analyzer,
     ["sumneko_lua"] = sumneko_lua,
-    ["volar"] = volar,
+    -- ["volar"] = volar,
   })
 
   require("fidget").setup()
