@@ -121,12 +121,6 @@ vim.keymap.set("n", "<C-q>", utils.smart_quit, { desc = "[Q]uit" })
 
 -- Code actions & formatting can function without a language server
 vim.keymap.set("n", "<C-.>", vim.lsp.buf.code_action, { desc = "LSP: Code actions" })
-vim.keymap.set(
-  "n",
-  "<Leader>f",
-  require("utils.lsp.auto_format").format,
-  { desc = "LSP: [F]ormat" }
-)
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
 vim.keymap.set("n", "n", "'Nn'[v:searchforward]", { desc = "Search forwards", expr = true })

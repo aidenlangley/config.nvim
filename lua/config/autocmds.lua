@@ -1,6 +1,3 @@
--- Auto format on save, preferring null-ls over LSP
-require("utils.lsp.auto_format").create_autocmd()
-
 -- Highlight on yank
 -- See `:help vim.highlight.on_yank()`
 vim.api.nvim_create_autocmd("TextYankPost", {
