@@ -49,6 +49,7 @@ vim.opt.whichwrap:append("<,>,[,],h,l")
 
 -- Completion menu height
 vim.o.pumheight = 16
+vim.o.pumwidth = 8
 
 -- Add a ruler at 80 & 100 lines
 vim.o.colorcolumn = "80,100"

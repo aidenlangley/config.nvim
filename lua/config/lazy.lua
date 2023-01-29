@@ -11,14 +11,13 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup("config.plugins", {
-  defaults = {
-    lazy = true,
-  },
+  defaults = { lazy = true },
+  dev = { path = "~/Code" },
   -- concurrency = 1,
-  install = {
-    colorscheme = {
-      "gruvbox-material",
-    },
+  install = { colorscheme = { "gruvbox-material" } },
+  ui = {
+    wrap = false,
+    icons = { plugin = "" },
   },
   checker = {
     enabled = true,

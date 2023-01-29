@@ -81,13 +81,11 @@ end
 
 vim.keymap.set("n", "<C-e>", require("utils").cmd("Neotree toggle"), { desc = "Explorer" })
 
+-- Resize windows when we close our explorer
 vim.api.nvim_create_autocmd("BufLeave", {
-  callback = function()
-    vim.cmd("Neotree close")
-    vim.cmd("wincmd =")
-  end,
-  group = vim.api.nvim_create_augroup("NeoTree_FocusLost", { clear = true }),
+  group = vim.api.nvim_create_augroup("ExplorerLostFocus", { clear = true }),
   pattern = "neo-tree *",
+  command = "wincmd =",
 })
 
 return M

@@ -4,7 +4,7 @@ return {
   "evanleck/vim-svelte",
   "folke/neodev.nvim",
   "gpanders/editorconfig.nvim",
-  "j-hui/fidget.nvim",
+  -- "j-hui/fidget.nvim",
   "jose-elias-alvarez/typescript.nvim",
   "nvim-lua/plenary.nvim",
   "nvim-tree/nvim-web-devicons",

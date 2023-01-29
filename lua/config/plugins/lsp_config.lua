@@ -13,7 +13,11 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 
 local function on_attach(client, bufnr)
   require("config.keymaps").lsp(client, bufnr)
-  -- require("nvim-navic").attach(client, bufnr)
+
+  local navic_ok, navic = pcall(require, "nvim-navic")
+  if navic_ok then
+    navic.attach(client, bufnr)
+  end
 end
 
 local function default_handler(server_name)
@@ -73,6 +77,8 @@ local function rust_analyzer()
 end
 
 local function sumneko_lua()
+  require("neodev").setup()
+
   local runtime_path = vim.split(package.path, ";", {})
   table.insert(runtime_path, "lua/?.lua")
   table.insert(runtime_path, "lua/?/init.lua")
@@ -123,7 +129,10 @@ function M.config()
     -- ["volar"] = volar,
   })
 
-  require("fidget").setup()
+  local fidget_ok, fidget = pcall(require, "fidget")
+  if fidget_ok then
+    fidget.setup()
+  end
 end
 
 return M

@@ -145,12 +145,23 @@ function M.config()
     }
   end
 
+  local lazy_provider = {
+    provider = function()
+      return "  " .. require("lazy.status").updates() .. " updates"
+    end,
+    enabled = require("lazy.status").has_updates,
+    hl = { fg = "light-grey" },
+    left_sep = "block",
+    priority = -1,
+  }
+
   feline.setup({
     components = {
       active = {
         -- LEFT
         {
           mode_provider,
+          -- lazy_provider,
           diag_errors_provider,
           diag_warnings_provider,
           diag_hints_provider,
