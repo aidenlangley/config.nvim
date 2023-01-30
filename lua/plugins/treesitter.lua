@@ -1,8 +1,5 @@
-local M = {
+return {
   "nvim-treesitter/nvim-treesitter",
-  build = ":TSUpdate",
-  event = "BufReadPost",
-
   dependencies = {
     "JoosepAlviste/nvim-ts-context-commentstring",
     "RRethy/nvim-treesitter-textsubjects",
@@ -10,117 +7,104 @@ local M = {
     "nvim-treesitter/playground",
     "windwp/nvim-ts-autotag",
   },
-}
-
-function M.config()
-  local config = {
-    auto_install = true,
-    ensure_installed = {
-      "bash",
-      "css",
-      "fish",
-      "go",
-      "javascript",
-      "json",
-      "lua",
-      "python",
-      "rust",
-      "svelte",
-      "toml",
-      "typescript",
-      "vim",
-      "yaml",
+  build = ":TSUpdate",
+  event = "BufReadPost",
+  keys = {
+    {
+      "<Leader>T",
+      require("utils").cmd("TSPlaygroundToggle"),
+      desc = "Treesitter: Playground",
     },
-
-    -- Plugins
-    autotag = { enable = true },
-    context_commentstring = { enable = true },
-    highlight = {
-      enable = true,
-      disable = {
-        "txt",
+  },
+  config = function()
+    require("nvim-treesitter.configs").setup({
+      auto_install = true,
+      ensure_installed = {
+        "bash",
+        "comment",
+        "css",
+        "diff",
+        "fish",
+        "gitignore",
+        "go",
+        "help",
+        "html",
+        "javascript",
+        "jsdoc",
+        "json",
+        "jsonc",
+        "lua",
+        "markdown",
+        "markdown_inline",
+        "python",
+        "rust",
+        "svelte",
+        "sql",
+        "toml",
+        "typescript",
+        "vim",
         "vue",
+        "yaml",
       },
-    },
-    incremental_selection = {
-      enable = true,
-      keymaps = {
-        init_selection = "<C-Space>",
-        node_incremental = "<C-Space>",
-        scope_incremental = "<C-s>",
-        node_decremental = "<C-BS>",
-      },
-    },
-    indent = { enable = false },
-    playground = { enable = true },
-    textobjects = {
-      lsp_interop = {
+
+      -- Plugins
+      autotag = { enable = true },
+      context_commentstring = { enable = true },
+      highlight = {
         enable = true,
-        border = "none",
-        peek_definition_code = {
-          ["gdf"] = "@function.outer",
-          ["gdF"] = "@class.outer",
+        disable = {
+          "txt",
+          "vue",
         },
       },
-      move = {
-        enable = true,
-        set_jumps = true, -- whether to set jumps in the jumplist
-        goto_next_start = {
-          ["]m"] = "@function.outer",
-          ["]]"] = "@class.outer",
+      indent = { enable = false },
+      playground = { enable = true },
+      textobjects = {
+        lsp_interop = {
+          enable = true,
+          border = "none",
+          peek_definition_code = {
+            ["<Leader>lp"] = "@function.outer",
+            ["<Leader>lP"] = "@class.outer",
+          },
         },
-        goto_next_end = {
-          ["]M"] = "@function.outer",
-          ["]["] = "@class.outer",
+        move = {
+          enable = true,
+          set_jumps = true, -- whether to set jumps in the jumplist
+          goto_next_start = {
+            ["]f"] = "@function.outer",
+            ["]]"] = "@class.outer",
+          },
+          goto_next_end = {
+            ["]F"] = "@function.outer",
+            ["]C"] = "@class.outer",
+          },
+          goto_previous_start = {
+            ["[f"] = "@function.outer",
+            ["[["] = "@class.outer",
+          },
+          goto_previous_end = {
+            ["[F"] = "@function.outer",
+            ["[C"] = "@class.outer",
+          },
         },
-        goto_previous_start = {
-          ["[m"] = "@function.outer",
-          ["[["] = "@class.outer",
-        },
-        goto_previous_end = {
-          ["[M"] = "@function.outer",
-          ["[]"] = "@class.outer",
+        swap = {
+          enable = true,
+          swap_next = {
+            ["]p"] = "@parameter.inner",
+          },
+          swap_previous = {
+            ["[p"] = "@parameter.inner",
+          },
         },
       },
-      select = {
+      textsubjects = {
         enable = true,
-        lookahead = true,
+        prev_selection = ",", -- (Optional) keymap to select the previous selection
         keymaps = {
-          ["aa"] = "@parameter.outer",
-          ["ia"] = "@parameter.inner",
-          ["af"] = "@function.outer",
-          ["if"] = "@function.inner",
-          ["ac"] = "@class.outer",
-          ["ic"] = "@class.inner",
+          ["."] = "textsubjects-smart",
         },
       },
-      swap = {
-        enable = true,
-        swap_next = {
-          ["<Leader>."] = "@parameter.inner",
-        },
-        swap_previous = {
-          ["<Leader>,"] = "@parameter.inner",
-        },
-      },
-    },
-    textsubjects = {
-      enable = true,
-      prev_selection = ",", -- (Optional) keymap to select the previous selection
-      keymaps = {
-        ["."] = "textsubjects-smart",
-      },
-    },
-  }
-
-  require("nvim-treesitter.configs").setup(config)
-
-  vim.keymap.set(
-    "n",
-    "<Leader>T",
-    require("utils").cmd("TSPlaygroundToggle"),
-    { desc = "Treesitter: Playground" }
-  )
-end
-
-return M
+    })
+  end,
+}

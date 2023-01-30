@@ -1,0 +1,7 @@
+local null_ls = require("null-ls.sources")
+local utils = require("utils ")
+
+utils.register_null_ls_sources({
+  null_ls.builtins.formatting.shfmt,
+  null_ls.builtins.diagnostics.shellcheck,
+})

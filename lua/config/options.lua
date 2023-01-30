@@ -1,6 +1,10 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- Backups please
+vim.o.backup = true
+vim.o.backupdir = vim.fn.stdpath("cache") .. "/backups"
+
 -- Set highlight on search
 vim.o.hlsearch = false
 
@@ -83,6 +87,9 @@ vim.o.foldlevelstart = 99
 -- Spelling
 -- vim.o.spell = true
 -- vim.o.spelllang = "en-gb"
+
+-- Floating status lines, works well with `incline.nvim`
+vim.o.laststatus = 3
 
 -- Title string
 vim.o.title = true
