@@ -78,35 +78,8 @@ return {
         end,
       },
     },
-    keys = {
-      {
-        "<Tab>",
-        function()
-          return require("luasnip").jumpable(1) and "<Plug>luasnip-jump-next" or "<tab>"
-        end,
-        mode = "i",
-        expr = true,
-        silent = true,
-      },
-      {
-        "<Tab>",
-        function()
-          require("luasnip").jump(1)
-        end,
-        mode = "s",
-      },
-      {
-        "<S-Tab>",
-        function()
-          require("luasnip").jump(-1)
-        end,
-        mode = { "i", "s" },
-      },
-    },
-    opts = {
-      history = true,
-      delete_check_events = "TextChanged",
-    },
+    build = "make install_jsregexp",
+    opts = { history = true },
   },
   {
     "hrsh7th/nvim-cmp",
@@ -141,31 +114,55 @@ return {
     },
     config = function(_, opts)
       local cmp = require("cmp")
+      local luasnip = require("luasnip")
+
+      local function select_next_item(fallback)
+        if cmp.visible() then
+          cmp.select_next_item()
+        elseif luasnip.expand_or_jumpable() then
+          luasnip.expand_or_jump()
+        else
+          fallback()
+        end
+      end
+
+      local function select_prev_item(fallback)
+        if cmp.visible() then
+          cmp.select_prev_item()
+        elseif luasnip.jumpable(-1) then
+          luasnip.jump(-1)
+        else
+          fallback()
+        end
+      end
+
       opts["sources"] = cmp.config.sources({
         { name = "buffer" },
         { name = "emoji" },
         { name = "luasnip" },
         { name = "nvim_lsp" },
         { name = "path" },
+        { name = "crates" },
       })
-      opts["mapping"] = cmp.mapping.preset.insert({
-        ["<Tab>"] = cmp.mapping.select_next_item(),
-        ["<S-Tab>"] = cmp.mapping.select_prev_item(),
-        ["<C-j>"] = cmp.mapping.scroll_docs(-4),
-        ["<C-k>"] = cmp.mapping.scroll_docs(4),
-        ["<C-Space>"] = cmp.mapping.complete({}),
-        ["<CR>"] = cmp.mapping.confirm({ select = true }),
-      })
+      opts["mapping"] = {
+        ["<Tab>"] = cmp.mapping(select_next_item, { "i", "s" }),
+        ["<S-Tab>"] = cmp.mapping(select_prev_item, { "i", "s" }),
+        ["<Down>"] = cmp.mapping(select_next_item, { "i", "s" }),
+        ["<Up>"] = cmp.mapping(select_prev_item, { "i", "s" }),
+        ["<CR>"] = cmp.mapping(cmp.mapping.confirm({ select = true }), { "i", "s" }),
+      }
       opts["formatting"] = {
         source_names = {},
         format = require("lspkind").cmp_format({
+          maxwidth = 32,
           mode = "symbol_text",
           menu = {
             buffer = "(Buffer)",
             emoji = "(Emoji)",
-            luasnip = "(Lua)",
+            luasnip = "(LuaSnip)",
             nvim_lsp = "(LSP)",
             path = "(Path)",
+            crates = "(Crates)",
           },
         }),
       }

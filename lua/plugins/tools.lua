@@ -25,7 +25,7 @@ return {
             peek.open()
           end
         end,
-        desc = "[Peek] Open Markdown Preview",
+        desc = "Open Markdown Preview",
       },
     },
     opts = { theme = "dark" },

@@ -1,7 +1,3 @@
-local function get_desc(desc)
-  return "Telescope: " .. (desc or "?")
-end
-
 return {
   {
     "nvim-telescope/telescope.nvim",
@@ -15,154 +11,154 @@ return {
         function()
           require("telescope.builtin").current_buffer_fuzzy_find()
         end,
-        desc = get_desc("(F)uzzy find..."),
+        desc = "(F)uzzy find...",
       },
       {
         "<Leader><Space>",
         function()
           require("telescope.builtin").buffers()
         end,
-        desc = get_desc("Buffers..."),
+        desc = "Buffers...",
       },
       {
         "ta",
         function()
           require("telescope.builtin").autocommands()
         end,
-        desc = get_desc("(A)utocommands..."),
+        desc = "(A)utocommands...",
       },
       {
         "tC",
         function()
           require("telescope.builtin").commands()
         end,
-        desc = get_desc("(C)ommands..."),
+        desc = "(C)ommands...",
       },
       {
         "td",
         function()
           require("telescope.builtin").diagnostics()
         end,
-        desc = get_desc("(D)iagnostics..."),
+        desc = "(D)iagnostics...",
       },
       {
         "tf",
         function()
           require("telescope.builtin").find_files()
         end,
-        desc = get_desc("(F)ind files..."),
+        desc = "(F)ind files...",
       },
       {
         "tg",
         function()
           require("telescope.builtin").live_grep()
         end,
-        desc = get_desc("Live (G)rep..."),
+        desc = "Live (G)rep...",
       },
       {
         "th",
         function()
           require("telescope.builtin").help_tags()
         end,
-        desc = get_desc("(H)elp..."),
+        desc = "(H)elp...",
       },
       {
         "tH",
         function()
           require("telescope.builtin").command_history()
         end,
-        desc = get_desc("Command (H)istory..."),
+        desc = "Command (H)istory...",
       },
       {
         "tm",
         function()
           require("telescope.builtin").marks()
         end,
-        desc = get_desc("(M)arks..."),
+        desc = "(M)arks...",
       },
       {
         "tp",
         function()
           require("telescope").extensions.projects.projects()
         end,
-        desc = get_desc("(P)rojects..."),
+        desc = "(P)rojects...",
       },
       {
         "tr",
         function()
           require("telescope.builtin").oldfiles()
         end,
-        desc = get_desc("(R)ecent files..."),
+        desc = "(R)ecent files...",
       },
       {
         "tk",
         function()
           require("telescope.builtin").keymaps()
         end,
-        desc = get_desc("(K)eymaps..."),
+        desc = "(K)eymaps...",
       },
       {
         "tt",
         function()
           require("telescope.builtin").builtin()
         end,
-        desc = get_desc("(B)uiltins..."),
+        desc = "(B)uiltins...",
       },
       {
         "tb",
         function()
           require("telescope.builtin").git_branches()
         end,
-        desc = get_desc("Git (B)ranches..."),
+        desc = "Git (B)ranches...",
       },
       {
         "tc",
         function()
           require("telescope.builtin").git_commits()
         end,
-        desc = get_desc("Git (C)ommits..."),
+        desc = "Git (C)ommits...",
       },
       {
         "ts",
         function()
           require("telescope.builtin").git_status()
         end,
-        desc = get_desc("Git (S)tatus..."),
+        desc = "Git (S)tatus...",
       },
       {
         "tS",
         function()
           require("telescope.builtin").git_stash()
         end,
-        desc = get_desc("Git (S)tash..."),
+        desc = "Git (S)tash...",
       },
       {
         "<Leader>ld",
         function()
           require("telescope.builtin").lsp_definitions()
         end,
-        desc = "LSP: View (D)efinitions...",
+        desc = "View (D)efinitions...",
       },
       {
         "<Leader>li",
         function()
           require("telescope.builtin").lsp_implementations()
         end,
-        desc = "LSP: View (I)mplementations...",
+        desc = "View (I)mplementations...",
       },
       {
         "<Leader>lr",
         function()
           require("telescope.builtin").lsp_references()
         end,
-        desc = "LSP: View (R)eferences...",
+        desc = "View (R)eferences...",
       },
       {
         "<Leader>lt",
         function()
           require("telescope.builtin").lsp_type_definitions()
         end,
-        desc = "LSP: View (T)ype definitions...",
+        desc = "View (T)ype definitions...",
       },
       {
         "<Leader>sf",
@@ -187,7 +183,7 @@ return {
         function()
           require("telescope.builtin").reloader()
         end,
-        desc = get_desc("(R)eload..."),
+        desc = "(R)eload...",
       },
     },
     config = function()

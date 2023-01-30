@@ -63,7 +63,10 @@ return {
       table.insert(runtime_path, "lua/?.lua")
       table.insert(runtime_path, "lua/?/init.lua")
 
+      local lsp = require("lsp")
       require("lspconfig").sumneko_lua.setup({
+        capabilities = lsp.capabilities,
+        on_attach = lsp.on_attach,
         settings = {
           Lua = {
             runtime = {
@@ -101,7 +104,12 @@ return {
     "saecki/crates.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     event = "BufRead Cargo.toml",
-    config = true,
+    opts = {
+      null_ls = {
+        enabled = true,
+        name = "crates",
+      },
+    },
   },
   {
     "jose-elias-alvarez/typescript.nvim",

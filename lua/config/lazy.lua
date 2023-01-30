@@ -13,11 +13,11 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup("plugins", {
   defaults = { lazy = true },
   dev = { path = "~/Code" },
-  install = { colorscheme = { "gruvbox-material" } },
-  ui = {
-    wrap = false,
-    icons = { plugin = "" },
+  install = {
+    missing = false,
+    colorscheme = { "gruvbox-material" },
   },
+  ui = { icons = { plugin = "" } },
   checker = {
     enabled = true,
     frequency = 3600,

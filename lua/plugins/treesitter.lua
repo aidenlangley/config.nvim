@@ -8,12 +8,12 @@ return {
     "windwp/nvim-ts-autotag",
   },
   build = ":TSUpdate",
-  event = "BufReadPost",
+  event = "BufReadPre",
   keys = {
     {
       "<Leader>T",
       require("utils").cmd("TSPlaygroundToggle"),
-      desc = "Treesitter: Playground",
+      desc = "Treesitter Playground",
     },
   },
   config = function()

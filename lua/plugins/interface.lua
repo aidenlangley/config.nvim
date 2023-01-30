@@ -81,7 +81,30 @@ return {
   {
     "lukas-reineke/indent-blankline.nvim",
     event = "BufReadPost",
-    config = true,
+    opts = {
+      char = "│",
+      filetype_exclude = { "help", "alpha", "dashboard", "neo-tree", "lazy" },
+      show_trailing_blankline_indent = false,
+      show_current_context = false,
+    },
+  },
+  {
+    "echasnovski/mini.indentscope",
+    version = false,
+    event = "BufReadPre",
+    opts = {
+      symbol = "│",
+      options = { try_as_border = true },
+    },
+    config = function(_, opts)
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "help", "alpha", "dashboard", "neo-tree", "lazy", "mason" },
+        callback = function()
+          vim.b.miniindentscope_disable = true
+        end,
+      })
+      require("mini.indentscope").setup(opts)
+    end,
   },
   {
     "echasnovski/mini.tabline",
@@ -94,6 +117,15 @@ return {
     "echasnovski/mini.animate",
     event = "VeryLazy",
     config = function()
+      local mouse_scrolled = false
+      for _, scroll in ipairs({ "Up", "Down" }) do
+        local key = "<ScrollWheel" .. scroll .. ">"
+        vim.keymap.set("", key, function()
+          mouse_scrolled = true
+          return key
+        end, { expr = true })
+      end
+
       local is_not_single_window = function(win_id)
         local tabpage_id = vim.api.nvim_win_get_tabpage(win_id)
         return #vim.api.nvim_tabpage_list_wins(tabpage_id) > 1
@@ -101,6 +133,18 @@ return {
 
       local animate = require("mini.animate")
       animate.setup({
+        scroll = {
+          timing = animate.gen_timing.linear({ duration = 150, unit = "total" }),
+          subscroll = animate.gen_subscroll.equal({
+            predicate = function(total_scroll)
+              if mouse_scrolled then
+                mouse_scrolled = false
+                return false
+              end
+              return total_scroll > 1
+            end,
+          }),
+        },
         open = {
           winconfig = animate.gen_winconfig.wipe({
             predicate = is_not_single_window,
@@ -267,7 +311,26 @@ return {
   {
     "petertriho/nvim-scrollbar",
     event = "BufReadPost",
-    opts = { excluded_filestypes = { "neo-tree" } },
+    opts = function()
+      local colours = require("config.colours").THEME
+      return {
+        handle = { color = colours.grey },
+        marks = {
+          Search = { color = colours.yellow },
+          Error = { color = colours.red },
+          Warn = { color = colours.orange },
+          Info = { color = colours["light-grey"] },
+          Hint = { color = colours.fg },
+          Misc = { color = colours.cyan },
+        },
+        excluded_filestypes = {
+          "prompt",
+          "TelescopePrompt",
+          "neo-tree",
+          "notify",
+        },
+      }
+    end,
   },
   {
     "folke/zen-mode.nvim",
@@ -315,13 +378,67 @@ return {
     },
   },
   {
+    "anuvyklack/windows.nvim",
+    event = "BufLeave",
+    dependencies = { "anuvyklack/middleclass" },
+    keys = {
+      {
+        "<Leader>z",
+        require("utils").cmd("WindowsMaximize"),
+        desc = "Zoom",
+      },
+    },
+    config = function()
+      vim.o.winwidth = 5
+      vim.o.equalalways = false
+      require("windows").setup({})
+    end,
+  },
+  {
     "folke/drop.nvim",
     event = "VeryLazy",
     enabled = false,
     config = function()
       math.randomseed(os.time())
-      local theme = ({ "stars", "snow" })[math.random(1, 3)]
+      local theme = ({ "stars", "snow" })[math.random(2, 3)]
       require("drop").setup({ theme = theme })
     end,
+  },
+  {
+    "folke/noice.nvim",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "rcarriga/nvim-notify",
+    },
+    event = "VeryLazy",
+    enabled = false,
+    opts = {
+      messages = {
+        view = "mini",
+        view_error = "mini",
+        view_warning = "mini",
+      },
+      commands = { last = { view = "mini" } },
+      lsp = {
+        progress = {
+          enabled = false,
+          throttle = 512,
+          view = "mini",
+        },
+        override = {
+          ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+          ["vim.lsp.util.stylize_markdown"] = true,
+          ["cmp.entry.get_documentation"] = true,
+        },
+      },
+      presets = {
+        bottom_search = true,
+        command_palette = true,
+        long_message_to_split = true,
+        inc_rename = false,
+        lsp_doc_border = false,
+      },
+    },
   },
 }

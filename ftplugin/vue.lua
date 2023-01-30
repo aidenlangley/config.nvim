@@ -1,6 +1,7 @@
 local lsp = require("lsp")
+local lspconfig = require("lspconfig")
 
-require("lspconfig").volar.setup({
+lspconfig.volar.setup({
   capabilities = lsp.capabilities,
   on_attach = lsp.on_attach,
   filetypes = {

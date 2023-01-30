@@ -57,8 +57,34 @@ return {
   },
   {
     "echasnovski/mini.ai",
+    dependencies = {
+      {
+        "nvim-treesitter/nvim-treesitter-textobjects",
+        init = function()
+          -- No need to load the plugin, since we only need its queries
+          require("lazy.core.loader").disable_rtp_plugin("nvim-treesitter-textobjects")
+        end,
+      },
+    },
+    keys = {
+      { "a", mode = { "x", "o" } },
+      { "i", mode = { "x", "o" } },
+    },
     event = "BufReadPost",
-    opts = { custom_textobjects = {} },
+    opts = function()
+      local ai = require("mini.ai")
+      return {
+        n_lines = 500,
+        custom_textobjects = {
+          o = ai.gen_spec.treesitter({
+            a = { "@block.outer", "@conditional.outer", "@loop.outer" },
+            i = { "@block.inner", "@conditional.inner", "@loop.inner" },
+          }, {}),
+          f = ai.gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }, {}),
+          c = ai.gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }, {}),
+        },
+      }
+    end,
     config = function(_, opts)
       require("mini.ai").setup(opts)
     end,
@@ -66,7 +92,38 @@ return {
   {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
+    enabled = true,
     config = true,
+  },
+  {
+    "echasnovski/mini.pairs",
+    event = "InsertEnter",
+    enabled = false,
+    opts = {
+      mappings = {
+        ["("] = {
+          action = "closeopen",
+          pair = "()",
+          neigh_pattern = "[^%a\\].",
+          register = { cr = false },
+        },
+        ["{"] = {
+          action = "closeopen",
+          pair = "{}",
+          neigh_pattern = "[^%a\\].",
+          register = { cr = false },
+        },
+        ["["] = {
+          action = "closeopen",
+          pair = "[]",
+          neigh_pattern = "[^%a\\].",
+          register = { cr = false },
+        },
+      },
+    },
+    config = function(_, opts)
+      require("mini.pairs").setup(opts)
+    end,
   },
   {
     "ggandor/leap.nvim",
@@ -112,7 +169,7 @@ return {
         function()
           require("neogen").generate({})
         end,
-        desc = "Neogen: (G)enerate docs",
+        desc = "(G)enerate docs",
       },
     },
     opts = { snippet_engine = "luasnip" },
@@ -123,7 +180,7 @@ return {
       {
         "<Leader>ls",
         require("utils").cmd("SymbolsOutline"),
-        desc = "LSP: View (S)ymbols",
+        desc = "View (S)ymbols",
       },
     },
     opts = { width = 28 },
