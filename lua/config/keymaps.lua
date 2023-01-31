@@ -1,44 +1,51 @@
-local utils = require("utils")
+---@module 'Util'
+---@type Util
+local Util = require("utils")
 
 vim.keymap.set(
   "n",
   "<Leader>so",
-  utils.cmd("e ~/.config/nvim/init.lua"),
+  Util.cmd("e ~/.config/nvim/init.lua"),
   { desc = "Open `init.lua`" }
 )
 
 -- Move through buffers
-vim.keymap.set("n", "[b", utils.cmd("bp"), { desc = "Previous buffer", silent = true })
-vim.keymap.set("n", "]b", utils.cmd("bn"), { desc = "Next buffer", silent = true })
+vim.keymap.set("n", "[b", Util.cmd("bp"), { desc = "Previous (b)uffer", silent = true })
+vim.keymap.set("n", "]b", Util.cmd("bn"), { desc = "Next (b)uffer", silent = true })
 
 -- Close buffers
-vim.keymap.set("n", "<Leader>D", utils.cmd("%bd|e#|bd#"), { desc = "(D)elete other bufferss" })
+vim.keymap.set("n", "<Leader>D", Util.cmd("%bd|e#|bd#"), { desc = "(D)elete other bufferss" })
 
 -- Write buffers
-vim.keymap.set("n", "<C-s>", utils.cmd("w"), { desc = "Write buffer" })
-vim.keymap.set("n", "<Leader>w", utils.cmd("w!"), { desc = "(W)rite buffer" })
-vim.keymap.set("n", "<Leader>W", utils.cmd("wa!"), { desc = "(W)rite all" })
+vim.keymap.set("n", "<C-s>", Util.cmd("w"), { desc = "Write buffer" })
+vim.keymap.set("n", "<Leader>w", Util.cmd("w!"), { desc = "(W)rite buffer" })
+vim.keymap.set("n", "<Leader>W", Util.cmd("wa!"), { desc = "(W)rite all" })
 
 -- New buffer
-vim.keymap.set("n", "<Leader>n", utils.cmd("enew"), { desc = "(N)ew buffer" })
+vim.keymap.set("n", "<Leader>n", Util.cmd("enew"), { desc = "(N)ew buffer" })
 
 -- Navigate windows
-vim.keymap.set("n", "<C-h>", utils.cmd("wincmd h"), { desc = " window" })
-vim.keymap.set("n", "<C-j>", utils.cmd("wincmd j"), { desc = " window" })
-vim.keymap.set("n", "<C-k>", utils.cmd("wincmd k"), { desc = " window" })
-vim.keymap.set("n", "<C-l>", utils.cmd("wincmd l"), { desc = " window" })
+vim.keymap.set("n", "<C-h>", Util.cmd("wincmd h"), { desc = " window" })
+vim.keymap.set("n", "<C-j>", Util.cmd("wincmd j"), { desc = " window" })
+vim.keymap.set("n", "<C-k>", Util.cmd("wincmd k"), { desc = " window" })
+vim.keymap.set("n", "<C-l>", Util.cmd("wincmd l"), { desc = " window" })
+
+vim.keymap.set("n", "<C-Left>", Util.cmd("wincmd h"), { desc = " window" })
+vim.keymap.set("n", "<C-Down>", Util.cmd("wincmd j"), { desc = " window" })
+vim.keymap.set("n", "<C-Up>", Util.cmd("wincmd k"), { desc = " window" })
+vim.keymap.set("n", "<C-Right>", Util.cmd("wincmd l"), { desc = " window" })
 
 -- Quit if not modified, else request confirmation
-vim.keymap.set("n", "<C-q>", utils.smart_quit, { desc = "(Q)uit" })
+vim.keymap.set("n", "<C-q>", Util.smart_quit, { desc = "(Q)uit" })
 
 -- Code actions & formatting can function without a language server
-vim.keymap.set("n", "<C-.>", vim.lsp.buf.code_action, { desc = "Code actions" })
-vim.keymap.set("n", "<Leader>lf", vim.lsp.buf.format, { desc = "Format" })
+vim.keymap.set("n", "<C-.>", vim.lsp.buf.code_action, { desc = "Code actions..." })
+vim.keymap.set("n", "<Leader>lf", vim.lsp.buf.format, { desc = "(F)ormat" })
 
-local term_lazygit = utils.float_term("lazygit")
+local term_lazygit = Util.float_term("lazygit")
 vim.keymap.set("n", "<Leader>gg", function()
   term_lazygit:toggle()
-end, { desc = "Git: Lazy(G)it" })
+end, { desc = "Lazy(G)it" })
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
 vim.keymap.set("n", "n", "'Nn'[v:searchforward]", { desc = "Search forwards", expr = true })
@@ -69,10 +76,11 @@ function M.lsp(_, bufnr)
   nmap("gd", vim.lsp.buf.definition, "Goto (D)efinition")
   nmap("gi", vim.lsp.buf.implementation, "Goto (I)mplementation")
 
-  nmap("]d", vim.diagnostic.goto_next, "Next diagnostic")
-  nmap("[d", vim.diagnostic.goto_prev, "Previous diagnostic")
+  nmap("<Leader>lk", vim.diagnostic.open_float, "Show (d)iagnostic")
+  nmap("]d", vim.diagnostic.goto_next, "Next (d)iagnostic")
+  nmap("[d", vim.diagnostic.goto_prev, "Previous (d)iagnostic")
 
-  vim.keymap.set("n", "<Leader>sl", utils.cmd("LspInfo"), { desc = "LSP: Info" })
+  vim.keymap.set("n", "<Leader>sl", Util.cmd("LspInfo"), { desc = "LSP: Info" })
 end
 
 return M

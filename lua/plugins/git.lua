@@ -1,4 +1,6 @@
-local utils = require("utils")
+---@module 'utils'
+---@type Util
+local Util = require("utils")
 
 return {
   {
@@ -62,13 +64,13 @@ return {
       },
       {
         "<Leader>gs",
-        utils.cmd("Gitsigns stage_hunk"),
+        Util.cmd("Gitsigns stage_hunk"),
         mode = "v",
         desc = "(S)tage hunk",
       },
       {
         "<Leader>gr",
-        utils.cmd("Gitsigns reset_hunk"),
+        Util.cmd("Gitsigns reset_hunk"),
         mode = "v",
         desc = "(R)eset hunk",
       },
@@ -87,16 +89,15 @@ return {
     keys = {
       {
         "<Leader>gd",
-        utils.cmd("DiffviewOpen"),
+        Util.cmd("DiffviewOpen"),
         desc = "(D)iff",
       },
       {
         "<Leader>gd",
-        utils.cmd("DiffviewFileHistory"),
+        Util.cmd("DiffviewFileHistory"),
         desc = "(H)istory",
       },
     },
     config = true,
   },
 }
-

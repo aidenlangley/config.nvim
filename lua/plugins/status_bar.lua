@@ -2,6 +2,8 @@ return {
   "feline-nvim/feline.nvim",
   event = "VeryLazy",
   config = function()
+    ---@module 'config.colours'
+    ---@type table<string, string>
     local THEME = require("config.colours").THEME
     local MODES = {
       NORMAL = "fg",
@@ -17,8 +19,10 @@ return {
       icon = "",
       hl = function()
         return {
+          ---@type string
           name = require("feline.providers.vi_mode").get_mode_highlight_name(),
           bg = "grey",
+          ---@type string
           fg = require("feline.providers.vi_mode").get_mode_color(),
           style = "bold",
         }
@@ -50,14 +54,22 @@ return {
 
     local attached_clients_provider = {
       provider = function()
+        ---@type table<integer, string>
         local clients = {}
 
-        for _, client in
-          ipairs(vim.lsp.get_active_clients({ bufnr = vim.api.nvim_get_current_buf() }))
-        do
+        ---@type table
+        local active_clients = vim.lsp.get_active_clients({
+          bufnr = vim.api.nvim_get_current_buf(),
+        })
+
+        ---@param client table
+        for _, client in ipairs(active_clients) do
           -- When handling null-ls clients, we have to further inspect the sources
           if client.name == "null-ls" then
-            for _, source in ipairs(require("null-ls.sources").get_available(vim.bo.filetype)) do
+            local avail_sources = require("null-ls.sources").get_available(vim.bo.filetype)
+
+            ---@param source table
+            for _, source in ipairs(avail_sources) do
               clients[#clients + 1] = source.name
             end
           else

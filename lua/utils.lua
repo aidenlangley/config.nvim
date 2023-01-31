@@ -1,14 +1,24 @@
-local M = {}
+---@module 'utils'
+---@author Aiden Langley
+---@license MIT
+
+---@class Source
+---@field name? string
+---@field method? string
+---@field id? integer
+
+---@class Util
+local Util = {}
 
 ---@param command string
 ---@return string
-function M.cmd(command)
+function Util.cmd(command)
   return "<CMD>" .. command .. "<CR>"
 end
 
 ---@param command string
 ---@return Terminal
-function M.float_term(command)
+function Util.float_term(command)
   return require("toggleterm.terminal").Terminal:new({
     cmd = command,
     hidden = true,
@@ -18,7 +28,7 @@ function M.float_term(command)
 end
 
 ---@param bufnr integer
-function M.smart_quit(bufnr)
+function Util.smart_quit(bufnr)
   local prompt = "You have unsaved changes. Quit anyway? (y/N) "
   local callback = function(input)
     if input == "y" then
@@ -36,19 +46,19 @@ function M.smart_quit(bufnr)
   end
 end
 
----@param source table
-function M.register_null_ls_source(source)
+---@param source Source
+function Util.register_null_ls_source(source)
   local sources = require("null-ls.sources")
   if not sources.is_registered(source.name) then
     sources.register(source)
   end
 end
 
----@param sources table
-function M.register_null_ls_sources(sources)
+---@param sources Source[]
+function Util.register_null_ls_sources(sources)
   for _, source in ipairs(sources) do
-    M.register_null_ls_source(source)
+    Util.register_null_ls_source(source)
   end
 end
 
-return M
+return Util

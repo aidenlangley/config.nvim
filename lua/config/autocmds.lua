@@ -13,8 +13,8 @@ vim.api.nvim_create_autocmd("BufLeave", {
 })
 
 -- Highlight on yank
-vim.api.nvim_create_autocmd("TextYankPost", {
-  group = vim.api.nvim_create_augroup("HighlightYank", { clear = true }),
-  pattern = "*",
-  command = "lua vim.highlight.on_yank()",
-})
+-- vim.api.nvim_create_autocmd("TextYankPost", {
+--   group = vim.api.nvim_create_augroup("HighlightYank", { clear = true }),
+--   pattern = "*",
+--   command = "lua vim.highlight.on_yank()",
+-- })

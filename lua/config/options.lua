@@ -2,8 +2,8 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- Backups please
-vim.o.backup = true
-vim.o.backupdir = vim.fn.stdpath("cache") .. "/backups"
+-- vim.o.backup = true
+-- vim.o.backupdir = vim.fn.stdpath("cache") .. "/backups"
 
 -- Set highlight on search
 vim.o.hlsearch = false

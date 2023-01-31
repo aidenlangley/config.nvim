@@ -20,6 +20,7 @@ return {
         "svelte",
         "taplo",
         "tsserver",
+        "vimls",
       },
       pip = { upgrade_pip = true },
     },
@@ -41,6 +42,8 @@ return {
         "stylua",
       }
 
+      ---@module 'mason-registry'
+      ---@class MasonRegistry
       local registry = require("mason-registry")
       for _, tool in ipairs(tools) do
         local pkg = registry.get_package(tool)
@@ -55,7 +58,13 @@ return {
   {
     "folke/neodev.nvim",
     ft = "lua",
-    opts = { setup_jsonls = true },
+    opts = {
+      debug = true,
+      experimental = {
+        pathStrict = true,
+      },
+      setup_jsonls = true,
+    },
     config = function(_, opts)
       require("neodev").setup(opts)
 
@@ -63,18 +72,61 @@ return {
       table.insert(runtime_path, "lua/?.lua")
       table.insert(runtime_path, "lua/?/init.lua")
 
+      ---@type LspHelper
       local lsp = require("lsp")
       require("lspconfig").sumneko_lua.setup({
         capabilities = lsp.capabilities,
         on_attach = lsp.on_attach,
+        single_file_support = true,
         settings = {
           Lua = {
             runtime = {
               version = "LuaJIT",
               path = runtime_path,
             },
-            diagnostics = { globals = { "vim" } },
-            workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+            completion = {
+              workspaceWord = true,
+              callSnippet = "Both",
+            },
+            misc = {
+              parameters = {
+                "--log-level=trace",
+              },
+            },
+            diagnostics = {
+              globals = { "vim" },
+              groupSeverity = {
+                strong = "Warning",
+                strict = "Warning",
+              },
+              groupFileStatus = {
+                ["ambiguity"] = "Opened",
+                ["await"] = "Opened",
+                ["codestyle"] = "None",
+                ["duplicate"] = "Opened",
+                ["global"] = "Opened",
+                ["luadoc"] = "Opened",
+                ["redefined"] = "Opened",
+                ["strict"] = "Opened",
+                ["strong"] = "Opened",
+                ["type-check"] = "Opened",
+                ["unbalanced"] = "Opened",
+                ["unused"] = "Opened",
+              },
+              unusedLocalExclude = { "_*" },
+            },
+            workspace = {
+              library = vim.api.nvim_get_runtime_file("", true),
+              checkThirdParty = false,
+            },
+            format = {
+              enable = true,
+              defaultConfig = {
+                indent_style = "space",
+                indent_size = "2",
+                continuation_indent_size = "2",
+              },
+            },
             telemetry = { enable = false },
           },
         },
@@ -177,10 +229,12 @@ return {
       },
     },
     config = function(_, opts)
+      ---@type LspHelper
       local lsp = require("lsp")
       local capabilities = lsp.capabilities
       local on_attach = lsp.on_attach
 
+      ---@type table
       local handlers = {
         function(server_name)
           require("lspconfig")[server_name].setup({
@@ -190,10 +244,14 @@ return {
         end,
       }
 
+      ---@param server string
+      ---@param config table<string, any>
       for server, config in pairs(opts.servers) do
         config["capabilities"] = capabilities
         config["on_attach"] = on_attach
-        handlers[server] = function()
+
+        ---@type fun(server_name?: string)
+        handlers[server] = function(_server_name)
           require("lspconfig")[server].setup(config)
         end
       end

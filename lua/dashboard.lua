@@ -1,13 +1,31 @@
-local M = {}
+---@module 'dashboard'
+---@author Aiden Langley
+---@license MIT
 
-function M.pad(num_spaces)
+---@class DashboardItem
+---@field type string
+---@field val any
+---@field on_press? fun()
+---@field opts { position?: string, shrink_margin?: boolean, keymap?: string[] | table<string, any>[] }
+---@field shortcut? string
+---@field align_shortcut? string
+---@field hl_shortcut? string
+
+---@class Dashboard
+local Dashboard = {}
+
+---@param num_spaces integer
+---@return { type: string, val: integer }
+function Dashboard.pad(num_spaces)
   return {
     type = "padding",
     val = num_spaces,
   }
 end
 
-function M.title(text)
+---@param text string
+---@return DashboardItem
+function Dashboard.title(text)
   if text then
     text = text .. (" "):rep(16 - #text)
   end
@@ -22,7 +40,8 @@ function M.title(text)
   }
 end
 
-function M.group()
+---@return DashboardItem
+function Dashboard.group()
   return {
     type = "group",
     val = {},
@@ -32,7 +51,11 @@ function M.group()
   }
 end
 
-function M.button(key, cmd, text)
+---@param key string
+---@param cmd string
+---@param text string
+---@return DashboardItem
+function Dashboard.button(key, cmd, text)
   return {
     type = "button",
     val = text,
@@ -60,8 +83,8 @@ function M.button(key, cmd, text)
   }
 end
 
-M.layout = {
-  M.pad(3),
+Dashboard.layout = {
+  Dashboard.pad(3),
   {
     type = "text",
     val = {
@@ -76,7 +99,7 @@ M.layout = {
       shrink_margin = false,
     },
   },
-  M.pad(1),
+  Dashboard.pad(1),
   { -- Start up time message
     type = "text",
     val = "",
@@ -85,39 +108,50 @@ M.layout = {
       hl = "@constructor",
     },
   },
-  M.pad(3),
-  M.title(" Menu"),
-  M.pad(1),
-  M.group(), -- Buttons
-  M.pad(2),
-  M.title("鈴 Lazy"),
-  M.pad(1),
-  M.group(), -- Lazy shortcuts
-  M.pad(2),
-  M.title(" Projects"),
-  M.pad(1),
-  M.group(), -- Recent projects
-  M.pad(2),
-  M.title(" Recent Files"),
-  M.pad(1),
-  M.group(), -- Recent files
+  Dashboard.pad(3),
+  Dashboard.title(" Menu"),
+  Dashboard.pad(1),
+  Dashboard.group(), -- Buttons
+  Dashboard.pad(2),
+  Dashboard.title("鈴 Lazy"),
+  Dashboard.pad(1),
+  Dashboard.group(), -- Lazy shortcuts
+  Dashboard.pad(2),
+  Dashboard.title(" Projects"),
+  Dashboard.pad(1),
+  Dashboard.group(), -- Recent projects
+  Dashboard.pad(2),
+  Dashboard.title(" Recent Files"),
+  Dashboard.pad(1),
+  Dashboard.group(), -- Recent files
 }
 
-function M.setup()
-  local utils = require("utils")
-  local menu_index = 8
-  M.layout[menu_index].val[1] = M.button("e", utils.cmd("ene"), "  New")
-  M.layout[menu_index].val[2] =
-    M.button("s", utils.cmd("e ~/.config/nvim/init.lua"), "  Settings")
-  M.layout[menu_index].val[3] = M.button("q", utils.cmd("qa"), "  Quit")
+function Dashboard.setup()
+  ---@module 'utils'
+  ---@type Util
+  local Util = require("utils")
 
-  local lazy_menu_index = 12
-  M.layout[lazy_menu_index].val[1] = M.button("h", utils.cmd("Lazy home"), "  Home")
-  M.layout[lazy_menu_index].val[2] = M.button("S", utils.cmd("Lazy sync"), "  Sync")
-  M.layout[lazy_menu_index].val[3] = M.button("u", utils.cmd("Lazy update"), "  Update")
-  M.layout[lazy_menu_index].val[4] = M.button("p", utils.cmd("Lazy profile"), "  Profile")
-  M.layout[lazy_menu_index].val[5] = M.button("c", utils.cmd("Lazy clean"), "  Clean")
-  M.layout[lazy_menu_index].val[6] = M.button("l", utils.cmd("Lazy log"), "  View Log")
+  local menu = Dashboard.layout[8]
+  ---@type DashboardItem
+  menu.val[1] = Dashboard.button("e", Util.cmd("ene"), "  New")
+  ---@type DashboardItem
+  menu.val[2] = Dashboard.button("s", Util.cmd("e ~/.config/nvim/init.lua"), "  Settings")
+  ---@type DashboardItem
+  menu.val[3] = Dashboard.button("q", Util.cmd("qa"), "  Quit")
+
+  local lazy_menu = Dashboard.layout[12]
+  ---@type DashboardItem
+  lazy_menu.val[1] = Dashboard.button("h", Util.cmd("Lazy home"), "  Home")
+  ---@type DashboardItem
+  lazy_menu.val[2] = Dashboard.button("S", Util.cmd("Lazy sync"), "  Sync")
+  ---@type DashboardItem
+  lazy_menu.val[3] = Dashboard.button("u", Util.cmd("Lazy update"), "  Update")
+  ---@type DashboardItem
+  lazy_menu.val[4] = Dashboard.button("p", Util.cmd("Lazy profile"), "  Profile")
+  ---@type DashboardItem
+  lazy_menu.val[5] = Dashboard.button("c", Util.cmd("Lazy clean"), "  Clean")
+  ---@type DashboardItem
+  lazy_menu.val[6] = Dashboard.button("l", Util.cmd("Lazy log"), "  View Log")
 end
 
-return M
+return Dashboard

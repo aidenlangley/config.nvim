@@ -27,12 +27,31 @@ return {
       },
     },
     config = function(_, opts)
-      local utils = require("utils")
+      -- Lazy is installing missing plugins for us, so we'll come back later
+      if vim.o.filetype == "lazy" then
+        vim.cmd.close()
+        vim.api.nvim_create_autocmd("User", {
+          pattern = "AlphaReady",
+          callback = function()
+            require("lazy").show()
+          end,
+        })
+      end
+
+      ---@module 'utils'
+      ---@type Util
+      local Util = require("utils")
+
+      ---@module 'dashboard'
+      ---@type Dashboard
       local dashboard = require("dashboard")
+
+      ---@type { }
       local layout = dashboard.layout
       local button = dashboard.button
 
       local stats = require("lazy").stats()
+      ---@type string
       layout[4].val = "  "
         .. stats.loaded
         .. "/"
@@ -41,6 +60,8 @@ return {
         .. (math.floor(stats.startuptime * 100 + 0.5) / 100)
         .. "ms  "
 
+      ---@module 'project_nvim'
+      ---@type string[]
       local rp = require("project_nvim").get_recent_projects()
 
       -- Reverse recent projects
@@ -56,19 +77,26 @@ return {
           break
         end
 
-        local cmd = utils.cmd("e " .. project_path .. "<Bar>Telescope find_files")
+        local cmd = Util.cmd("e " .. project_path .. "<Bar>Telescope find_files")
         local project_name = vim.fn.fnamemodify(project_path, ":t")
         local short_project_path = vim.fn.fnamemodify(project_path, ":~")
         local text = " " .. project_name .. " (" .. short_project_path .. ")"
+
+        ---@type DashboardItem
         layout[16].val[index] = button(tostring(index - 1), cmd, text)
       end
 
-      ---@diagnostic disable-next-line: undefined-field
+      ---@param filename string
       for _, filename in ipairs(vim.v.oldfiles) do
         local index = #layout[20].val + 1
+
+        ---@module 'utils'
+        ---@type string
         local cmd = require("utils").cmd("e " .. filename)
         if vim.fn.filereadable(filename) == 1 then
           local short_filename = vim.fn.fnamemodify(filename, ":~"):sub(1, 64)
+
+          ---@type DashboardItem
           layout[20].val[index] = button(tostring((index + 10) - 1), cmd, " " .. short_filename)
         end
       end
@@ -116,6 +144,7 @@ return {
   {
     "echasnovski/mini.animate",
     event = "VeryLazy",
+    enabled = true,
     config = function()
       local mouse_scrolled = false
       for _, scroll in ipairs({ "Up", "Down" }) do
@@ -131,11 +160,21 @@ return {
         return #vim.api.nvim_tabpage_list_wins(tabpage_id) > 1
       end
 
+      ---@module 'mini.animate'
+      ---@class MiniAnimate
+      ---@field setup fun(config: table)
+      ---@field config table
+      ---@field gen_timing { linear: fun(opts: table): fun(power: integer, opts: table) }
+      ---@field gen_subscroll { equal: fun(opts: table): fun() }
+      ---@field gen_winconfig { wipe: fun(opts: table): fun() }
       local animate = require("mini.animate")
       animate.setup({
         scroll = {
+          ---@type fun(a, b): integer
           timing = animate.gen_timing.linear({ duration = 150, unit = "total" }),
+          ---@type fun(total_scroll: integer): boolean
           subscroll = animate.gen_subscroll.equal({
+            max_output_steps = 120,
             predicate = function(total_scroll)
               if mouse_scrolled then
                 mouse_scrolled = false
@@ -167,13 +206,12 @@ return {
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons",
     },
-    branch = "v2.x",
     cmd = { "Neotree" },
     keys = {
       {
         "<C-e>",
         require("utils").cmd("Neotree toggle"),
-        desc = "Explorer",
+        desc = "Explorer (NeoTree)",
         noremap = true,
       },
     },
@@ -182,13 +220,15 @@ return {
       enable_diagnostics = true,
       enable_git_status = true,
       hide_root_node = true,
-      use_popups_for_input = false,
+      use_popups_for_input = true,
       window = {
         position = "left",
         width = 28,
         mappings = {
           ["d"] = function(state)
+            ---@type table
             local tree = state.tree
+            ---@type table
             local node = tree:get_node()
             if node.type == "message" then
               return
@@ -250,7 +290,7 @@ return {
         presets = {
           g = true,
           nav = true,
-          operators = true,
+          operators = false,
           text_objects = true,
           windows = true,
           z = true,
@@ -279,6 +319,7 @@ return {
       local wk = require("which-key")
       wk.setup(opts)
 
+      wk.register({ t = { name = "(T)elescope..." } })
       wk.register({
         { c = { name = "(C)omment..." } },
         { g = { name = "(G)it..." } },
@@ -290,11 +331,20 @@ return {
         prefix = "<Leader>",
         mode = { "n", "v" },
       })
+      wk.register({
+        { ["ds"] = { name = "(D)elete (S)urround" } },
+        { ["ys"] = { name = "(S)urround" } },
+        { ["cs"] = { name = "(C)hange (S)urround" } },
+      }, {
+        mode = { "n", "v", "o" },
+      })
     end,
   },
   {
     "rcarriga/nvim-notify",
     init = function()
+      ---@module 'notify'
+      ---@type table
       local notify = require("notify")
       notify.setup({
         max_height = function()
@@ -348,19 +398,6 @@ return {
   {
     "stevearc/dressing.nvim",
     event = "VeryLazy",
-    init = function()
-      ---@diagnostic disable-next-line: duplicate-set-field
-      vim.ui.select = function(...)
-        require("lazy").load({ plugins = { "dressing.nvim" } })
-        return vim.ui.select(...)
-      end
-      --
-      ---@diagnostic disable-next-line: duplicate-set-field
-      vim.ui.input = function(...)
-        require("lazy").load({ plugins = { "dressing.nvim" } })
-        return vim.ui.input(...)
-      end
-    end,
   },
   {
     "b0o/incline.nvim",
@@ -368,9 +405,13 @@ return {
     opts = {
       render = function(props)
         local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+        ---@type string, string
         local icon, color = require("nvim-web-devicons").get_icon_color(filename)
         return {
-          { icon, guifg = color },
+          {
+            icon,
+            guifg = color, ---@type string
+          },
           { " " },
           { filename },
         }
@@ -379,7 +420,7 @@ return {
   },
   {
     "anuvyklack/windows.nvim",
-    event = "BufLeave",
+    event = "BufReadPost",
     dependencies = { "anuvyklack/middleclass" },
     keys = {
       {
@@ -390,7 +431,7 @@ return {
     },
     config = function()
       vim.o.winwidth = 5
-      vim.o.equalalways = false
+      vim.o.equalalways = true
       require("windows").setup({})
     end,
   },

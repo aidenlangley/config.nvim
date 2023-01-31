@@ -5,4 +5,5 @@ utils.register_null_ls_sources({
   null_ls.builtins.formatting.prettierd.with({
     filetypes = { "markdown" },
   }),
+  null_ls.builtins.diagnostics.markdownlint,
 })

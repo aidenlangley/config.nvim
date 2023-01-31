@@ -22,12 +22,13 @@ return {
       {
         "<Leader>sn",
         require("utils").cmd("NullLsInfo"),
-        desc = "(N)ullLs: Info",
+        desc = "NullLs: Info",
       },
     },
     config = function()
       local null_ls = require("null-ls")
       null_ls.setup({
+        debounce = 150,
         sources = {
           -- Web dev
           null_ls.builtins.formatting.prettier.with({
@@ -113,7 +114,15 @@ return {
       end,
     },
     config = function(_, opts)
+      ---@module 'cmp'
       local cmp = require("cmp")
+
+      ---@module 'luasnip'
+      ---@class LuaSnip
+      ---@field expand_or_jumpable fun(): boolean
+      ---@field expand_or_jump fun(): boolean
+      ---@field jumpable fun(dir: any): boolean
+      ---@field jump fun(dir: any): boolean
       local luasnip = require("luasnip")
 
       local function select_next_item(fallback)
@@ -144,6 +153,10 @@ return {
         { name = "path" },
         { name = "crates" },
       })
+
+      ---@module 'cmp.config.mapping'
+      ---@class CmpMapping
+      ---@type { [string]: CmpMapping }
       opts["mapping"] = {
         ["<Tab>"] = cmp.mapping(select_next_item, { "i", "s" }),
         ["<S-Tab>"] = cmp.mapping(select_prev_item, { "i", "s" }),
@@ -172,7 +185,9 @@ return {
   {
     "echasnovski/mini.comment",
     dependencies = { "JoosepAlviste/nvim-ts-context-commentstring" },
-    keys = { "gc" },
+    keys = {
+      { "gc", mode = { "n", "v" } },
+    },
     opts = {
       mappings = {
         comment = "gc",

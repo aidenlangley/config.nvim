@@ -3,6 +3,7 @@ return {
     "nvim-telescope/telescope.nvim",
     dependencies = {
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+      "debugloop/telescope-undo.nvim",
     },
     cmd = { "Telescope" },
     keys = {
@@ -19,6 +20,13 @@ return {
           require("telescope.builtin").buffers()
         end,
         desc = "Buffers...",
+      },
+      {
+        "t:",
+        function()
+          require("telescope.builtin").command_history()
+        end,
+        desc = "Command History...",
       },
       {
         "ta",
@@ -62,13 +70,7 @@ return {
         end,
         desc = "(H)elp...",
       },
-      {
-        "tH",
-        function()
-          require("telescope.builtin").command_history()
-        end,
-        desc = "Command (H)istory...",
-      },
+
       {
         "tm",
         function()
@@ -102,35 +104,49 @@ return {
         function()
           require("telescope.builtin").builtin()
         end,
-        desc = "(B)uiltins...",
+        desc = "Buil(t)ins...",
       },
       {
-        "tb",
+        "ty",
+        function()
+          require("telescope").extensions.yank_history.yank_history()
+        end,
+        desc = "Put from (Y)anky...",
+      },
+      {
+        "tu",
+        function()
+          require("telescope").extensions.undo.undo()
+        end,
+        desc = "(U)ndo history...",
+      },
+      {
+        "<Leader>gb",
         function()
           require("telescope.builtin").git_branches()
         end,
-        desc = "Git (B)ranches...",
+        desc = "(B)ranches...",
       },
       {
-        "tc",
+        "<Leader>gc",
         function()
           require("telescope.builtin").git_commits()
         end,
-        desc = "Git (C)ommits...",
+        desc = "(C)ommits...",
       },
       {
-        "ts",
+        "<Leader>gs",
         function()
           require("telescope.builtin").git_status()
         end,
-        desc = "Git (S)tatus...",
+        desc = "(S)tatus...",
       },
       {
-        "tS",
+        "<Leader>gt",
         function()
           require("telescope.builtin").git_stash()
         end,
-        desc = "Git (S)tash...",
+        desc = "S(t)ash...",
       },
       {
         "<Leader>ld",
@@ -187,7 +203,10 @@ return {
       },
     },
     config = function()
+      ---@type table
       local actions = require("telescope.actions")
+
+      ---@type table<string, table<string, any>>
       local mappings = {
         i = {
           ["<C-j>"] = actions.move_selection_next,
@@ -221,16 +240,28 @@ return {
         oldfiles = { theme = "dropdown" },
       }
 
+      ---@type table
       local ts = require("telescope")
       ts.setup({
         defaults = { mappings = mappings },
         pickers = pickers,
+        extensions = {
+          undo = {
+            side_by_side = true,
+            layout_strategy = "vertical",
+            layout_config = {
+              preview_height = 0.7,
+            },
+          },
+        },
       })
 
       pcall(ts.load_extension, "fzf")
       pcall(ts.load_extension, "notify")
       pcall(ts.load_extension, "projects")
       pcall(ts.load_extension, "refactoring")
+      pcall(ts.load_extension, "yank_history")
+      pcall(ts.load_extension, "undo")
     end,
   },
 }
