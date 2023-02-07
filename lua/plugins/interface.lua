@@ -9,102 +9,6 @@ return {
       vim.cmd([[colorscheme gruvbox-material]])
     end,
   },
-  {
-    "goolord/alpha-nvim",
-    dependencies = { "ahmedkhalf/project.nvim" },
-    event = "UIEnter",
-    keys = {
-      {
-        "<Leader>;",
-        require("utils").cmd("Alpha"),
-        desc = "Dashboard",
-      },
-    },
-    opts = {
-      layout = {},
-      opts = {
-        margin = 12,
-      },
-    },
-    config = function(_, opts)
-      -- Lazy is installing missing plugins for us, so we'll come back later
-      if vim.o.filetype == "lazy" then
-        vim.cmd.close()
-        vim.api.nvim_create_autocmd("User", {
-          pattern = "AlphaReady",
-          callback = function()
-            require("lazy").show()
-          end,
-        })
-      end
-
-      ---@module 'utils'
-      ---@type Util
-      local Util = require("utils")
-
-      ---@module 'dashboard'
-      ---@type Dashboard
-      local dashboard = require("dashboard")
-
-      ---@type { }
-      local layout = dashboard.layout
-      local button = dashboard.button
-
-      local stats = require("lazy").stats()
-      ---@type string
-      layout[4].val = "  "
-        .. stats.loaded
-        .. "/"
-        .. stats.count
-        .. " plugins, "
-        .. (math.floor(stats.startuptime * 100 + 0.5) / 100)
-        .. "ms  "
-
-      ---@module 'project_nvim'
-      ---@type string[]
-      local rp = require("project_nvim").get_recent_projects()
-
-      -- Reverse recent projects
-      for i = 1, math.floor(#rp / 2) do
-        rp[i], rp[#rp - i + 1] = rp[#rp - i + 1], rp[i]
-      end
-
-      for _, project_path in ipairs(rp) do
-        local index = #layout[16].val + 1
-
-        -- Only print 9 most recent projects
-        if index >= 11 then
-          break
-        end
-
-        local cmd = Util.cmd("e " .. project_path .. "<Bar>Telescope find_files")
-        local project_name = vim.fn.fnamemodify(project_path, ":t")
-        local short_project_path = vim.fn.fnamemodify(project_path, ":~")
-        local text = " " .. project_name .. " (" .. short_project_path .. ")"
-
-        ---@type DashboardItem
-        layout[16].val[index] = button(tostring(index - 1), cmd, text)
-      end
-
-      ---@param filename string
-      for _, filename in ipairs(vim.v.oldfiles) do
-        local index = #layout[20].val + 1
-
-        ---@module 'utils'
-        ---@type string
-        local cmd = require("utils").cmd("e " .. filename)
-        if vim.fn.filereadable(filename) == 1 then
-          local short_filename = vim.fn.fnamemodify(filename, ":~"):sub(1, 64)
-
-          ---@type DashboardItem
-          layout[20].val[index] = button(tostring((index + 10) - 1), cmd, " " .. short_filename)
-        end
-      end
-
-      opts.layout = layout
-      require("alpha").setup(opts)
-    end,
-  },
   "nvim-tree/nvim-web-devicons",
   {
     "lukas-reineke/indent-blankline.nvim",
@@ -338,6 +242,10 @@ return {
       }, {
         mode = { "n", "v", "o" },
       })
+      wk.register({
+        { ["]"] = { name = "Goto..." } },
+        { ["["] = { name = "Goto..." } },
+      }, {})
     end,
   },
   {

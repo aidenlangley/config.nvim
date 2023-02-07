@@ -6,11 +6,11 @@ vim.api.nvim_create_autocmd("BufRead", {
 })
 
 -- Resize windows when we close our explorer
-vim.api.nvim_create_autocmd("BufLeave", {
-  group = vim.api.nvim_create_augroup("ExplorerLostFocus", { clear = true }),
-  pattern = "neo-tree *",
-  command = "wincmd =",
-})
+-- vim.api.nvim_create_autocmd("BufLeave", {
+--   group = vim.api.nvim_create_augroup("ExplorerLostFocus", { clear = true }),
+--   pattern = "neo-tree *",
+--   command = "wincmd =",
+-- })
 
 -- Highlight on yank
 -- vim.api.nvim_create_autocmd("TextYankPost", {

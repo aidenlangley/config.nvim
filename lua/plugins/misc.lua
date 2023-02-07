@@ -33,5 +33,4 @@ return {
     },
     opts = { plugins = { gitsigns = true } },
   },
-  { "fladson/vim-kitty", ft = "kitty" },
 }

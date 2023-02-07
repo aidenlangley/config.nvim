@@ -42,8 +42,6 @@ return {
         "stylua",
       }
 
-      ---@module 'mason-registry'
-      ---@class MasonRegistry
       local registry = require("mason-registry")
       for _, tool in ipairs(tools) do
         local pkg = registry.get_package(tool)
@@ -60,9 +58,7 @@ return {
     ft = "lua",
     opts = {
       debug = true,
-      experimental = {
-        pathStrict = true,
-      },
+      experimental = { pathStrict = true },
       setup_jsonls = true,
     },
     config = function(_, opts)
@@ -72,7 +68,6 @@ return {
       table.insert(runtime_path, "lua/?.lua")
       table.insert(runtime_path, "lua/?/init.lua")
 
-      ---@type LspHelper
       local lsp = require("lsp")
       require("lspconfig").sumneko_lua.setup({
         capabilities = lsp.capabilities,
@@ -181,10 +176,9 @@ return {
       },
     },
   },
-  {
-    "evanleck/vim-svelte",
-    ft = "svelte",
-  },
+  "akinsho/flutter-tools.nvim",
+  { "evanleck/vim-svelte", ft = "svelte" },
+  { "fladson/vim-kitty", ft = "kitty" },
   {
     "neovim/nvim-lspconfig",
     dependencies = {
@@ -260,5 +254,30 @@ return {
       require("mason-lspconfig").setup_handlers(handlers)
     end,
   },
-  "akinsho/flutter-tools.nvim",
+  {
+    "glepnir/lspsaga.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    event = "BufReadPost",
+    opts = {
+      ui = { border = "single" },
+      beacon = { enable = false },
+      diagnostic = {
+        show_code_action = false,
+        show_source = false,
+        jump_num_shortcut = false,
+      },
+      lightbulb = {
+        enable_in_insert = false,
+        sign = false,
+      },
+      rename = { quit = "q" },
+      symbol_in_winbar = { enable = false },
+    },
+    config = function(_, opts)
+      require("lspsaga").setup(opts)
+
+      local colours = require("config.colours").THEME
+      vim.api.nvim_set_hl(0, "SagaBorder", { fg = colours.grey })
+    end,
+  },
 }

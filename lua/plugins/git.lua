@@ -1,10 +1,10 @@
----@module 'utils'
----@type Util
-local Util = require("utils")
+---@type utils
+local utils = require("utils")
 
 return {
   {
     "lewis6991/gitsigns.nvim",
+    event = { "BufReadPost" },
     keys = {
       {
         "]h",
@@ -35,13 +35,6 @@ return {
         desc = "Toggle (D)eleted",
       },
       {
-        "<Leader>gp",
-        function()
-          require("gitsigns").preview_hunk()
-        end,
-        desc = "(P)review hunk",
-      },
-      {
         "<Leader>gR",
         function()
           require("gitsigns").reset_buffer()
@@ -64,18 +57,26 @@ return {
       },
       {
         "<Leader>gs",
-        Util.cmd("Gitsigns stage_hunk"),
+        utils.cmd("Gitsigns stage_hunk"),
         mode = "v",
         desc = "(S)tage hunk",
       },
       {
         "<Leader>gr",
-        Util.cmd("Gitsigns reset_hunk"),
+        utils.cmd("Gitsigns reset_hunk"),
         mode = "v",
         desc = "(R)eset hunk",
       },
     },
-    config = true,
+    opts = {
+      current_line_blame = true,
+      current_line_blame_formatter = "<author> (<author_time:%Y-%m-%d>): <summary>",
+      current_line_blame_opts = {
+        virt_text_pos = "eol",
+        delay = 500,
+      },
+      preview_config = { border = "none" },
+    },
   },
   {
     "sindrets/diffview.nvim",
@@ -89,12 +90,12 @@ return {
     keys = {
       {
         "<Leader>gd",
-        Util.cmd("DiffviewOpen"),
+        utils.cmd("DiffviewOpen"),
         desc = "(D)iff",
       },
       {
         "<Leader>gd",
-        Util.cmd("DiffviewFileHistory"),
+        utils.cmd("DiffviewFileHistory"),
         desc = "(H)istory",
       },
     },

@@ -45,16 +45,16 @@ require("lazy").setup("plugins", {
 })
 
 ---@module 'utils'
----@type Util
-local Util = require("utils")
-vim.keymap.set("n", "<Leader>sL", Util.cmd("Lazy"), { desc = "Open Lazy" })
+---@type utils
+local utils = require("utils")
 
 local function nmap(keys, func, desc)
   vim.keymap.set("n", keys, func, { desc = desc })
 end
 
-nmap("<Leader>sc", Util.cmd("Lazy clean"), "Clean")
-nmap("<Leader>sh", Util.cmd("Lazy help"), "Help")
-nmap("<Leader>sp", Util.cmd("Lazy profile"), "Profile")
-nmap("<Leader>ss", Util.cmd("Lazy sync"), "Sync")
-nmap("<Leader>su", Util.cmd("Lazy update"), "Update")
+vim.keymap.set("n", "<Leader>sL", utils.cmd("Lazy"), { desc = "Open Lazy" })
+nmap("<Leader>sc", utils.cmd("Lazy clean"), "Clean")
+nmap("<Leader>sh", utils.cmd("Lazy help"), "Help")
+nmap("<Leader>sp", utils.cmd("Lazy profile"), "Profile")
+nmap("<Leader>ss", utils.cmd("Lazy sync"), "Sync")
+nmap("<Leader>su", utils.cmd("Lazy update"), "Update")

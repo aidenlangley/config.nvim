@@ -121,7 +121,7 @@ return {
         desc = "(U)ndo history...",
       },
       {
-        "<Leader>gb",
+        "<Leader>gB",
         function()
           require("telescope.builtin").git_branches()
         end,

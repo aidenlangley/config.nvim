@@ -1,3 +1,5 @@
+local utils = require("utils")
+
 return {
   {
     "jose-elias-alvarez/null-ls.nvim",
@@ -21,7 +23,7 @@ return {
     keys = {
       {
         "<Leader>sn",
-        require("utils").cmd("NullLsInfo"),
+        utils.cmd("NullLsInfo"),
         desc = "NullLs: Info",
       },
     },
@@ -50,15 +52,15 @@ return {
               "vue",
             },
             only_local = "node_modules/.bin",
-            condition = function(utils)
-              utils.root_has_file({ "node_modules" })
+            condition = function(nls_utils)
+              nls_utils.root_has_file({ "node_modules" })
             end,
           }),
           null_ls.builtins.diagnostics.eslint.with({
             extra_filetypes = { "svelte" },
             prefer_local = "node_modules/.bin",
-            condition = function(utils)
-              utils.root_has_file({ "node_modules" })
+            condition = function(nls_utils)
+              nls_utils.root_has_file({ "node_modules" })
             end,
           }),
           require("typescript.extensions.null-ls.code-actions").with({
@@ -114,15 +116,14 @@ return {
       end,
     },
     config = function(_, opts)
-      ---@module 'cmp'
       local cmp = require("cmp")
 
       ---@module 'luasnip'
-      ---@class LuaSnip
+      ---@class luasnip
       ---@field expand_or_jumpable fun(): boolean
       ---@field expand_or_jump fun(): boolean
-      ---@field jumpable fun(dir: any): boolean
-      ---@field jump fun(dir: any): boolean
+      ---@field jumpable fun(dir: nil | integer): boolean
+      ---@field jump fun(dir: nil | integer): boolean
       local luasnip = require("luasnip")
 
       local function select_next_item(fallback)
@@ -154,9 +155,7 @@ return {
         { name = "crates" },
       })
 
-      ---@module 'cmp.config.mapping'
-      ---@class CmpMapping
-      ---@type { [string]: CmpMapping }
+      ---@type table<string, cmp.Mapping>
       opts["mapping"] = {
         ["<Tab>"] = cmp.mapping(select_next_item, { "i", "s" }),
         ["<S-Tab>"] = cmp.mapping(select_prev_item, { "i", "s" }),
@@ -164,6 +163,7 @@ return {
         ["<Up>"] = cmp.mapping(select_prev_item, { "i", "s" }),
         ["<CR>"] = cmp.mapping(cmp.mapping.confirm({ select = true }), { "i", "s" }),
       }
+
       opts["formatting"] = {
         source_names = {},
         format = require("lspkind").cmp_format({
@@ -179,31 +179,14 @@ return {
           },
         }),
       }
+
+      local autopairs = require("nvim-autopairs.completion.cmp")
+      cmp.event:on("confirm_done", autopairs.on_confirm_done())
+
       cmp.setup(opts)
     end,
   },
-  {
-    "echasnovski/mini.comment",
-    dependencies = { "JoosepAlviste/nvim-ts-context-commentstring" },
-    keys = {
-      { "gc", mode = { "n", "v" } },
-    },
-    opts = {
-      mappings = {
-        comment = "gc",
-        comment_line = "gcc",
-        textobject = "gc",
-      },
-      hooks = {
-        pre = function()
-          require("ts_context_commentstring.internal").update_commentstring({})
-        end,
-      },
-    },
-    config = function(_, opts)
-      require("mini.comment").setup(opts)
-    end,
-  },
+
   {
     "ThePrimeagen/refactoring.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
@@ -224,15 +207,11 @@ return {
     keys = {
       {
         "<Leader>rn",
-        function()
-          return ":IncRename " .. vim.fn.expand("<cword>")
-        end,
+        utils.cmd("IncRename " .. vim.fn.expand("<cword>")),
         expr = true,
         desc = "Incremental re(n)ame",
       },
     },
-    opts = {
-      input_buffer_type = "dressing",
-    },
+    opts = { input_buffer_type = "dressing" },
   },
 }

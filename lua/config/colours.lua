@@ -1,4 +1,5 @@
-local M = {
+---@class colours
+return {
   -- gruvbox-material
   THEME = {
     fg = "#ebdbb2",
@@ -17,5 +18,3 @@ local M = {
     yellow = "#fabd2f",
   },
 }
-
-return M
