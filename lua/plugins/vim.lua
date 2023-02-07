@@ -2,6 +2,7 @@ return {
   {
     "tpope/vim-fugitive",
     cmd = {
+      "G",
       "Git",
       "Gedit",
       "Gdiffsplit",
@@ -17,9 +18,8 @@ return {
       "Gsplit",
     },
   },
-  "tpope/vim-surround",
-  -- "tpope/vim-commentary",
   "tpope/vim-sensible",
+  "tpope/vim-repeat",
   {
     "andymass/vim-matchup",
     event = "BufReadPre",
@@ -32,19 +32,14 @@ return {
       vim.g.matchup_matchparen_deferred = 1
       vim.g.matchup_matchparen_hi_surround_always = 1
       vim.g.matchup_matchparen_offscreen = { method = "popup" }
-
-      local colours = require("config.colours").THEME
-      vim.api.nvim_set_hl(0, "MatchParenCur", {
-        fg = colours.grey,
-        bg = colours.bg,
-      })
     end,
   },
   {
     "mg979/vim-visual-multi",
+    enabled = false,
     keys = {
       "<C-n>", -- Selects word incrementally
-      "<M-n>", -- Selects all words
+      "<C-N>", -- Selects all words
       "<C-Down>",
       "<C-Left>",
       "<C-Right>",
@@ -52,9 +47,9 @@ return {
     },
     config = function()
       vim.g.multi_cursor_start_word_key = "<C-n>"
-      vim.g.multi_cursor_select_all_word_key = "<M-n>"
+      vim.g.multi_cursor_select_all_word_key = "<C-N>"
       vim.g.multi_cursor_start_key = "g<C-n>"
-      vim.g.multi_cursor_select_all_key = "g<M-n>"
+      vim.g.multi_cursor_select_all_key = "g<C-N>"
       vim.g.multi_cursor_next_key = "<C-n>"
       vim.g.multi_cursor_prev_key = "<C-p>"
       vim.g.multi_cursor_skip_key = "<C-x>"

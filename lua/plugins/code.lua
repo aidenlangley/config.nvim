@@ -1,5 +1,3 @@
-local utils = require("utils")
-
 return {
   {
     "jose-elias-alvarez/null-ls.nvim",
@@ -23,7 +21,7 @@ return {
     keys = {
       {
         "<Leader>sn",
-        utils.cmd("NullLsInfo"),
+        require("utils").cmd("NullLsInfo"),
         desc = "NullLs: Info",
       },
     },
@@ -89,101 +87,132 @@ return {
     dependencies = {
       "L3MON4D3/LuaSnip",
       "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-emoji",
       "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-nvim-lsp-signature-help",
+      "hrsh7th/cmp-nvim-lsp-document-symbol",
+      "hrsh7th/cmp-omni",
       "hrsh7th/cmp-path",
       "saadparwaiz1/cmp_luasnip",
       "onsails/lspkind.nvim",
     },
     version = false,
     event = "InsertEnter",
-    opts = {
-      completion = { completeopt = "menu,menuone,noinsert" },
-      snippet = {
-        expand = function(args)
-          require("luasnip").lsp_expand(args.body)
-        end,
-      },
-      experimental = { ghost_text = { hl_group = "LspCodeLens" } },
-      enabled = function()
-        if vim.api.nvim_get_mode().mode == "c" then
-          return true
-        else
-          local context = require("cmp.config.context")
-          return not context.in_treesitter_capture("comment")
-            and not context.in_syntax_group("Comment")
-        end
-      end,
-    },
-    config = function(_, opts)
+    opts = function()
       local cmp = require("cmp")
-
-      ---@module 'luasnip'
-      ---@class luasnip
-      ---@field expand_or_jumpable fun(): boolean
-      ---@field expand_or_jump fun(): boolean
-      ---@field jumpable fun(dir: nil | integer): boolean
-      ---@field jump fun(dir: nil | integer): boolean
       local luasnip = require("luasnip")
 
-      local function select_next_item(fallback)
-        if cmp.visible() then
-          cmp.select_next_item()
-        elseif luasnip.expand_or_jumpable() then
-          luasnip.expand_or_jump()
-        else
-          fallback()
-        end
-      end
+      return {
+        completion = { completeopt = "menu,menuone,noinsert" },
+        snippet = {
+          expand = function(args)
+            require("luasnip").lsp_expand(args.body)
+          end,
+        },
+        experimental = { ghost_text = { hl_group = "@comment" } },
+        enabled = function()
+          if vim.api.nvim_get_mode().mode == "c" then
+            return true
+          else
+            local context = require("cmp.config.context")
+            return not context.in_treesitter_capture("comment")
+              and not context.in_syntax_group("Comment")
+          end
+        end,
+        sources = cmp.config.sources({
+          { name = "crates" },
+          { name = "omni" },
+          { name = "nvim_lsp" },
+          { name = "nvim_lsp_signature_help" },
+          { name = "nvim_lsp_document_symbol" },
+          { name = "luasnip" },
+          { name = "buffer" },
+          { name = "path" },
+          { name = "emoji" },
+        }),
+        mapping = {
+          ["<Up>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item()
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+          ["<Down>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_next_item()
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
 
-      local function select_prev_item(fallback)
-        if cmp.visible() then
-          cmp.select_prev_item()
-        elseif luasnip.jumpable(-1) then
-          luasnip.jump(-1)
-        else
-          fallback()
-        end
-      end
+          ["<Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_next_item()
+            elseif luasnip.expand_or_jumpable() then
+              luasnip.expand_or_jump()
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+          ["<S-Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+              luasnip.jump(-1)
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
 
-      opts["sources"] = cmp.config.sources({
-        { name = "buffer" },
-        { name = "emoji" },
-        { name = "luasnip" },
-        { name = "nvim_lsp" },
-        { name = "path" },
-        { name = "crates" },
+          ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-u>"] = cmp.mapping.scroll_docs(4),
+
+          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+        },
+        formatting = {
+          source_names = {},
+          format = require("lspkind").cmp_format({
+            maxwidth = 32,
+            mode = "symbol_text",
+            menu = {
+              buffer = "(Buffer)",
+              emoji = "(Emoji)",
+              luasnip = "(LuaSnip)",
+              nvim_lsp = "(LSP)",
+              nvim_lsp_signature_help = "(Signature)",
+              nvim_lsp_document_symbol = "(Document)",
+              omni = "(Omni)",
+              path = "(Path)",
+              crates = "(Crates)",
+            },
+          }),
+        },
+      }
+    end,
+    config = function(_, opts)
+      local cmp = require("cmp")
+      cmp.setup(opts)
+
+      cmp.setup.cmdline("/", {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = {
+          { name = "buffer" },
+        },
       })
 
-      ---@type table<string, cmp.Mapping>
-      opts["mapping"] = {
-        ["<Tab>"] = cmp.mapping(select_next_item, { "i", "s" }),
-        ["<S-Tab>"] = cmp.mapping(select_prev_item, { "i", "s" }),
-        ["<Down>"] = cmp.mapping(select_next_item, { "i", "s" }),
-        ["<Up>"] = cmp.mapping(select_prev_item, { "i", "s" }),
-        ["<CR>"] = cmp.mapping(cmp.mapping.confirm({ select = true }), { "i", "s" }),
-      }
-
-      opts["formatting"] = {
-        source_names = {},
-        format = require("lspkind").cmp_format({
-          maxwidth = 32,
-          mode = "symbol_text",
-          menu = {
-            buffer = "(Buffer)",
-            emoji = "(Emoji)",
-            luasnip = "(LuaSnip)",
-            nvim_lsp = "(LSP)",
-            path = "(Path)",
-            crates = "(Crates)",
-          },
+      cmp.setup.cmdline(":", {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources({
+          { name = "path" },
+        }, {
+          { name = "cmdline" },
         }),
-      }
+      })
 
       local autopairs = require("nvim-autopairs.completion.cmp")
       cmp.event:on("confirm_done", autopairs.on_confirm_done())
-
-      cmp.setup(opts)
     end,
   },
 
@@ -207,7 +236,7 @@ return {
     keys = {
       {
         "<Leader>rn",
-        utils.cmd("IncRename " .. vim.fn.expand("<cword>")),
+        require("utils").cmd("IncRename " .. vim.fn.expand("<cword>")),
         expr = true,
         desc = "Incremental re(n)ame",
       },

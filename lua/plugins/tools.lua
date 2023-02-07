@@ -1,7 +1,15 @@
 return {
   {
     "akinsho/toggleterm.nvim",
-    keys = { "<C-t>" },
+    keys = {
+      "<C-t>",
+      {
+        "<Esc><Esc>",
+        "<C-\\><C-n>",
+        mode = "t",
+        desc = "Exit terminal",
+      },
+    },
     opts = {
       open_mapping = "<C-t>",
       direction = "horizontal",

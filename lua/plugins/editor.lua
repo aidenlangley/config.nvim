@@ -17,7 +17,7 @@ return {
   },
   {
     "mcauley-penney/tidy.nvim",
-    event = "BufReadPost",
+    event = "BufWrite",
     config = true,
   },
   {
@@ -109,15 +109,60 @@ return {
   },
   {
     "gbprod/yanky.nvim",
+    dependencies = { "kkharji/sqlite.lua" },
     keys = {
-      { "p", "<Plug>(YankyPutAfter)", desc = "Put after" },
-      { "P", "<Plug>(YankyPutBefore)", desc = "Put before" },
-      { "gp", "<Plug>(YankyGPutAfter)", desc = "GPut after" },
-      { "gP", "<Plug>(YankyGPutBefore)", desc = "GPut before" },
-      { "<C-p>", "<Plug>(YankyCycleBackward)", desc = "Cycle yank backwards" },
-      { "<C-k>", "<Plug>(YankyCycleForward)", desc = "Cycle yank forwards" },
-      { "y", "<Plug>(YankyYank)", desc = "(Y)ank" },
+      {
+        "p",
+        "<Plug>(YankyPutAfter)",
+        mode = { "n", "x" },
+        desc = "Put after",
+      },
+      {
+        "P",
+        "<Plug>(YankyPutBefore)",
+        mode = { "n", "x" },
+        desc = "Put before",
+      },
+      {
+        "<C-n>",
+        "<Plug>(YankyCicleForward)",
+        desc = "Cycle yanky forwards",
+      },
+      {
+        "<C-p>",
+        "<Plug>(YankyCicleBackward)",
+        desc = "Cycle yanky backwards",
+      },
+      {
+        "gp",
+        "<Plug>(YankyGPutAfter)",
+        mode = { "n", "x" },
+        desc = "GPut after",
+      },
+      {
+        "gP",
+        "<Plug>(YankyGPutBefore)",
+        mode = { "n", "x" },
+        desc = "GPut before",
+      },
+      {
+        "y",
+        "<Plug>(YankyYank)",
+        mode = { "n", "x" },
+        desc = "(Y)ank",
+      },
+      {
+        "ty",
+        require("utils").cmd("YankyRingHistory"),
+        desc = "Yanky history...",
+      },
     },
-    opts = { highlight = { timer = 150 } },
+    opts = {
+      ring = {
+        history_length = 10,
+        storage = "sqlite",
+      },
+      highlight = { timer = 150 },
+    },
   },
 }

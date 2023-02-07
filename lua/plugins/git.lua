@@ -1,6 +1,3 @@
----@type utils
-local utils = require("utils")
-
 return {
   {
     "lewis6991/gitsigns.nvim",
@@ -57,26 +54,18 @@ return {
       },
       {
         "<Leader>gs",
-        utils.cmd("Gitsigns stage_hunk"),
-        mode = "v",
+        require("utils").cmd("Gitsigns stage_hunk"),
+        mode = { "n", "v" },
         desc = "(S)tage hunk",
       },
       {
         "<Leader>gr",
-        utils.cmd("Gitsigns reset_hunk"),
-        mode = "v",
+        require("utils").cmd("Gitsigns reset_hunk"),
+        mode = { "n", "v" },
         desc = "(R)eset hunk",
       },
     },
-    opts = {
-      current_line_blame = true,
-      current_line_blame_formatter = "<author> (<author_time:%Y-%m-%d>): <summary>",
-      current_line_blame_opts = {
-        virt_text_pos = "eol",
-        delay = 500,
-      },
-      preview_config = { border = "none" },
-    },
+    opts = { preview_config = { border = "none" } },
   },
   {
     "sindrets/diffview.nvim",
@@ -90,12 +79,12 @@ return {
     keys = {
       {
         "<Leader>gd",
-        utils.cmd("DiffviewOpen"),
+        require("utils").cmd("DiffviewOpen"),
         desc = "(D)iff",
       },
       {
         "<Leader>gd",
-        utils.cmd("DiffviewFileHistory"),
+        require("utils").cmd("DiffviewFileHistory"),
         desc = "(H)istory",
       },
     },

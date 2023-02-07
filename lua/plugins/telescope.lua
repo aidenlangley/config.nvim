@@ -107,13 +107,6 @@ return {
         desc = "Buil(t)ins...",
       },
       {
-        "ty",
-        function()
-          require("telescope").extensions.yank_history.yank_history()
-        end,
-        desc = "Put from (Y)anky...",
-      },
-      {
         "tu",
         function()
           require("telescope").extensions.undo.undo()
@@ -135,46 +128,18 @@ return {
         desc = "(C)ommits...",
       },
       {
-        "<Leader>gs",
+        "<Leader>gt",
         function()
           require("telescope.builtin").git_status()
         end,
         desc = "(S)tatus...",
       },
       {
-        "<Leader>gt",
+        "<Leader>gT",
         function()
           require("telescope.builtin").git_stash()
         end,
         desc = "S(t)ash...",
-      },
-      {
-        "<Leader>ld",
-        function()
-          require("telescope.builtin").lsp_definitions()
-        end,
-        desc = "View (D)efinitions...",
-      },
-      {
-        "<Leader>li",
-        function()
-          require("telescope.builtin").lsp_implementations()
-        end,
-        desc = "View (I)mplementations...",
-      },
-      {
-        "<Leader>lr",
-        function()
-          require("telescope.builtin").lsp_references()
-        end,
-        desc = "View (R)eferences...",
-      },
-      {
-        "<Leader>lt",
-        function()
-          require("telescope.builtin").lsp_type_definitions()
-        end,
-        desc = "View (T)ype definitions...",
       },
       {
         "<Leader>sf",
@@ -202,49 +167,39 @@ return {
         desc = "(R)eload...",
       },
     },
-    config = function()
-      ---@type table
+    opts = function()
       local actions = require("telescope.actions")
-
-      ---@type table<string, table<string, any>>
-      local mappings = {
-        i = {
-          ["<C-j>"] = actions.move_selection_next,
-          ["<C-k>"] = actions.move_selection_previous,
+      return {
+        defaults = {
+          path_display = { "smart" },
+          dynamic_preview_title = true,
+          mappings = {
+            i = {
+              ["<C-j>"] = actions.move_selection_next,
+              ["<C-k>"] = actions.move_selection_previous,
+            },
+            n = {
+              ["<C-n>"] = nil,
+              ["<C-p>"] = nil,
+            },
+          },
         },
-        n = {
-          ["<C-n>"] = nil,
-          ["<C-p>"] = nil,
+        pickers = {
+          buffers = { theme = "dropdown" },
+          current_buffer_fuzzy_find = { theme = "dropdown" },
+          diagnostics = { theme = "ivy" },
+          find_files = { theme = "dropdown" },
+          git_branches = { theme = "dropdown" },
+          git_commits = { theme = "dropdown" },
+          git_status = { theme = "dropdown" },
+          grep_string = { theme = "dropdown" },
+          live_grep = { theme = "dropdown" },
+          lsp_definitions = { theme = "dropdown" },
+          lsp_implementations = { theme = "dropdown" },
+          lsp_references = { theme = "dropdown" },
+          lsp_type_definitions = { theme = "dropdown" },
+          oldfiles = { theme = "dropdown" },
         },
-      }
-
-      local pickers = {
-        buffers = { theme = "dropdown" },
-        -- builtin = { theme = "ivy" },
-        -- command_history = { theme = "dropdown" },
-        current_buffer_fuzzy_find = { theme = "dropdown" },
-        diagnostics = { theme = "ivy" },
-        find_files = { theme = "dropdown" },
-        git_branches = { theme = "dropdown" },
-        git_commits = { theme = "dropdown" },
-        git_status = { theme = "dropdown" },
-        grep_string = { theme = "dropdown" },
-        -- keymaps = { theme = "ivy" },
-        -- help_tags = { theme = "dropdown" },
-        live_grep = { theme = "dropdown" },
-        lsp_definitions = { theme = "dropdown" },
-        lsp_implementations = { theme = "dropdown" },
-        lsp_references = { theme = "dropdown" },
-        lsp_type_definitions = { theme = "dropdown" },
-        -- marks = { theme = "dropdown" },
-        oldfiles = { theme = "dropdown" },
-      }
-
-      ---@type table
-      local ts = require("telescope")
-      ts.setup({
-        defaults = { mappings = mappings },
-        pickers = pickers,
         extensions = {
           undo = {
             side_by_side = true,
@@ -254,13 +209,17 @@ return {
             },
           },
         },
-      })
+      }
+    end,
+    config = function(_, opts)
+      ---@type table
+      local ts = require("telescope")
+      ts.setup(opts)
 
       pcall(ts.load_extension, "fzf")
       pcall(ts.load_extension, "notify")
       pcall(ts.load_extension, "projects")
       pcall(ts.load_extension, "refactoring")
-      pcall(ts.load_extension, "yank_history")
       pcall(ts.load_extension, "undo")
     end,
   },

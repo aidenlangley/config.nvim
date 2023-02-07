@@ -29,15 +29,7 @@ return {
       "windwp/nvim-ts-autotag",
     },
     build = ":TSUpdate",
-    keys = {
-      -- "<Leader>lp",
-      "]",
-      "[",
-      ">",
-      "<",
-      { ";", mode = "v" },
-      { ",", mode = "v" },
-    },
+    event = "BufReadPost",
     config = function()
       require("nvim-treesitter.configs").setup({
         auto_install = true,
@@ -92,26 +84,26 @@ return {
           },
           move = {
             enable = true,
-            set_jumps = true,
+            set_jumps = false,
             goto_next_start = {
-              ["]c"] = { "@class.outer", "@method.outer" },
+              ["]c"] = "@class.outer",
               ["]f"] = "@function.outer",
-              ["]z"] = { query = "@fold", query_group = "folds" },
+              ["]z"] = { query = "@fold", query_group = "folds", desc = "Next fold start" },
             },
             goto_next_end = {
-              ["]C"] = { "@class.outer", "@method.outer" },
+              ["]C"] = "@class.outer",
               ["]F"] = "@function.outer",
-              ["]Z"] = { query = "@fold", query_group = "folds" },
+              ["]Z"] = { query = "@fold", query_group = "folds", desc = "Next fold end" },
             },
             goto_previous_start = {
-              ["[c"] = { "@class.outer", "@method.outer" },
+              ["[c"] = "@class.outer",
               ["[f"] = "@function.outer",
-              ["[z"] = { query = "@fold", query_group = "folds" },
+              ["[z"] = { query = "@fold", query_group = "folds", desc = "Next fold start" },
             },
             goto_previous_end = {
-              ["[C"] = { "@class.outer", "@method.outer" },
+              ["[C"] = "@class.outer",
               ["[F"] = "@function.outer",
-              ["[Z"] = { query = "@fold", query_group = "folds" },
+              ["[Z"] = { query = "@fold", query_group = "folds", desc = "Next fold end" },
             },
             goto_next = {
               ["]g"] = "@call.outer",
@@ -140,6 +132,10 @@ return {
           },
         },
       })
+
+      local ts_repeat_move = require("nvim-treesitter.textobjects.repeatable_move")
+      vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
+      vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous)
     end,
   },
 }

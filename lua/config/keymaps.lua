@@ -1,4 +1,3 @@
----@type utils
 local utils = require("utils")
 
 vim.keymap.set(
@@ -29,17 +28,11 @@ vim.keymap.set("n", "<C-j>", utils.cmd("wincmd j"), { desc = " window" })
 vim.keymap.set("n", "<C-k>", utils.cmd("wincmd k"), { desc = " window" })
 vim.keymap.set("n", "<C-l>", utils.cmd("wincmd l"), { desc = " window" })
 
--- vim.keymap.set("n", "<C-Left>", utils.cmd("wincmd h"), { desc = " window" })
--- vim.keymap.set("n", "<C-Down>", utils.cmd("wincmd j"), { desc = " window" })
--- vim.keymap.set("n", "<C-Up>", utils.cmd("wincmd k"), { desc = " window" })
--- vim.keymap.set("n", "<C-Right>", utils.cmd("wincmd l"), { desc = " window" })
-
 -- Quit if not modified, else request confirmation
 vim.keymap.set("n", "<C-q>", utils.smart_quit, { desc = "(Q)uit" })
 
 -- Code actions & formatting can function without a language server
-vim.keymap.set("n", "<C-.>", vim.lsp.buf.code_action, { desc = "Code actions..." })
-vim.keymap.set("n", "<Leader>lf", vim.lsp.buf.format, { desc = "(F)ormat" })
+vim.keymap.set("n", "<C-.>", utils.cmd("Lspsaga code_action"), { desc = "Code actions..." })
 
 local term_lazygit = utils.float_term("lazygit")
 vim.keymap.set("n", "<Leader>gg", function()
@@ -65,20 +58,36 @@ vim.keymap.set("i", "<M-k>", "<Esc>:m .-2<CR>==gi", { desc = "move line up" })
 local M = {}
 
 function M.lsp(_, _)
-  vim.keymap.set("n", "<F2>", utils.cmd("Lspsaga rename"), { desc = "Rename" })
-  vim.keymap.set("n", "K", utils.cmd("Lspsaga hover_doc ++quiet"), { desc = "Hover" })
+  vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, { desc = "Rename" })
+  vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover" })
+  vim.keymap.set("n", "gs", vim.lsp.buf.signature_help, { desc = "(S)ignature help" })
 
-  vim.keymap.set({ "n", "v" }, "<C-.>", utils.cmd("Lspsaga code_action"), {
-    noremap = true,
-    desc = "Code actions...",
-  })
+  vim.keymap.set(
+    "n",
+    "gg",
+    utils.cmd("Telescope lsp_definitions"),
+    { desc = "Goto (D)efinitions..." }
+  )
+  vim.keymap.set(
+    "n",
+    "gi",
+    utils.cmd("Telescope lsp_implementations"),
+    { desc = "Goto (I)mplementations..." }
+  )
+  vim.keymap.set(
+    "n",
+    "gr",
+    utils.cmd("Telescope lsp_references"),
+    { desc = "Goto (R)eferences..." }
+  )
+  vim.keymap.set(
+    "n",
+    "gt",
+    utils.cmd("Telescope lsp_type_definitions"),
+    { desc = "Goto (T)ype definitions..." }
+  )
 
-  -- vim.keymap.set("n", "gd", vim.lsp.buf.definition, "Goto (D)efinition")
-  vim.keymap.set("n", "gd", utils.cmd("Lspsaga goto_definition"), { desc = "Goto (D)efinition" })
-  vim.keymap.set("n", "gf", utils.cmd("Lspsaga lsp_finder"), { desc = "Goto (F)inder..." })
-  vim.keymap.set("n", "<Leader>ls", utils.cmd("Lspsaga outline"), { desc = "View (S)ymbols" })
-
-  vim.keymap.set("n", "<Leader>lD", vim.diagnostic.show, { desc = "Show (D)iagnostic" })
+  vim.keymap.set("n", "gd", vim.diagnostic.open_float, { desc = "Show (D)iagnostic" })
   vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next (D)iagnostic" })
   vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous (D)iagnostic" })
 

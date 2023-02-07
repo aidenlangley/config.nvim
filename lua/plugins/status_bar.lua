@@ -2,17 +2,7 @@ return {
   "feline-nvim/feline.nvim",
   event = "VeryLazy",
   config = function()
-    ---@module 'config.colours'
-    ---@type table<string, string>
-    local THEME = require("config.colours").THEME
-    local MODES = {
-      NORMAL = "fg",
-      OP = "red",
-      COMMAND = "red",
-      INSERT = "green",
-      VISUAL = "blue",
-      TERM = "yellow",
-    }
+    local bg_lighter = "#3c3836"
 
     local mode_provider = {
       provider = "vi_mode",
@@ -21,7 +11,7 @@ return {
         return {
           ---@type string
           name = require("feline.providers.vi_mode").get_mode_highlight_name(),
-          bg = "grey",
+          bg = bg_lighter,
           ---@type string
           fg = require("feline.providers.vi_mode").get_mode_color(),
           style = "bold",
@@ -36,7 +26,7 @@ return {
         return require("feline.providers.file").file_encoding() ~= "UTF-8"
       end,
       provider = "file_encoding",
-      hl = { bg = "grey" },
+      hl = { bg = "gray" },
       left_sep = "block",
     }
 
@@ -48,7 +38,7 @@ return {
           case = "lowercase",
         },
       },
-      hl = { bg = "grey" },
+      hl = { bg = bg_lighter },
       left_sep = "block",
     }
 
@@ -79,7 +69,7 @@ return {
 
         return table.concat(clients, " "), " "
       end,
-      hl = { fg = "light-grey" },
+      hl = { fg = "gray" },
       left_sep = "block",
       right_sep = "block",
       update = { "FileType" },
@@ -96,7 +86,7 @@ return {
         name = "position",
         opts = { format = "{col}" },
       },
-      hl = { bg = "grey" },
+      hl = { bg = bg_lighter },
       left_sep = "block",
       right_sep = "block",
     }
@@ -153,7 +143,7 @@ return {
 
     local diag_info_provider = {
       provider = "diagnostic_info",
-      hl = { fg = "light-grey" },
+      hl = { fg = "gray" },
     }
 
     local lazy_provider = {
@@ -161,7 +151,6 @@ return {
         return "💤 " .. require("lazy.status").updates() .. " updates"
       end,
       enabled = require("lazy.status").has_updates,
-      hl = { fg = "light-grey" },
       left_sep = "block",
       priority = -1,
     }
@@ -202,8 +191,14 @@ return {
           {},
         },
       },
-      theme = THEME,
-      vi_mode_colors = MODES,
+      vi_mode_colors = {
+        NORMAL = "#ebdbb2",
+        OP = "#fb4934",
+        COMMAND = "#fb4934",
+        INSERT = "#b8bb26",
+        VISUAL = "#83a598",
+        TERM = "#fabd2f",
+      },
       disable = {
         filetypes = {
           "^NvimTree$",

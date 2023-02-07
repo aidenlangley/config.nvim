@@ -36,6 +36,14 @@ return {
             a = "@call.outer",
             i = "@call.inner",
           }, {}),
+          l = ai.gen_spec.treesitter({
+            a = "@loop.outer",
+            i = "@loop.inner",
+          }, {}),
+          o = ai.gen_spec.treesitter({
+            a = "@conditional.outer",
+            i = "@conditional.inner",
+          }, {}),
           -- Whole buffer
           G = function()
             local from = { line = 1, col = 1 }
@@ -46,19 +54,19 @@ return {
             }
             return { from = from, to = to }
           end,
-          l = ai.gen_spec.treesitter({
-            a = "@loop.outer",
-            i = "@loop.inner",
-          }, {}),
-          o = ai.gen_spec.treesitter({
-            a = "@conditional.outer",
-            i = "@conditional.inner",
-          }, {}),
         },
       }
     end,
     config = function(_, opts)
       require("mini.ai").setup(opts)
+    end,
+  },
+  {
+    "echasnovski/mini.align",
+    event = "BufReadPost",
+    keys = { "ga", "gA" },
+    config = function(_, opts)
+      require("mini.align").setup(opts)
     end,
   },
   {
@@ -77,6 +85,7 @@ return {
   {
     "echasnovski/mini.comment",
     dependencies = { "JoosepAlviste/nvim-ts-context-commentstring" },
+    event = "BufReadPost",
     keys = {
       { "gc", mode = { "n", "v" } },
     },
@@ -111,37 +120,8 @@ return {
     end,
   },
   {
-    "echasnovski/mini.pairs",
-    enabled = false,
-    event = "InsertEnter",
-    opts = {
-      mappings = {
-        ["("] = {
-          action = "closeopen",
-          pair = "()",
-          neigh_pattern = "[^%a\\].",
-          register = { cr = false },
-        },
-        ["{"] = {
-          action = "closeopen",
-          pair = "{}",
-          neigh_pattern = "[^%a\\].",
-          register = { cr = false },
-        },
-        ["["] = {
-          action = "closeopen",
-          pair = "[]",
-          neigh_pattern = "[^%a\\].",
-          register = { cr = false },
-        },
-      },
-    },
-    config = function(_, opts)
-      require("mini.pairs").setup(opts)
-    end,
-  },
-  {
     "echasnovski/mini.sessions",
+    enabled = false,
     config = function(_, opts)
       require("mini.sessions").setup(opts)
     end,
@@ -150,6 +130,15 @@ return {
     "echasnovski/mini.starter",
     dependencies = { "echasnovski/mini.sessions" },
     event = "UIEnter",
+    keys = {
+      {
+        "<Leader>;",
+        function()
+          require("mini.starter").open()
+        end,
+        desc = "Dashboard",
+      },
+    },
     opts = function()
       local title = table.concat({
         [[                   |         |         ]],
@@ -183,8 +172,9 @@ return {
         end,
         items = {
           actions,
-          starter.sections.recent_files(),
-          starter.sections.sessions(),
+          starter.sections.recent_files(9),
+          -- starter.sections.sessions(),
+          { name = "Settings", action = "e ~/.config/nvim/init.lua", section = "Actions" },
           { name = "Quit", action = "qa!", section = "Actions" },
         },
         footer = "",
@@ -212,7 +202,6 @@ return {
   },
   {
     "echasnovski/mini.surround",
-    enabled = true,
     keys = {
       { "ys", mode = { "n", "v", "o" } },
       { "ds", mode = { "n", "v", "o" } },

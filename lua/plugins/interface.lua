@@ -1,12 +1,26 @@
 return {
   {
     "sainnhe/gruvbox-material",
+    enabled = false,
     lazy = false,
     priority = 1000,
     config = function()
       vim.o.background = "dark"
       vim.g.gruvbox_material_background = "hard"
       vim.cmd([[colorscheme gruvbox-material]])
+    end,
+  },
+  {
+    "morhetz/gruvbox",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.o.background = "dark"
+      vim.g.gruvbox_transparent_bg = "1"
+      vim.g.gruvbox_contrast_dark = "hard"
+      vim.g.gruvbox_invert_selection = "0"
+      vim.g.gruvbox_sign_column = "bg0"
+      vim.cmd([[colorscheme gruvbox]])
     end,
   },
   "nvim-tree/nvim-web-devicons",
@@ -23,7 +37,7 @@ return {
   {
     "echasnovski/mini.indentscope",
     version = false,
-    event = "BufReadPre",
+    event = "BufReadPost",
     opts = {
       symbol = "│",
       options = { try_as_border = true },
@@ -195,7 +209,7 @@ return {
           g = true,
           nav = true,
           operators = false,
-          text_objects = true,
+          text_objects = false,
           windows = true,
           z = true,
         },
@@ -270,17 +284,7 @@ return {
     "petertriho/nvim-scrollbar",
     event = "BufReadPost",
     opts = function()
-      local colours = require("config.colours").THEME
       return {
-        handle = { color = colours.grey },
-        marks = {
-          Search = { color = colours.yellow },
-          Error = { color = colours.red },
-          Warn = { color = colours.orange },
-          Info = { color = colours["light-grey"] },
-          Hint = { color = colours.fg },
-          Misc = { color = colours.cyan },
-        },
         excluded_filestypes = {
           "prompt",
           "TelescopePrompt",
@@ -334,7 +338,7 @@ return {
       {
         "<Leader>z",
         require("utils").cmd("WindowsMaximize"),
-        desc = "Zoom",
+        desc = "(Z)oom",
       },
     },
     config = function()

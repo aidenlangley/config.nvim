@@ -16,7 +16,7 @@ require("lazy").setup("plugins", {
   dev = { path = "~/Code" },
   install = {
     missing = true,
-    colorscheme = { "gruvbox-material" },
+    colorscheme = { "gruvbox" },
   },
   ui = {
     icons = { plugin = "" },

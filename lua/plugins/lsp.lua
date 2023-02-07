@@ -186,6 +186,7 @@ return {
       "williamboman/mason-lspconfig.nvim",
       "folke/lsp-colors.nvim",
       "b0o/SchemaStore.nvim",
+      "j-hui/fidget.nvim",
     },
     event = "BufReadPre",
     keys = {
@@ -252,6 +253,8 @@ return {
 
       vim.diagnostic.config(opts.diagnostics)
       require("mason-lspconfig").setup_handlers(handlers)
+
+      require("fidget").setup({})
     end,
   },
   {
@@ -275,9 +278,7 @@ return {
     },
     config = function(_, opts)
       require("lspsaga").setup(opts)
-
-      local colours = require("config.colours").THEME
-      vim.api.nvim_set_hl(0, "SagaBorder", { fg = colours.grey })
+      vim.api.nvim_set_hl(0, "SagaBorder", { fg = "gray" })
     end,
   },
 }
