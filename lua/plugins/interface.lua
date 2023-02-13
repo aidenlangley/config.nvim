@@ -164,14 +164,6 @@ return {
           ["D"] = "delete",
         },
       },
-      source_selector = {
-        statusline = true,
-        tab_labels = {
-          filesystem = " dir",
-          buffers = " buf",
-          git_status = " git",
-        },
-      },
       default_component_configs = {
         git_status = {
           symbols = {
@@ -200,6 +192,7 @@ return {
   },
   {
     "folke/which-key.nvim",
+    enabled = true,
     event = "VeryLazy",
     opts = {
       plugins = {
@@ -207,7 +200,7 @@ return {
         registers = false,
         presets = {
           g = true,
-          nav = true,
+          nav = false,
           operators = false,
           text_objects = false,
           windows = true,
@@ -241,7 +234,6 @@ return {
       wk.register({
         { c = { name = "(C)omment..." } },
         { g = { name = "(G)it..." } },
-        { l = { name = "(L)SP..." } },
         { o = { name = "(O)pen..." } },
         { r = { name = "(R)e(name/factor/load)..." } },
         { s = { name = "(S)ettings..." } },
@@ -249,17 +241,6 @@ return {
         prefix = "<Leader>",
         mode = { "n", "v" },
       })
-      wk.register({
-        { ["ds"] = { name = "(D)elete (S)urround" } },
-        { ["ys"] = { name = "(S)urround" } },
-        { ["cs"] = { name = "(C)hange (S)urround" } },
-      }, {
-        mode = { "n", "v", "o" },
-      })
-      wk.register({
-        { ["]"] = { name = "Goto..." } },
-        { ["["] = { name = "Goto..." } },
-      }, {})
     end,
   },
   {
@@ -348,24 +329,14 @@ return {
     end,
   },
   {
-    "folke/drop.nvim",
-    event = "VeryLazy",
-    enabled = false,
-    config = function()
-      math.randomseed(os.time())
-      local theme = ({ "stars", "snow" })[math.random(2, 3)]
-      require("drop").setup({ theme = theme })
-    end,
-  },
-  {
     "folke/noice.nvim",
+    enabled = false,
     dependencies = {
       "MunifTanjim/nui.nvim",
       "nvim-treesitter/nvim-treesitter",
       "rcarriga/nvim-notify",
     },
     event = "VeryLazy",
-    enabled = false,
     opts = {
       messages = {
         view = "mini",

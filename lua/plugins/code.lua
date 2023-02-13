@@ -169,7 +169,12 @@ return {
           ["<C-d>"] = cmp.mapping.scroll_docs(-4),
           ["<C-u>"] = cmp.mapping.scroll_docs(4),
 
-          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+          ["<CR>"] = cmp.mapping(
+            cmp.mapping.confirm({
+              select = true,
+            }),
+            { "i", "s" }
+          ),
         },
         formatting = {
           source_names = {},

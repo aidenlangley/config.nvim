@@ -2,8 +2,8 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- Backups please
--- vim.o.backup = true
--- vim.o.backupdir = vim.fn.stdpath("cache") .. "/backups"
+vim.o.backup = true
+vim.o.backupdir = vim.fn.stdpath("cache") .. "/backups"
 
 -- Set highlight on search
 vim.o.hlsearch = false
@@ -79,10 +79,12 @@ vim.o.scrolloff = 8
 vim.o.sidescrolloff = 16
 
 -- Code folding by indent
-vim.o.foldmethod = "syntax"
+vim.o.foldmethod = "expr"
+vim.o.foldexpr = "nvim_treesitter#foldexpr()"
 vim.o.nofoldenable = true
 vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
+vim.opt.fillchars = { eob = "-", fold = " " }
 
 -- Spelling
 -- vim.o.spell = true

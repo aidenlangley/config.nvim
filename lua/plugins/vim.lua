@@ -18,11 +18,12 @@ return {
       "Gsplit",
     },
   },
-  "tpope/vim-sensible",
-  "tpope/vim-repeat",
+  "tpope/vim-sensible", -- Sensible options.
+  "tpope/vim-repeat", -- Make more actions `.` repeatable.
+  "tpope/vim-sleuth", -- Detect indentation automatically.
   {
     "andymass/vim-matchup",
-    event = "BufReadPre",
+    event = "BufReadPost",
     config = function()
       vim.g.matchup_motion_enabled = 0
       vim.g.matchup_surround_enabled = 0
@@ -31,7 +32,7 @@ return {
 
       vim.g.matchup_matchparen_deferred = 1
       vim.g.matchup_matchparen_hi_surround_always = 1
-      vim.g.matchup_matchparen_offscreen = { method = "popup" }
+      vim.g.matchup_matchparen_offscreen = { method = "status_manual" }
     end,
   },
   {

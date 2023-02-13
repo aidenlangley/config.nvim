@@ -146,22 +146,12 @@ return {
       hl = { fg = "gray" },
     }
 
-    local lazy_provider = {
-      provider = function()
-        return "💤 " .. require("lazy.status").updates() .. " updates"
-      end,
-      enabled = require("lazy.status").has_updates,
-      left_sep = "block",
-      priority = -1,
-    }
-
     require("feline").setup({
       components = {
         active = {
           -- LEFT
           {
             mode_provider,
-            lazy_provider,
             diag_errors_provider,
             diag_warnings_provider,
             diag_hints_provider,

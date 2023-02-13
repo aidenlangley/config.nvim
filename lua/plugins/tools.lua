@@ -1,22 +1,11 @@
 return {
   {
     "akinsho/toggleterm.nvim",
-    keys = {
-      "<C-t>",
-      {
-        "<Esc><Esc>",
-        "<C-\\><C-n>",
-        mode = "t",
-        desc = "Exit terminal",
-      },
-    },
+    keys = { "<C-\\>" },
     opts = {
-      open_mapping = "<C-t>",
-      direction = "horizontal",
-      size = 12,
-      persist_size = true,
-      hide_numbers = true,
-      start_in_insert = true,
+      open_mapping = "<C-\\>",
+      shade_terminals = false,
+      direction = "float",
     },
   },
   {

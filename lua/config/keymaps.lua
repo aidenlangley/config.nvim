@@ -32,7 +32,7 @@ vim.keymap.set("n", "<C-l>", utils.cmd("wincmd l"), { desc = " window" })
 vim.keymap.set("n", "<C-q>", utils.smart_quit, { desc = "(Q)uit" })
 
 -- Code actions & formatting can function without a language server
-vim.keymap.set("n", "<C-.>", utils.cmd("Lspsaga code_action"), { desc = "Code actions..." })
+vim.keymap.set("n", "<C-.>", vim.lsp.buf.code_action, { desc = "Code actions..." })
 
 local term_lazygit = utils.float_term("lazygit")
 vim.keymap.set("n", "<Leader>gg", function()
@@ -62,12 +62,6 @@ function M.lsp(_, _)
   vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover" })
   vim.keymap.set("n", "gs", vim.lsp.buf.signature_help, { desc = "(S)ignature help" })
 
-  vim.keymap.set(
-    "n",
-    "gg",
-    utils.cmd("Telescope lsp_definitions"),
-    { desc = "Goto (D)efinitions..." }
-  )
   vim.keymap.set(
     "n",
     "gi",

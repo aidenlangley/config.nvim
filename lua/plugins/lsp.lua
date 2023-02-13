@@ -2,6 +2,7 @@ return {
   {
     "williamboman/mason.nvim",
     dependencies = { "williamboman/mason-lspconfig.nvim" },
+    cmd = "Mason",
     keys = {
       {
         "<Leader>sm",
@@ -16,7 +17,7 @@ return {
         "jsonls",
         "pyright",
         "rust_analyzer",
-        "sumneko_lua",
+        "lua_ls",
         "svelte",
         "taplo",
         "tsserver",
@@ -69,7 +70,7 @@ return {
       table.insert(runtime_path, "lua/?/init.lua")
 
       local lsp = require("lsp")
-      require("lspconfig").sumneko_lua.setup({
+      require("lspconfig").lua_ls.setup({
         capabilities = lsp.capabilities,
         on_attach = lsp.on_attach,
         single_file_support = true,
@@ -224,7 +225,6 @@ return {
       },
     },
     config = function(_, opts)
-      ---@type LspHelper
       local lsp = require("lsp")
       local capabilities = lsp.capabilities
       local on_attach = lsp.on_attach
@@ -258,27 +258,29 @@ return {
     end,
   },
   {
-    "glepnir/lspsaga.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    event = "BufReadPost",
-    opts = {
-      ui = { border = "single" },
-      beacon = { enable = false },
-      diagnostic = {
-        show_code_action = false,
-        show_source = false,
-        jump_num_shortcut = false,
+    "simrat39/symbols-outline.nvim",
+    keys = {
+      {
+        "<Leader>S",
+        require("utils").cmd("SymbolsOutline"),
+        desc = "LSP: [S]ymbols",
       },
-      lightbulb = {
-        enable_in_insert = false,
-        sign = false,
-      },
-      rename = { quit = "q" },
-      symbol_in_winbar = { enable = false },
     },
-    config = function(_, opts)
-      require("lspsaga").setup(opts)
-      vim.api.nvim_set_hl(0, "SagaBorder", { fg = "gray" })
-    end,
+    config = true,
+  },
+  {
+    "kosayoda/nvim-lightbulb",
+    event = "BufReadPost",
+    opts = { autocmd = { enabled = true } },
+  },
+  {
+    "folke/trouble.nvim",
+    keys = {
+      {
+        "<Leader>t",
+        require("utils").cmd("Trouble"),
+        desc = "[T]rouble (diagnostics)",
+      },
+    },
   },
 }

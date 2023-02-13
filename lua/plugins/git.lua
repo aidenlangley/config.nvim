@@ -83,7 +83,7 @@ return {
         desc = "(D)iff",
       },
       {
-        "<Leader>gd",
+        "<Leader>gh",
         require("utils").cmd("DiffviewFileHistory"),
         desc = "(H)istory",
       },

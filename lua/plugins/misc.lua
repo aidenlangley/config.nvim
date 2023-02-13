@@ -2,6 +2,7 @@ return {
   "nvim-lua/plenary.nvim",
   {
     "ahmedkhalf/project.nvim",
+    lazy = false,
     event = "BufReadPost",
     cmd = "Telescope projects",
     keys = { "tp" },
