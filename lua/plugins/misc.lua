@@ -5,10 +5,10 @@ return {
     opts = {
       detection_methods = { "pattern", "lsp" },
       patterns = {
-        "=src",
         ".git",
         ".gitignore",
         ".svn",
+        "^Cargo.toml",
         "Makefile",
         "package.json",
       },

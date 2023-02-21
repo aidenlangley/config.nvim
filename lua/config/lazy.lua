@@ -43,7 +43,7 @@ require("lazy").setup("plugins", {
   diff = { cmd = "diffview.nvim" },
   change_detection = {
     enabled = true,
-    notify = true,
+    notify = false,
   },
   performance = {
     cache = { enabled = true },

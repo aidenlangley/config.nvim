@@ -1,7 +1,6 @@
 return {
   {
     "williamboman/mason.nvim",
-    dependencies = { "williamboman/mason-lspconfig.nvim" },
     cmd = {
       "Mason",
       "MasonInstall",
@@ -16,6 +15,35 @@ return {
         desc = "Mason: Info",
       },
     },
+    config = function()
+      require("mason").setup()
+
+      local tools = {
+        "black",
+        "csharpier",
+        "flake8",
+        "gofumpt",
+        "golines",
+        "isort",
+        "luacheck",
+        "prettierd",
+        "shellcheck",
+        "shfmt",
+        "stylua",
+      }
+
+      local registry = require("mason-registry")
+      for _, tool in ipairs(tools) do
+        local pkg = registry.get_package(tool)
+        if not pkg:is_installed() then
+          pkg:install()
+        end
+      end
+    end,
+  },
+  {
+    "williamboman/mason-lspconfig.nvim",
+    dependencies = { "williamboman/mason.nvim" },
     opts = {
       ensure_installed = {
         "bashls",
@@ -40,117 +68,36 @@ return {
       },
       pip = { upgrade_pip = true },
     },
-    config = function(_, opts)
-      require("mason").setup()
-
-      local tools = {
-        "black",
-        "csharpier",
-        "flake8",
-        "gofumpt",
-        "golines",
-        "isort",
-        "luacheck",
-        "prettierd",
-        "shellcheck",
-        "shfmt",
-        "stylua",
-      }
-
-      local registry = require("mason-registry")
-      for _, tool in ipairs(tools) do
-        local pkg = registry.get_package(tool)
-        if not pkg:is_installed() then
-          pkg:install()
-        end
-      end
-
-      require("mason-lspconfig").setup(opts)
-    end,
   },
   {
     "folke/neodev.nvim",
-    dependencies = {
-      "hrsh7th/nvim-cmp",
-      "saadparwaiz1/cmp_luasnip",
-    },
+    dependencies = { "saadparwaiz1/cmp_luasnip" },
     ft = "lua",
-    opts = {
-      debug = true,
-      experimental = { pathStrict = true },
-      setup_jsonls = true,
-    },
-    config = function(_, opts)
-      require("neodev").setup(opts)
+    config = function()
+      require("neodev").setup()
 
-      local runtime_path = vim.split(package.path, ";", {})
-      table.insert(runtime_path, "lua/?.lua")
-      table.insert(runtime_path, "lua/?/init.lua")
-
-      local lsp = require("lsp")
       require("lspconfig").lua_ls.setup({
-        capabilities = lsp.capabilities,
+        capabilities = require("lsp").capabilities,
         on_attach = function(client, bufnr)
           require("config.keymaps").lsp(client, bufnr)
 
           local cmp = require("cmp")
-          local completions = require("completions")
-          cmp.setup.buffer({
+          cmp.setup.filetype("lua", {
             sources = cmp.config.sources({
               { name = "luasnip" },
-            }, completions.lsp_sources, completions.sources),
+            }, require("completions").sources),
           })
         end,
         single_file_support = true,
         settings = {
           Lua = {
-            runtime = {
-              version = "LuaJIT",
-              path = runtime_path,
-            },
+            diagnostics = { globals = { "vim" } },
             completion = {
-              workspaceWord = true,
-              callSnippet = "Both",
+              autoRequired = true,
+              displayContext = 1,
             },
-            misc = {
-              parameters = {
-                "--log-level=trace",
-              },
-            },
-            diagnostics = {
-              globals = { "vim" },
-              groupSeverity = {
-                strong = "Warning",
-                strict = "Warning",
-              },
-              groupFileStatus = {
-                ["ambiguity"] = "Opened",
-                ["await"] = "Opened",
-                ["codestyle"] = "None",
-                ["duplicate"] = "Opened",
-                ["global"] = "Opened",
-                ["luadoc"] = "Opened",
-                ["redefined"] = "Opened",
-                ["strict"] = "Opened",
-                ["strong"] = "Opened",
-                ["type-check"] = "Opened",
-                ["unbalanced"] = "Opened",
-                ["unused"] = "Opened",
-              },
-              unusedLocalExclude = { "_*" },
-            },
-            workspace = {
-              library = vim.api.nvim_get_runtime_file("", true),
-              checkThirdParty = false,
-            },
-            format = {
-              enable = true,
-              defaultConfig = {
-                indent_style = "space",
-                indent_size = "2",
-                continuation_indent_size = "2",
-              },
-            },
+            codeLens = { enable = 1 },
+            hint = { enable = true },
             telemetry = { enable = false },
           },
         },
@@ -160,28 +107,42 @@ return {
   {
     "simrat39/rust-tools.nvim",
     ft = "rust",
-    opts = {
-      tools = { hover_actions = { border = "none" } },
-      server = {
-        on_attach = function(client, bufnr)
-          require("lsp").on_attach(client, bufnr)
-          require("rust-tools").inlay_hints.enable()
-        end,
-        settings = {
-          ["rust-analyzer"] = {
-            checkOnSave = { command = "clippy" },
-            inlayHints = { locationLinks = false },
+    opts = function()
+      local rt = require("rust-tools")
+      return {
+        tools = { hover_actions = { border = "none" } },
+        server = {
+          on_attach = function(client, bufnr)
+            require("lsp").on_attach(client, bufnr)
+            rt.inlay_hints.enable()
+
+            vim.keymap.set(
+              "n",
+              "<C-.>",
+              rt.code_action_group.code_action_group,
+              { desc = "Code actions..." }
+            )
+            vim.keymap.set(
+              "n",
+              "<C-a>",
+              rt.hover_actions.hover_actions,
+              { desc = "Hover actions..." }
+            )
+          end,
+          standalone = true,
+          settings = {
+            ["rust-analyzer"] = {
+              checkOnSave = { command = "clippy" },
+              inlayHints = { locationLinks = false },
+            },
           },
         },
-      },
-    },
+      }
+    end,
   },
   {
     "Saecki/crates.nvim",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "hrsh7th/nvim-cmp",
-    },
+    dependencies = { "nvim-lua/plenary.nvim" },
     event = "BufRead Cargo.toml",
     opts = {
       null_ls = {
@@ -199,7 +160,7 @@ return {
           cmp.setup.buffer({
             sources = cmp.config.sources({
               { name = "crates" },
-            }, completions.lsp_sources, completions.sources),
+            }, completions.sources),
           })
         end,
       })
@@ -227,12 +188,17 @@ return {
   "akinsho/flutter-tools.nvim",
   { "evanleck/vim-svelte", ft = "svelte" },
   { "fladson/vim-kitty", ft = "kitty" },
-  { "dag/vim-fish", ft = "fish" },
   {
     "neovim/nvim-lspconfig",
     dependencies = {
-      "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
+      --
+      -- Completions
+      "hrsh7th/nvim-cmp",
+      "hrsh7th/cmp-omni",
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-nvim-lsp-document-symbol",
+      "hrsh7th/cmp-nvim-lsp-signature-help",
 
       -- JSON
       "b0o/SchemaStore.nvim",
@@ -240,13 +206,6 @@ return {
       -- Utility
       "folke/lsp-colors.nvim",
       "j-hui/fidget.nvim",
-
-      -- Completions
-      "hrsh7th/nvim-cmp",
-      "hrsh7th/cmp-omni",
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-nvim-lsp-document-symbol",
-      "hrsh7th/cmp-nvim-lsp-signature-help",
     },
     keys = {
       {
@@ -266,7 +225,10 @@ return {
           on_new_config = function(config)
             config.settings.json["schemas"] = config.settings.json.schemas or {}
             ---@diagnostic disable-next-line: missing-parameter
-            vim.list_extend(config.settings.json.schemas, require("schemastore").json.schemas())
+            vim.list_extend(
+              config.settings.json.schemas,
+              require("schemastore").json.schemas()
+            )
           end,
           settings = {
             json = {
@@ -301,8 +263,8 @@ return {
       ---@param server string
       ---@param config table<string, any>
       for server, config in pairs(opts.servers) do
-        config["on_attach"] = on_attach
         config["capabilities"] = capabilities
+        config["on_attach"] = on_attach
 
         ---@type fun(server_name?: string)
         handlers[server] = function(_server_name)

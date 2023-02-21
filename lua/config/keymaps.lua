@@ -32,7 +32,9 @@ vim.keymap.set("n", "<C-l>", utils.cmd("wincmd l"), { desc = " window" })
 vim.keymap.set("n", "<C-q>", utils.smart_quit, { desc = "(Q)uit" })
 
 -- Code actions & formatting can function without a language server
-vim.keymap.set("n", "<C-.>", vim.lsp.buf.code_action, { desc = "Code actions..." })
+vim.keymap.set("n", "<C-.>", function()
+  vim.lsp.buf.code_action()
+end, { desc = "Code actions..." })
 
 vim.keymap.set("n", "<Leader>gg", function()
   utils.float_term("lazygit"):toggle()

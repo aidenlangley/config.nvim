@@ -260,15 +260,7 @@ return {
     end,
   },
   {
-    "echasnovski/mini.sessions",
-    enabled = false,
-    config = function(_, opts)
-      require("mini.sessions").setup(opts)
-    end,
-  },
-  {
     "echasnovski/mini.starter",
-    dependencies = { "echasnovski/mini.sessions" },
     event = "UIEnter",
     opts = function()
       local title = table.concat({

@@ -14,9 +14,7 @@ function M.on_attach(client, bufnr)
 
   local cmp = require("cmp")
   local completions = require("completions")
-  cmp.setup.buffer({
-    sources = cmp.config.sources(completions.lsp_sources, completions.sources),
-  })
+  cmp.setup.buffer({ sources = completions.sources })
 end
 
 return M
