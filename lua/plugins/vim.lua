@@ -21,6 +21,7 @@ return {
   "tpope/vim-sensible", -- Sensible options.
   "tpope/vim-repeat", -- Make more actions `.` repeatable.
   "tpope/vim-sleuth", -- Detect indentation automatically.
+  -- "tpope/vim-vinegar", -- File explorer?
   {
     "andymass/vim-matchup",
     event = "BufReadPost",

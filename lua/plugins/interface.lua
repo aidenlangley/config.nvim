@@ -193,7 +193,13 @@ return {
   {
     "folke/which-key.nvim",
     enabled = true,
-    event = "VeryLazy",
+    keys = {
+      "<C-w>",
+      "<Leader>",
+      "g",
+      "t",
+      "z",
+    },
     opts = {
       plugins = {
         marks = false,
@@ -283,10 +289,10 @@ return {
       {
         "<S-z>",
         require("utils").cmd("ZenMode"),
-        { desc = "ZenMode" },
+        desc = "ZenMode",
       },
     },
-    config = true,
+    opts = { plugins = { gitsigns = true } },
   },
   {
     "stevearc/dressing.nvim",

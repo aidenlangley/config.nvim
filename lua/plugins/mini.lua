@@ -49,7 +49,6 @@ return {
             local from = { line = 1, col = 1 }
             local to = {
               line = vim.fn.line("$"),
-              ---@diagnostic disable-next-line = param-type-mismatch, undefined-field
               col = math.max(vim.fn.getline("$"):len(), 1),
             }
             return { from = from, to = to }
@@ -68,6 +67,10 @@ return {
     config = function(_, opts)
       require("mini.align").setup(opts)
     end,
+  },
+  {
+    "echasnovski/mini.basics",
+    enabled = false,
   },
   {
     "echasnovski/mini.base16",
@@ -151,6 +154,7 @@ return {
   },
   {
     "echasnovski/mini.map",
+    enabled = false,
     event = "BufReadPost",
     opts = function()
       local map = require("mini.map")
@@ -166,6 +170,12 @@ return {
       -- vim.api.nvim_create_autocmd("BufReadPost", {
       --   group = vim.api.nvim_create_augroup("MiniMapOpen", { clear = true }),
       -- })
+    end,
+  },
+  {
+    "echasnovski/mini.move",
+    config = function()
+      require("mini.move").setup({})
     end,
   },
   {

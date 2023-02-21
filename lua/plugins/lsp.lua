@@ -2,7 +2,13 @@ return {
   {
     "williamboman/mason.nvim",
     dependencies = { "williamboman/mason-lspconfig.nvim" },
-    cmd = "Mason",
+    cmd = {
+      "Mason",
+      "MasonInstall",
+      "MasonUninstall",
+      "MasonUninstallAll",
+      "MasonLog",
+    },
     keys = {
       {
         "<Leader>sm",
@@ -13,15 +19,24 @@ return {
     opts = {
       ensure_installed = {
         "bashls",
+        "csharp_ls",
+        "cssls",
+        "denols",
+        "dockerls",
+        "emmet_ls",
+        "eslint",
         "gopls",
+        "html",
         "jsonls",
+        "lua_ls",
         "pyright",
         "rust_analyzer",
-        "lua_ls",
         "svelte",
+        "tailwindcss",
         "taplo",
         "tsserver",
         "vimls",
+        "yamlls",
       },
       pip = { upgrade_pip = true },
     },
@@ -30,8 +45,7 @@ return {
 
       local tools = {
         "black",
-        "commitlint",
-        "eslint_d",
+        "csharpier",
         "flake8",
         "gofumpt",
         "golines",

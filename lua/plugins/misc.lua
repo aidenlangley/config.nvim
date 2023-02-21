@@ -25,17 +25,4 @@ return {
       require("project_nvim").setup(opts)
     end,
   },
-  {
-    "folke/zen-mode.nvim",
-    dependencies = { "folke/twilight.nvim" },
-    cmd = { "ZenMode" },
-    keys = {
-      {
-        "<S-z>",
-        require("utils").cmd("ZenMode"),
-        desc = "ZenMode",
-      },
-    },
-    opts = { plugins = { gitsigns = true } },
-  },
 }
