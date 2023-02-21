@@ -70,6 +70,10 @@ return {
   },
   {
     "folke/neodev.nvim",
+    dependencies = {
+      "hrsh7th/nvim-cmp",
+      "saadparwaiz1/cmp_luasnip",
+    },
     ft = "lua",
     opts = {
       debug = true,
@@ -86,7 +90,17 @@ return {
       local lsp = require("lsp")
       require("lspconfig").lua_ls.setup({
         capabilities = lsp.capabilities,
-        on_attach = lsp.on_attach,
+        on_attach = function(client, bufnr)
+          require("config.keymaps").lsp(client, bufnr)
+
+          local cmp = require("cmp")
+          local completions = require("completions")
+          cmp.setup.buffer({
+            sources = cmp.config.sources({
+              { name = "luasnip" },
+            }, completions.lsp_sources, completions.sources),
+          })
+        end,
         single_file_support = true,
         settings = {
           Lua = {
@@ -163,8 +177,11 @@ return {
     },
   },
   {
-    "saecki/crates.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
+    "Saecki/crates.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "hrsh7th/nvim-cmp",
+    },
     event = "BufRead Cargo.toml",
     opts = {
       null_ls = {
@@ -172,9 +189,25 @@ return {
         name = "crates",
       },
     },
+    init = function()
+      vim.api.nvim_create_autocmd("InsertEnter", {
+        group = vim.api.nvim_create_augroup("CmpSourceCargo", { clear = true }),
+        pattern = "Cargo.toml",
+        callback = function()
+          local cmp = require("cmp")
+          local completions = require("completions")
+          cmp.setup.buffer({
+            sources = cmp.config.sources({
+              { name = "crates" },
+            }, completions.lsp_sources, completions.sources),
+          })
+        end,
+      })
+    end,
   },
   {
     "jose-elias-alvarez/typescript.nvim",
+    dependencies = { "jose-elias-alvarez/null-ls.nvim" },
     ft = "typescript",
     opts = {
       server = {
@@ -194,16 +227,27 @@ return {
   "akinsho/flutter-tools.nvim",
   { "evanleck/vim-svelte", ft = "svelte" },
   { "fladson/vim-kitty", ft = "kitty" },
+  { "dag/vim-fish", ft = "fish" },
   {
     "neovim/nvim-lspconfig",
     dependencies = {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
-      "folke/lsp-colors.nvim",
+
+      -- JSON
       "b0o/SchemaStore.nvim",
+
+      -- Utility
+      "folke/lsp-colors.nvim",
       "j-hui/fidget.nvim",
+
+      -- Completions
+      "hrsh7th/nvim-cmp",
+      "hrsh7th/cmp-omni",
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-nvim-lsp-document-symbol",
+      "hrsh7th/cmp-nvim-lsp-signature-help",
     },
-    event = "BufReadPre",
     keys = {
       {
         "<Leader>sl",
@@ -213,6 +257,7 @@ return {
     },
     opts = {
       diagnostics = {
+        underline = true,
         update_in_insert = false,
         severity_sort = true,
       },
@@ -256,8 +301,8 @@ return {
       ---@param server string
       ---@param config table<string, any>
       for server, config in pairs(opts.servers) do
-        config["capabilities"] = capabilities
         config["on_attach"] = on_attach
+        config["capabilities"] = capabilities
 
         ---@type fun(server_name?: string)
         handlers[server] = function(_server_name)
@@ -284,7 +329,7 @@ return {
   },
   {
     "kosayoda/nvim-lightbulb",
-    event = "BufReadPost",
+    event = { "BufReadPost" },
     opts = { autocmd = { enabled = true } },
   },
   {

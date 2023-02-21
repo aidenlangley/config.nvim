@@ -20,6 +20,3 @@ require("config.lazy")
 -- Our keymaps & autocommands
 require("config.keymaps")
 require("config.autocmds")
-
--- Final steps
-vim.g.neo_tree_remove_legacy_commands = 1

@@ -1,16 +1,5 @@
 return {
   {
-    "sainnhe/gruvbox-material",
-    enabled = false,
-    lazy = false,
-    priority = 1000,
-    config = function()
-      vim.o.background = "dark"
-      vim.g.gruvbox_material_background = "hard"
-      vim.cmd([[colorscheme gruvbox-material]])
-    end,
-  },
-  {
     "morhetz/gruvbox",
     lazy = false,
     priority = 1000,
@@ -23,106 +12,29 @@ return {
       vim.cmd([[colorscheme gruvbox]])
     end,
   },
-  "nvim-tree/nvim-web-devicons",
   {
     "lukas-reineke/indent-blankline.nvim",
-    event = "BufReadPost",
+    event = { "BufReadPost" },
     opts = {
       char = "│",
-      filetype_exclude = { "help", "alpha", "dashboard", "neo-tree", "lazy" },
+      filetype_exclude = {
+        "help",
+        "alpha",
+        "dashboard",
+        "neo-tree",
+        "Trouble",
+        "lazy",
+      },
       show_trailing_blankline_indent = false,
       show_current_context = false,
     },
   },
   {
-    "echasnovski/mini.indentscope",
-    version = false,
-    event = "BufReadPost",
-    opts = {
-      symbol = "│",
-      options = { try_as_border = true },
-    },
-    config = function(_, opts)
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = { "help", "alpha", "dashboard", "neo-tree", "lazy", "mason" },
-        callback = function()
-          vim.b.miniindentscope_disable = true
-        end,
-      })
-      require("mini.indentscope").setup(opts)
-    end,
-  },
-  {
-    "echasnovski/mini.tabline",
-    event = "VeryLazy",
-    config = function()
-      require("mini.tabline").setup({})
-    end,
-  },
-  {
-    "echasnovski/mini.animate",
-    event = "VeryLazy",
-    enabled = true,
-    config = function()
-      local mouse_scrolled = false
-      for _, scroll in ipairs({ "Up", "Down" }) do
-        local key = "<ScrollWheel" .. scroll .. ">"
-        vim.keymap.set("", key, function()
-          mouse_scrolled = true
-          return key
-        end, { expr = true })
-      end
-
-      local is_not_single_window = function(win_id)
-        local tabpage_id = vim.api.nvim_win_get_tabpage(win_id)
-        return #vim.api.nvim_tabpage_list_wins(tabpage_id) > 1
-      end
-
-      ---@module 'mini.animate'
-      ---@class MiniAnimate
-      ---@field setup fun(config: table)
-      ---@field config table
-      ---@field gen_timing { linear: fun(opts: table): fun(power: integer, opts: table) }
-      ---@field gen_subscroll { equal: fun(opts: table): fun() }
-      ---@field gen_winconfig { wipe: fun(opts: table): fun() }
-      local animate = require("mini.animate")
-      animate.setup({
-        scroll = {
-          ---@type fun(a, b): integer
-          timing = animate.gen_timing.linear({ duration = 150, unit = "total" }),
-          ---@type fun(total_scroll: integer): boolean
-          subscroll = animate.gen_subscroll.equal({
-            max_output_steps = 120,
-            predicate = function(total_scroll)
-              if mouse_scrolled then
-                mouse_scrolled = false
-                return false
-              end
-              return total_scroll > 1
-            end,
-          }),
-        },
-        open = {
-          winconfig = animate.gen_winconfig.wipe({
-            predicate = is_not_single_window,
-            direction = "from_edge",
-          }),
-        },
-        close = {
-          winconfig = animate.gen_winconfig.wipe({
-            predicate = is_not_single_window,
-            direction = "to_edge",
-          }),
-        },
-      })
-    end,
-  },
-  {
     "nvim-neo-tree/neo-tree.nvim",
     dependencies = {
-      "MunifTanjim/nui.nvim",
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons",
+      "MunifTanjim/nui.nvim",
     },
     cmd = { "Neotree" },
     keys = {
@@ -133,6 +45,18 @@ return {
         noremap = true,
       },
     },
+    init = function()
+      vim.g.neo_tree_remove_legacy_commands = 1
+
+      -- Opening a directory will load neo-tree.
+      -- hijack_netrw_behavior = "open_default" does the rest.
+      if vim.fn.argc() == 1 then
+        local stat = vim.loop.fs_stat(vim.fn.argv(0))
+        if stat and stat.type == "directory" then
+          require("neo-tree")
+        end
+      end
+    end,
     opts = {
       close_if_last_window = true,
       enable_diagnostics = true,
@@ -143,6 +67,7 @@ return {
         position = "left",
         width = 28,
         mappings = {
+          ["<Space>"] = "none",
           ["d"] = function(state)
             ---@type table
             local tree = state.tree
@@ -182,7 +107,7 @@ return {
       filesystem = {
         bind_to_cwd = true,
         follow_current_file = true,
-        hijack_netrw_behavior = "disabled",
+        hijack_netrw_behavior = "open_default",
         filtered_items = {
           visible = true,
           show_hidden_count = false,
@@ -192,18 +117,10 @@ return {
   },
   {
     "folke/which-key.nvim",
-    enabled = true,
-    keys = {
-      "<C-w>",
-      "<Leader>",
-      "g",
-      "t",
-      "z",
-    },
+    keys = { "<C-w>", "<Leader>", "g", "t", "z" },
     opts = {
       plugins = {
         marks = false,
-        registers = false,
         presets = {
           g = true,
           nav = false,
@@ -212,6 +129,8 @@ return {
           windows = true,
           z = true,
         },
+        registers = false,
+        spelling = false,
       },
       disable = {
         filetypes = {
@@ -252,34 +171,28 @@ return {
   {
     "rcarriga/nvim-notify",
     init = function()
-      ---@module 'notify'
-      ---@type table
-      local notify = require("notify")
-      notify.setup({
-        max_height = function()
-          return math.floor(vim.o.lines * 0.6)
-        end,
-        max_width = function()
-          return math.floor(vim.o.columns * 0.75)
-        end,
-      })
-
-      vim.notify = notify
+      vim.notify = require("notify")
     end,
+    opts = {
+      max_height = function()
+        return math.floor(vim.o.lines * 0.6)
+      end,
+      max_width = function()
+        return math.floor(vim.o.columns * 0.75)
+      end,
+    },
   },
   {
     "petertriho/nvim-scrollbar",
-    event = "BufReadPost",
-    opts = function()
-      return {
-        excluded_filestypes = {
-          "prompt",
-          "TelescopePrompt",
-          "neo-tree",
-          "notify",
-        },
-      }
-    end,
+    event = { "BufAdd" },
+    opts = {
+      excluded_filestypes = {
+        "prompt",
+        "TelescopePrompt",
+        "neo-tree",
+        "notify",
+      },
+    },
   },
   {
     "folke/zen-mode.nvim",
@@ -296,11 +209,23 @@ return {
   },
   {
     "stevearc/dressing.nvim",
-    event = "VeryLazy",
+    event = { "BufReadPost" },
+    config = function()
+      vim.ui.select = function(...)
+        require("lazy").load({ plugins = { "dressing.nvim" } })
+        return vim.ui.select(...)
+      end
+
+      vim.ui.input = function(...)
+        require("lazy").load({ plugins = { "dressing.nvim" } })
+        return vim.ui.input(...)
+      end
+    end,
   },
   {
     "b0o/incline.nvim",
-    event = "BufReadPost",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    event = { "BufAdd" },
     opts = {
       render = function(props)
         local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
@@ -319,15 +244,8 @@ return {
   },
   {
     "anuvyklack/windows.nvim",
-    event = "BufReadPost",
     dependencies = { "anuvyklack/middleclass" },
-    keys = {
-      {
-        "<Leader>z",
-        require("utils").cmd("WindowsMaximize"),
-        desc = "(Z)oom",
-      },
-    },
+    event = { "BufAdd" },
     config = function()
       vim.o.winwidth = 5
       vim.o.equalalways = true
@@ -342,7 +260,7 @@ return {
       "nvim-treesitter/nvim-treesitter",
       "rcarriga/nvim-notify",
     },
-    event = "VeryLazy",
+    event = { "VeryLazy" },
     opts = {
       messages = {
         view = "mini",

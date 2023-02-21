@@ -18,3 +18,9 @@ vim.b.minisurround_config = {
     },
   },
 }
+
+vim.b.miniai_config = {
+  custom_textobjects = {
+    s = { "%[%[().-()%]%]" },
+  },
+}

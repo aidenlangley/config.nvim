@@ -29,109 +29,124 @@ return {
       "windwp/nvim-ts-autotag",
     },
     build = ":TSUpdate",
-    event = "BufReadPost",
-    config = function()
-      require("nvim-treesitter.configs").setup({
-        auto_install = true,
-        ensure_installed = {
-          "bash",
-          "comment",
-          "css",
-          "diff",
-          "fish",
-          "gitignore",
-          "go",
-          "help",
-          "html",
-          "javascript",
-          "jsdoc",
-          "json",
-          "jsonc",
-          "lua",
-          "markdown",
-          "markdown_inline",
-          "python",
-          "rust",
-          "svelte",
-          "sql",
-          "toml",
-          "typescript",
-          "vim",
-          "vue",
-          "yaml",
-        },
+    event = { "BufReadPre" },
+    opts = {
+      auto_install = true,
+      ensure_installed = {
+        "bash",
+        "comment",
+        "css",
+        "diff",
+        "fish",
+        "gitignore",
+        "go",
+        "help",
+        "html",
+        "javascript",
+        "jsdoc",
+        "json",
+        "json5",
+        "jsonc",
+        "lua",
+        "markdown",
+        "markdown_inline",
+        "python",
+        "rust",
+        "svelte",
+        "sql",
+        "toml",
+        "typescript",
+        "tsx",
+        "vim",
+        "vue",
+        "yaml",
+      },
 
-        -- Plugins
-        autotag = { enable = true },
-        context_commentstring = { enable = true },
-        highlight = {
+      -- Plugins
+      autotag = { enable = true },
+      context_commentstring = { enable = true },
+      highlight = {
+        enable = true,
+        disable = {
+          "txt",
+          "vue",
+        },
+      },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = "<C-Space>",
+          node_incremental = "<C-Space>",
+          scope_incremental = "<Nop>",
+          node_decremental = "<BS>",
+        },
+      },
+      indent = {
+        enable = true,
+        disable = { "fish" },
+      },
+      matchup = { enable = true },
+      playground = { enable = true },
+      textobjects = {
+        lsp_interop = {
+          enable = false,
+          border = "none",
+          peek_definition_code = {
+            ["<Leader>lp"] = { query = { "@function.*", "@class.*" } },
+          },
+        },
+        move = {
           enable = true,
-          disable = {
-            "txt",
-            "vue",
+          set_jumps = false,
+          goto_next_start = {
+            ["]c"] = "@class.outer",
+            ["]f"] = "@function.outer",
+            ["]z"] = { query = "@fold", query_group = "folds", desc = "Next fold start" },
+          },
+          goto_next_end = {
+            ["]C"] = "@class.outer",
+            ["]F"] = "@function.outer",
+            ["]Z"] = { query = "@fold", query_group = "folds", desc = "Next fold end" },
+          },
+          goto_previous_start = {
+            ["[c"] = "@class.outer",
+            ["[f"] = "@function.outer",
+            ["[z"] = { query = "@fold", query_group = "folds", desc = "Next fold start" },
+          },
+          goto_previous_end = {
+            ["[C"] = "@class.outer",
+            ["[F"] = "@function.outer",
+            ["[Z"] = { query = "@fold", query_group = "folds", desc = "Next fold end" },
+          },
+          goto_next = {
+            ["]g"] = "@call.outer",
+            ["]p"] = "@paramater.outer",
+          },
+          goto_previous = {
+            ["[g"] = "@call.outer",
+            ["[p"] = "@paramater.outer",
           },
         },
-        indent = { enable = true },
-        matchup = { enable = true },
-        playground = { enable = true },
-        textobjects = {
-          lsp_interop = {
-            enable = false,
-            border = "none",
-            peek_definition_code = {
-              ["<Leader>lp"] = { query = { "@function.*", "@class.*" } },
-            },
-          },
-          move = {
-            enable = true,
-            set_jumps = false,
-            goto_next_start = {
-              ["]c"] = "@class.outer",
-              ["]f"] = "@function.outer",
-              ["]z"] = { query = "@fold", query_group = "folds", desc = "Next fold start" },
-            },
-            goto_next_end = {
-              ["]C"] = "@class.outer",
-              ["]F"] = "@function.outer",
-              ["]Z"] = { query = "@fold", query_group = "folds", desc = "Next fold end" },
-            },
-            goto_previous_start = {
-              ["[c"] = "@class.outer",
-              ["[f"] = "@function.outer",
-              ["[z"] = { query = "@fold", query_group = "folds", desc = "Next fold start" },
-            },
-            goto_previous_end = {
-              ["[C"] = "@class.outer",
-              ["[F"] = "@function.outer",
-              ["[Z"] = { query = "@fold", query_group = "folds", desc = "Next fold end" },
-            },
-            goto_next = {
-              ["]g"] = "@call.outer",
-              ["]p"] = "@paramater.outer",
-            },
-            goto_previous = {
-              ["[g"] = "@call.outer",
-              ["[p"] = "@paramater.outer",
-            },
-          },
-          swap = {
-            enable = true,
-            swap_next = {
-              [">p"] = "@parameter.inner",
-            },
-            swap_previous = {
-              ["<p"] = "@parameter.inner",
-            },
-          },
-        },
-        textsubjects = {
+        swap = {
           enable = true,
-          prev_selection = ",", -- (Optional) keymap to select the previous selection
-          keymaps = {
-            ["."] = "textsubjects-smart",
+          swap_next = {
+            [">p"] = "@parameter.inner",
+          },
+          swap_previous = {
+            ["<p"] = "@parameter.inner",
           },
         },
-      })
+      },
+      textsubjects = {
+        enable = true,
+        prev_selection = ",", -- (Optional) keymap to select the previous selection
+        keymaps = {
+          ["."] = "textsubjects-smart",
+        },
+      },
+    },
+    config = function(_, opts)
+      require("nvim-treesitter.configs").setup(opts)
 
       local ts_repeat_move = require("nvim-treesitter.textobjects.repeatable_move")
       vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)

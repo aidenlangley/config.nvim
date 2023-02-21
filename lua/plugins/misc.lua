@@ -1,16 +1,15 @@
 return {
-  "nvim-lua/plenary.nvim",
   {
     "ahmedkhalf/project.nvim",
-    lazy = false,
-    event = "BufReadPost",
-    cmd = "Telescope projects",
-    keys = { "tp" },
+    event = { "VeryLazy" },
     opts = {
-      detection_methods = { "pattern" },
+      detection_methods = { "pattern", "lsp" },
       patterns = {
+        "=src",
         ".git",
         ".gitignore",
+        ".svn",
+        "Makefile",
         "package.json",
       },
       exclude_dirs = {
@@ -19,7 +18,7 @@ return {
         "~/.rustup/*",
       },
       silent_chdir = true,
-      show_hidden = true,
+      show_hidden = false,
     },
     config = function(_, opts)
       require("project_nvim").setup(opts)

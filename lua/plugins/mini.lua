@@ -2,11 +2,7 @@ return {
   {
     "echasnovski/mini.ai",
     dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
-    keys = {
-      { "a", mode = { "v", "o" } },
-      { "i", mode = { "v", "o" } },
-    },
-    event = "BufReadPost",
+    event = { "BufReadPre" },
     opts = function()
       local ai = require("mini.ai")
       return {
@@ -62,10 +58,71 @@ return {
   },
   {
     "echasnovski/mini.align",
-    event = "BufReadPost",
     keys = { "ga", "gA" },
     config = function(_, opts)
       require("mini.align").setup(opts)
+    end,
+  },
+  {
+    "echasnovski/mini.animate",
+    event = { "BufAdd" },
+    enabled = true,
+    opts = function()
+      local mouse_scrolled = false
+      for _, scroll in ipairs({ "Up", "Down" }) do
+        local key = "<ScrollWheel" .. scroll .. ">"
+        vim.keymap.set("", key, function()
+          mouse_scrolled = true
+          return key
+        end, { expr = true })
+      end
+
+      local is_not_single_window = function(win_id)
+        local tabpage_id = vim.api.nvim_win_get_tabpage(win_id)
+        return #vim.api.nvim_tabpage_list_wins(tabpage_id) > 1
+      end
+
+      ---@module 'mini.animate'
+      ---@class MiniAnimate
+      ---@field setup fun(config: table)
+      ---@field config table
+      ---@field gen_timing { linear: fun(opts: table): fun(power: integer, opts: table) }
+      ---@field gen_subscroll { equal: fun(opts: table): fun() }
+      ---@field gen_winconfig { wipe: fun(opts: table): fun() }
+      local animate = require("mini.animate")
+
+      return {
+        scroll = {
+          ---@type fun(a, b): integer
+          timing = animate.gen_timing.linear({ duration = 150, unit = "total" }),
+          ---@type fun(total_scroll: integer): boolean
+          subscroll = animate.gen_subscroll.equal({
+            max_output_steps = 120,
+            predicate = function(total_scroll)
+              if mouse_scrolled then
+                mouse_scrolled = false
+                return false
+              end
+              return total_scroll > 1
+            end,
+          }),
+        },
+        open = {
+          winconfig = animate.gen_winconfig.wipe({
+            predicate = is_not_single_window,
+            direction = "from_edge",
+          }),
+        },
+        close = {
+          winconfig = animate.gen_winconfig.wipe({
+            predicate = is_not_single_window,
+            direction = "to_edge",
+          }),
+        },
+      }
+    end,
+    config = function(_, opts)
+      require("mini.animate").setup(opts)
     end,
   },
   {
@@ -118,10 +175,7 @@ return {
   {
     "echasnovski/mini.comment",
     dependencies = { "JoosepAlviste/nvim-ts-context-commentstring" },
-    event = "BufReadPost",
-    keys = {
-      { "gc", mode = { "n", "v" } },
-    },
+    event = { "BufReadPost" },
     opts = {
       mappings = {
         comment = "gc",
@@ -140,22 +194,48 @@ return {
   },
   {
     "echasnovski/mini.cursorword",
-    event = "BufReadPost",
+    event = { "BufAdd" },
     config = function()
       require("mini.cursorword").setup({})
     end,
   },
   {
     "echasnovski/mini.doc",
-    event = "VeryLazy",
+    enabled = false,
+    event = { "VeryLazy" },
     config = function()
       require("mini.doc").setup({})
     end,
   },
   {
+    "echasnovski/mini.indentscope",
+    event = { "BufReadPost" },
+    opts = {
+      symbol = "│",
+      options = { try_as_border = true },
+    },
+    config = function(_, opts)
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = {
+          "help",
+          "alpha",
+          "dashboard",
+          "neo-tree",
+          "Trouble",
+          "lazy",
+          "mason",
+        },
+        callback = function()
+          vim.b.miniindentscope_disable = true
+        end,
+      })
+      require("mini.indentscope").setup(opts)
+    end,
+  },
+  {
     "echasnovski/mini.map",
     enabled = false,
-    event = "BufReadPost",
+    event = { "BufAdd" },
     opts = function()
       local map = require("mini.map")
       return {
@@ -174,6 +254,7 @@ return {
   },
   {
     "echasnovski/mini.move",
+    enabled = false,
     config = function()
       require("mini.move").setup({})
     end,
@@ -189,15 +270,6 @@ return {
     "echasnovski/mini.starter",
     dependencies = { "echasnovski/mini.sessions" },
     event = "UIEnter",
-    keys = {
-      {
-        "<Leader>;",
-        function()
-          require("mini.starter").open()
-        end,
-        desc = "Dashboard",
-      },
-    },
     opts = function()
       local title = table.concat({
         [[                   |         |         ]],
@@ -211,7 +283,8 @@ return {
           "💤 %s/%s plugins loaded in %sms  ",
           stats.loaded,
           stats.count,
-          math.floor(stats.startuptime * 100 + 0.5) / 100
+          math.floor(stats.startuptime * 100 + 0.5) / 100,
+          stats.real_cputime
         )
       end
 
@@ -280,6 +353,10 @@ return {
       end
 
       require("mini.starter").setup(opts)
+
+      vim.keymap.set("n", "<Leader>;", function()
+        require("mini.starter").open()
+      end, { desc = "Dashboard" })
     end,
   },
   {
@@ -316,6 +393,13 @@ return {
     config = function(_, opts)
       require("mini.surround").setup(opts)
       vim.api.nvim_set_keymap("n", "yss", "ys_", { noremap = false })
+    end,
+  },
+  {
+    "echasnovski/mini.tabline",
+    event = { "VeryLazy" },
+    config = function()
+      require("mini.tabline").setup({})
     end,
   },
 }

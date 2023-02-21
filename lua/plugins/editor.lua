@@ -1,13 +1,13 @@
 return {
   {
     "https://git.sr.ht/~nedia/auto-format.nvim",
-    event = "BufReadPost",
+    event = { "InsertLeavePre" },
     config = true,
-    dev = false,
+    dev = true,
   },
   {
     "https://git.sr.ht/~nedia/auto-save.nvim",
-    event = "BufReadPost",
+    event = { "BufReadPre" },
     opts = {
       events = { "InsertLeave", "BufLeave" },
       silent = false,
@@ -17,24 +17,34 @@ return {
   },
   {
     "mcauley-penney/tidy.nvim",
-    event = "BufWrite",
+    event = { "BufWrite" },
     config = true,
   },
   {
     "windwp/nvim-autopairs",
-    event = "InsertEnter",
+    event = { "InsertEnter" },
     enabled = true,
     config = true,
   },
   {
     "ggandor/leap.nvim",
     keys = {
-      { "s", mode = { "n", "v", "o" } },
-      { "S", mode = { "n", "v", "o" } },
+      { "s", mode = { "n", "x", "o" } },
+      { "S", mode = { "n", "x", "o" } },
     },
     config = function()
       require("leap").set_default_keymaps()
     end,
+  },
+  {
+    "ggandor/flit.nvim",
+    keys = {
+      { "f", mode = { "n", "x", "o" } },
+      { "F", mode = { "n", "x", "o" } },
+      { "t", mode = { "n", "x", "o" } },
+      { "T", mode = { "n", "x", "o" } },
+    },
+    opts = { labeled_modes = "nx" },
   },
   {
     "danymat/neogen",
@@ -52,7 +62,7 @@ return {
   "gpanders/editorconfig.nvim",
   {
     "NvChad/nvim-colorizer.lua",
-    event = "BufReadPre",
+    event = { "BufReadPre" },
     opts = {
       filetypes = { "*", "!lazy" },
       buftype = { "*", "!prompt", "!nofile" },
@@ -110,53 +120,6 @@ return {
   {
     "gbprod/yanky.nvim",
     dependencies = { "kkharji/sqlite.lua" },
-    keys = {
-      {
-        "p",
-        "<Plug>(YankyPutAfter)",
-        mode = { "n", "x" },
-        desc = "Put after",
-      },
-      {
-        "P",
-        "<Plug>(YankyPutBefore)",
-        mode = { "n", "x" },
-        desc = "Put before",
-      },
-      {
-        "<C-n>",
-        "<Plug>(YankyCicleForward)",
-        desc = "Cycle yanky forwards",
-      },
-      {
-        "<C-p>",
-        "<Plug>(YankyCicleBackward)",
-        desc = "Cycle yanky backwards",
-      },
-      {
-        "gp",
-        "<Plug>(YankyGPutAfter)",
-        mode = { "n", "x" },
-        desc = "GPut after",
-      },
-      {
-        "gP",
-        "<Plug>(YankyGPutBefore)",
-        mode = { "n", "x" },
-        desc = "GPut before",
-      },
-      {
-        "y",
-        "<Plug>(YankyYank)",
-        mode = { "n", "x" },
-        desc = "(Y)ank",
-      },
-      {
-        "ty",
-        require("utils").cmd("YankyRingHistory"),
-        desc = "Yanky history...",
-      },
-    },
     opts = {
       ring = {
         history_length = 10,
@@ -164,5 +127,65 @@ return {
       },
       highlight = { timer = 150 },
     },
+    config = function(_, opts)
+      require("yanky").setup(opts)
+
+      local keys = {
+        {
+          "p",
+          "<Plug>(YankyPutAfter)",
+          mode = { "n", "x" },
+          desc = "Put after",
+        },
+        {
+          "P",
+          "<Plug>(YankyPutBefore)",
+          mode = { "n", "x" },
+          desc = "Put before",
+        },
+        {
+          "<C-n>",
+          "<Plug>(YankyCicleForward)",
+          desc = "Cycle yanky forwards",
+        },
+        {
+          "<C-p>",
+          "<Plug>(YankyCicleBackward)",
+          desc = "Cycle yanky backwards",
+        },
+        {
+          "gp",
+          "<Plug>(YankyGPutAfter)",
+          mode = { "n", "x" },
+          desc = "GPut after",
+        },
+        {
+          "gP",
+          "<Plug>(YankyGPutBefore)",
+          mode = { "n", "x" },
+          desc = "GPut before",
+        },
+        {
+          "y",
+          "<Plug>(YankyYank)",
+          mode = { "n", "x" },
+          desc = "(Y)ank",
+        },
+        {
+          "ty",
+          require("utils").cmd("YankyRingHistory"),
+          desc = "Yanky history...",
+        },
+      }
+
+      for _, keymap in ipairs(keys) do
+        vim.keymap.set(
+          keymap.mode or "n",
+          keymap[1],
+          keymap[2],
+          { desc = keymap.desc, noremap = true }
+        )
+      end
+    end,
   },
 }

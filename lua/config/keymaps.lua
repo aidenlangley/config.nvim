@@ -8,8 +8,8 @@ vim.keymap.set(
 )
 
 -- Move through buffers
-vim.keymap.set("n", "[b", utils.cmd("bp"), { desc = "Previous (B)uffer", silent = true })
-vim.keymap.set("n", "]b", utils.cmd("bn"), { desc = "Next (B)uffer", silent = true })
+vim.keymap.set("n", "H", utils.cmd("bp"), { desc = "Previous buffer", silent = true })
+vim.keymap.set("n", "L", utils.cmd("bn"), { desc = "Next buffer", silent = true })
 
 -- Close buffers
 vim.keymap.set("n", "<Leader>D", utils.cmd("%bd|e#|bd#"), { desc = "(D)elete other bufferss" })
@@ -34,9 +34,8 @@ vim.keymap.set("n", "<C-q>", utils.smart_quit, { desc = "(Q)uit" })
 -- Code actions & formatting can function without a language server
 vim.keymap.set("n", "<C-.>", vim.lsp.buf.code_action, { desc = "Code actions..." })
 
-local term_lazygit = utils.float_term("lazygit")
 vim.keymap.set("n", "<Leader>gg", function()
-  term_lazygit:toggle()
+  utils.float_term("lazygit"):toggle()
 end, { desc = "Lazy(G)it" })
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n

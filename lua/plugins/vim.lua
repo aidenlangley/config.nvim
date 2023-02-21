@@ -24,7 +24,7 @@ return {
   -- "tpope/vim-vinegar", -- File explorer?
   {
     "andymass/vim-matchup",
-    event = "BufReadPost",
+    event = { "BufReadPost" },
     config = function()
       vim.g.matchup_motion_enabled = 0
       vim.g.matchup_surround_enabled = 0
@@ -56,6 +56,13 @@ return {
       vim.g.multi_cursor_prev_key = "<C-p>"
       vim.g.multi_cursor_skip_key = "<C-x>"
       vim.g.multi_cursor_quit_key = "<Esc>"
+    end,
+  },
+  {
+    "dstein64/vim-startuptime",
+    cmd = "StartupTime",
+    config = function()
+      vim.g.startuptime_tries = 10
     end,
   },
 }

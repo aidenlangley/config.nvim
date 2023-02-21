@@ -35,8 +35,14 @@ vim.o.timeoutlen = 500
 -- Add diagnostic symbols to left-hand column
 vim.wo.signcolumn = "yes"
 
--- Set completeopt to have a better completion experience
-vim.o.completeopt = "menuone,noselect"
+-- Set completeopt to have a better completion experience - basically the least
+-- intrusive it can be.
+--
+-- 'menuone' displays a menu, even when there is only one option
+-- 'noinsert' will prevent the command prompt from being populated with the
+-- completion option until selected.
+-- 'noselect' ensures the user selects the item from the menu manually.
+vim.o.completeopt = "menuone,noinsert,noselect"
 
 -- Highlight current line
 vim.o.cursorline = false
@@ -76,9 +82,9 @@ vim.o.showmode = false
 
 -- Lines to keep above/below & left/right of cursor
 vim.o.scrolloff = 8
-vim.o.sidescrolloff = 16
+vim.o.sidescrolloff = 4
 
--- Code folding by indent
+-- Code folding via treesitter
 vim.o.foldmethod = "expr"
 vim.o.foldexpr = "nvim_treesitter#foldexpr()"
 vim.o.nofoldenable = true
@@ -86,12 +92,29 @@ vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
 vim.opt.fillchars = { eob = "-", fold = " " }
 
+-- Command mode completion
+vim.o.wildmode = "longest:full,full"
+
+-- Sessions
+vim.opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize" }
+
 -- Spelling
--- vim.o.spell = true
--- vim.o.spelllang = "en-gb"
+vim.o.spell = true
+vim.o.spelllang = "uk,en"
+vim.o.spelloptions = "camel"
+vim.opt.complete:append("kspell")
 
 -- Floating status lines, works well with `incline.nvim`
 vim.o.laststatus = 3
+
+-- Treat dash separated words as a word text object
+vim.opt.iskeyword:append("-")
+
+-- NeoVim 9+
+if vim.fn.has("nvim-0.9.0") == 1 then
+  vim.o.splitkeep = "screen"
+  vim.opt.shortmess:append({ C = true })
+end
 
 -- Title string
 vim.o.title = true

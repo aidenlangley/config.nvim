@@ -11,7 +11,7 @@ return {
       "json",
       "jsonc",
       "less",
-      "markdown.mdx",
+      "markdown",
       "scss",
       "svelte",
       "typescript",
@@ -25,9 +25,9 @@ return {
         desc = "NullLs: Info",
       },
     },
-    config = function()
+    opts = function()
       local null_ls = require("null-ls")
-      null_ls.setup({
+      return {
         debounce = 150,
         sources = {
           -- Web dev
@@ -42,7 +42,6 @@ return {
               "json",
               "jsonc",
               "less",
-              "markdown.mdx",
               "scss",
               "svelte",
               "typescript",
@@ -73,7 +72,7 @@ return {
           }),
         },
         diagnostics_format = "[#{c}] #{m} (#{s})",
-      })
+      }
     end,
   },
   {

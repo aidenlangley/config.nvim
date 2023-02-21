@@ -1,6 +1,6 @@
 return {
   "feline-nvim/feline.nvim",
-  event = "VeryLazy",
+  event = { "VeryLazy" },
   config = function()
     local bg_lighter = "#3c3836"
 
