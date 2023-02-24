@@ -7,7 +7,7 @@ vim.api.nvim_create_autocmd("User", {
   once = true,
   callback = function()
     -- Checks that a file wasn't passed as an argument to nvim
-    if vim.fn.argc() == 0 or #vim.v.argv == 0 then
+    if vim.fn.argc() == 0 or vim.fn.argv() == 0 then
       require("mini.starter").open(vim.api.nvim_get_current_buf())
     end
   end,

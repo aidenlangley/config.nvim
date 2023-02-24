@@ -1,4 +1,3 @@
----@class utils
 local M = {}
 
 ---@param command string
@@ -18,7 +17,7 @@ function M.float_term(command)
   })
 end
 
----@param bufnr integer
+---@param bufnr number
 function M.smart_quit(bufnr)
   local prompt = "You have unsaved changes. Quit anyway? (y/N) "
   local callback = function(input)
