@@ -83,10 +83,13 @@ return {
       },
       indent = {
         enable = true,
-        disable = { "fish" },
+        disable = {
+          "fish",
+          "svelte",
+        },
       },
-      matchup = { enable = true },
-      playground = { enable = true },
+      matchup = { enable = false },
+      playground = { enable = false },
       textobjects = {
         lsp_interop = {
           enable = false,
@@ -101,22 +104,38 @@ return {
           goto_next_start = {
             ["]c"] = "@class.outer",
             ["]f"] = "@function.outer",
-            ["]z"] = { query = "@fold", query_group = "folds", desc = "Next fold start" },
+            ["]z"] = {
+              query = "@fold",
+              query_group = "folds",
+              desc = "Next fold start",
+            },
           },
           goto_next_end = {
             ["]C"] = "@class.outer",
             ["]F"] = "@function.outer",
-            ["]Z"] = { query = "@fold", query_group = "folds", desc = "Next fold end" },
+            ["]Z"] = {
+              query = "@fold",
+              query_group = "folds",
+              desc = "Next fold end",
+            },
           },
           goto_previous_start = {
             ["[c"] = "@class.outer",
             ["[f"] = "@function.outer",
-            ["[z"] = { query = "@fold", query_group = "folds", desc = "Next fold start" },
+            ["[z"] = {
+              query = "@fold",
+              query_group = "folds",
+              desc = "Next fold start",
+            },
           },
           goto_previous_end = {
             ["[C"] = "@class.outer",
             ["[F"] = "@function.outer",
-            ["[Z"] = { query = "@fold", query_group = "folds", desc = "Next fold end" },
+            ["[Z"] = {
+              query = "@fold",
+              query_group = "folds",
+              desc = "Next fold end",
+            },
           },
           goto_next = {
             ["]g"] = "@call.outer",
@@ -148,9 +167,18 @@ return {
     config = function(_, opts)
       require("nvim-treesitter.configs").setup(opts)
 
-      local ts_repeat_move = require("nvim-treesitter.textobjects.repeatable_move")
-      vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
-      vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous)
+      local ts_repeat_move =
+        require("nvim-treesitter.textobjects.repeatable_move")
+      vim.keymap.set(
+        { "n", "x", "o" },
+        ";",
+        ts_repeat_move.repeat_last_move_next
+      )
+      vim.keymap.set(
+        { "n", "x", "o" },
+        ",",
+        ts_repeat_move.repeat_last_move_previous
+      )
     end,
   },
 }

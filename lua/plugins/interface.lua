@@ -51,7 +51,7 @@ return {
       -- Opening a directory will load neo-tree.
       -- hijack_netrw_behavior = "open_default" does the rest.
       if vim.fn.argc() == 1 then
-        local stat = vim.loop.fs_stat(vim.fn.argv(0))
+        local stat = vim.loop.fs_stat(tostring(vim.fn.argv(0)))
         if stat and stat.type == "directory" then
           require("neo-tree")
         end
@@ -210,17 +210,7 @@ return {
   {
     "stevearc/dressing.nvim",
     event = { "BufReadPost" },
-    config = function()
-      vim.ui.select = function(...)
-        require("lazy").load({ plugins = { "dressing.nvim" } })
-        return vim.ui.select(...)
-      end
-
-      vim.ui.input = function(...)
-        require("lazy").load({ plugins = { "dressing.nvim" } })
-        return vim.ui.input(...)
-      end
-    end,
+    config = true,
   },
   {
     "b0o/incline.nvim",
@@ -228,9 +218,11 @@ return {
     event = { "BufAdd" },
     opts = {
       render = function(props)
-        local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+        local filename =
+          vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
         ---@type string, string
-        local icon, color = require("nvim-web-devicons").get_icon_color(filename)
+        local icon, color =
+          require("nvim-web-devicons").get_icon_color(filename)
         return {
           {
             icon,

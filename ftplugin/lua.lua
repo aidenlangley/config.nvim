@@ -3,8 +3,11 @@ local utils = require("utils")
 
 utils.register_null_ls_sources({
   null_ls.builtins.formatting.stylua,
-  null_ls.builtins.diagnostics.luacheck.with({
-    extra_args = { "--config", ".luacheckrc" },
+  null_ls.builtins.diagnostics.selene.with({
+    args = { "-q", "--allow-warnings", "-" },
+    condition = function(nls_utils)
+      return nls_utils.root_has_file({ "selene.toml" })
+    end,
   }),
 })
 

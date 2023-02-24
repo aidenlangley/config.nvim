@@ -63,8 +63,6 @@ require("lazy").setup("plugins", {
   },
 })
 
----@module 'utils'
----@type utils
 local utils = require("utils")
 
 local function nmap(keys, func, desc)

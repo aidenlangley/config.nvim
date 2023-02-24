@@ -1,7 +1,11 @@
 return {
+  { "saadparwaiz1/cmp_luasnip", ft = "lua" },
+
+  { "mtoohey31/cmp-fish", ft = "fish" },
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
+      -- Engine
       {
         "L3MON4D3/LuaSnip",
         dependencies = {
@@ -12,32 +16,31 @@ return {
             end,
           },
         },
+        opts = {
+          history = true,
+          delete_check_events = "TextChanged",
+        },
       },
+
+      -- Generic completion sources
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-calc",
       "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-emoji",
       "hrsh7th/cmp-path",
       "chrisgrieser/cmp-nerdfont",
+
+      -- LSP sources
+      -- "hrsh7th/cmp-omni",
+      "hrsh7th/cmp-nvim-lsp",
+      -- "hrsh7th/cmp-nvim-lsp-document-symbol",
+      "hrsh7th/cmp-nvim-lsp-signature-help",
+
+      -- Utility
+      "lukas-reineke/cmp-under-comparator",
     },
     event = "InsertEnter",
     opts = function()
-      local cmp = require("cmp")
-      local luasnip = require("luasnip")
-
-      --- Check if the completion menu item is the only option
-      ---@return boolean
-      local function partially_complete()
-        unpack = unpack or table.unpack
-        local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-        local single_row = vim.api
-          .nvim_buf_get_lines(0, row - 1, row, true)[1]
-          :sub(col, col)
-          :match("%s") == nil
-
-        return col ~= 0 and single_row
-      end
-
       local icons = {
         Text = " ",
         Method = " ",
@@ -75,21 +78,27 @@ return {
         luasnip = "(LuaSnip)",
         nerdfont = "(NerdFont)",
         nvim_lsp = "(LSP)",
-        nvim_lsp_document_symbol = "(LSP Doc)",
-        nvim_lsp_signature_help = "(LSP Sig)",
-        omni = "(Omni)",
+        -- nvim_lsp_document_symbol = "(LSP Doc)",
+        nvim_lsp_signature_help = "(Signature)",
+        -- omni = "(Omni)",
         path = "(Path)",
       }
+
+      local cmp = require("cmp")
+      ---@diagnostic disable-next-line: no-unknown
+      local luasnip = require("luasnip")
 
       return {
         completion = { completeopt = "menuone,noinsert,noselect" },
         snippet = {
           expand = function(args)
-            require("luasnip").lsp_expand(args.body)
+            luasnip.lsp_expand(args.body)
           end,
         },
         enabled = function()
-          if vim.api.nvim_get_mode().mode == "c" then
+          local console_mode = vim.api.nvim_get_mode().mode == "c"
+          local buftype = vim.api.nvim_buf_get_option(0, "buftype")
+          if console_mode or buftype == "" then
             return true
           else
             local context = require("cmp.config.context")
@@ -98,10 +107,26 @@ return {
           end
         end,
         sources = require("completions").sources,
+        sorting = {
+          comparators = {
+            cmp.config.compare.offset,
+            cmp.config.compare.exact,
+            cmp.config.compare.score,
+            require("cmp-under-comparator").under,
+            cmp.config.compare.kind,
+            cmp.config.compare.sort_text,
+            cmp.config.compare.length,
+            cmp.config.compare.order,
+          },
+        },
+        view = { entries = "custom" },
         formatting = {
           fields = { "kind", "abbr", "menu" },
+          ---@param entry cmp.Entry
+          ---@param vim_item vim.CompletedItem
           format = function(entry, vim_item)
-            vim_item.kind = string.format("%s%s", icons[vim_item.kind], vim_item.kind)
+            vim_item.kind =
+              string.format("%s%s", icons[vim_item.kind], vim_item.kind)
             vim_item.abbr = vim_item.abbr:sub(0, 24)
             vim_item.menu = (menu)[entry.source.name]
             return vim_item
@@ -109,38 +134,60 @@ return {
         },
         window = {
           completion = {
+            -- border = "single",
             winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
+          },
+          documentation = {
+            -- border = "single",
           },
         },
         mapping = {
-          ["<Up>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-          ["<Down>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+          ["<Up>"] = cmp.mapping.select_prev_item({
+            ---@type cmp.SelectBehavior
+            behavior = cmp.SelectBehavior.Insert,
+          }),
+          ["<Down>"] = cmp.mapping.select_next_item({
+            ---@type cmp.SelectBehavior
+            behavior = cmp.SelectBehavior.Insert,
+          }),
 
-          ["<Tab>"] = cmp.mapping(function(fallback)
+          ["<Tab>"] = function()
+            --- Check if the completion menu item is the only option
+            ---@return boolean
+            local function partially_complete()
+              local unpack = unpack or table.unpack
+              ---@type number, number
+              local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+              local single_row = vim.api
+                .nvim_buf_get_lines(0, row - 1, row, true)[1]
+                :sub(col, col)
+                :match("%s") == nil
+
+              return col ~= 0 and single_row
+            end
+
             if cmp.visible() then
               cmp.select_next_item()
             elseif luasnip.expand_or_locally_jumpable() then
               luasnip.expand_or_jump()
             elseif partially_complete() then
               cmp.complete()
-            else
-              fallback()
             end
-          end, { "i", "s" }),
-          ["<S-Tab>"] = cmp.mapping(function(fallback)
+          end,
+
+          ["<S-Tab>"] = function()
             if cmp.visible() then
               cmp.select_prev_item()
             elseif luasnip.jumpable(-1) then
               luasnip.jump(-1)
-            else
-              fallback()
             end
-          end, { "i", "s" }),
+          end,
 
           ["<CR>"] = cmp.mapping.confirm({ select = true }),
           ["<C-d>"] = cmp.mapping.scroll_docs(-4),
           ["<C-u>"] = cmp.mapping.scroll_docs(4),
         },
+        performance = { debounce = 250 },
         experimental = { ghost_text = { hl_group = "@comment" } },
       }
     end,
@@ -151,6 +198,7 @@ return {
       cmp.setup.cmdline("/", {
         mapping = cmp.mapping.preset.cmdline(),
         sources = {
+          { name = "path" },
           { name = "buffer" },
         },
       })
@@ -170,10 +218,14 @@ return {
         PmenuSel = { fg = "NONE", bg = "#928374" },
         Pmenu = { fg = "#fbf1c7", bg = "#22252A" },
 
-        CmpItemAbbrDeprecated = { fg = "#7E8294", bg = "NONE", strikethrough = true },
+        CmpItemAbbrDeprecated = {
+          fg = "#7E8294",
+          bg = "NONE",
+          strikethrough = true,
+        },
         CmpItemAbbrMatch = { fg = "#82AAFF", bg = "NONE", bold = true },
         CmpItemAbbrMatchFuzzy = { fg = "#82AAFF", bg = "NONE", bold = true },
-        CmpItemMenu = { fg = "#C792EA", bg = "NONE", italic = true },
+        CmpItemMenu = { fg = "#C792EA", bg = "NONE", italic = false },
 
         CmpItemKindText = { fg = "#C3E88D", bg = "NONE" },
         CmpItemKindEnum = { fg = "#C3E88D", bg = "NONE" },
@@ -212,21 +264,6 @@ return {
       for name, hl in pairs(highlights) do
         vim.api.nvim_set_hl(0, name, hl)
       end
-    end,
-  },
-  {
-    "mtoohey31/cmp-fish",
-    ft = "fish",
-    config = function()
-      local cmp = require("cmp")
-      local completions = require("completions")
-      cmp.setup.filetype("fish", {
-        sources = cmp.config.sources(
-          { { name = "fish" } },
-          completions.lsp_sources,
-          completions.sources
-        ),
-      })
     end,
   },
 }

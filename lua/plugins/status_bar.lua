@@ -56,7 +56,8 @@ return {
         for _, client in ipairs(active_clients) do
           -- When handling null-ls clients, we have to further inspect the sources
           if client.name == "null-ls" then
-            local avail_sources = require("null-ls.sources").get_available(vim.bo.filetype)
+            local avail_sources =
+              require("null-ls.sources").get_available(vim.bo.filetype)
 
             ---@param source table
             for _, source in ipairs(avail_sources) do
@@ -67,7 +68,24 @@ return {
           end
         end
 
-        return table.concat(clients, " "), " "
+        ---@type table<string, boolean>
+        -- Removing duplicates from clients table
+        -- Add duplicated values here, we check against this as we loop through
+        -- `clients`.
+        local duplicates = {}
+
+        ---@type string[]
+        -- Resulting table with duplicates removed
+        local squashed = {}
+
+        for _, v in ipairs(clients) do
+          if not duplicates[v] then
+            squashed[#squashed + 1] = v
+            duplicates[v] = true
+          end
+        end
+
+        return table.concat(squashed, " "), " "
       end,
       hl = { fg = "gray" },
       left_sep = "block",

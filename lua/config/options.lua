@@ -2,35 +2,35 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- Backups please
-vim.o.backup = true
-vim.o.backupdir = vim.fn.stdpath("cache") .. "/backups"
+vim.opt.backup = true
+vim.opt.backupdir = vim.fn.stdpath("cache") .. "/backups"
 
 -- Set highlight on search
-vim.o.hlsearch = false
+vim.opt.hlsearch = false
 
 -- Make line numbers default, and have them relative to current line
 vim.wo.number = true
 vim.wo.relativenumber = true
 
 -- Enable mouse mode
-vim.o.mouse = "a"
+vim.opt.mouse = "a"
 
 -- Right mouse extends selection
-vim.o.mousemodel = "extend"
+vim.opt.mousemodel = "extend"
 
 -- Enable break indent
-vim.o.breakindent = true
+vim.opt.breakindent = true
 
 -- Save undo history
-vim.o.undofile = true
+vim.opt.undofile = true
 
 -- Case insensitive searching UNLESS /C or capital in search
-vim.o.ignorecase = true
-vim.o.smartcase = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
 -- Decrease update time & timeout length
-vim.o.updatetime = 250
-vim.o.timeoutlen = 500
+vim.opt.updatetime = 250
+vim.opt.timeoutlen = 500
 
 -- Add diagnostic symbols to left-hand column
 vim.wo.signcolumn = "yes"
@@ -42,83 +42,83 @@ vim.wo.signcolumn = "yes"
 -- 'noinsert' will prevent the command prompt from being populated with the
 -- completion option until selected.
 -- 'noselect' ensures the user selects the item from the menu manually.
-vim.o.completeopt = "menuone,noinsert,noselect"
+vim.opt.completeopt = { "menuone", "noinsert", "noselect" }
 
 -- Highlight current line
-vim.o.cursorline = false
+vim.opt.cursorline = false
 
 -- Split logically - not before the current window, but afterwards
-vim.o.splitbelow = true
-vim.o.splitright = true
+vim.opt.splitbelow = true
+vim.opt.splitright = true
 
 -- Disable line wrapping
-vim.o.wrap = false
+vim.opt.wrap = false
 
 -- Moving to the end of the line will wrap the cursor
 vim.opt.whichwrap:append("<,>,[,],h,l")
 
 -- Completion menu height
-vim.o.pumheight = 16
-vim.o.pumwidth = 8
+vim.opt.pumheight = 16
+vim.opt.pumwidth = 8
 
 -- Add a ruler at 80 & 100 lines
-vim.o.colorcolumn = "80,100"
+vim.opt.colorcolumn = "80,100"
 
 -- Share clipboard with system
-vim.o.clipboard = "unnamedplus"
+vim.opt.clipboard = "unnamedplus"
 
 -- Indenting, doesn't impact the file itself, just displays 2 spaces for a tab
-vim.o.autoindent = true
-vim.o.expandtab = true
-vim.o.shiftwidth = 2
-vim.o.smartindent = true
-vim.o.tabstop = 2
+vim.opt.autoindent = true
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 2
+vim.opt.smartindent = true
+vim.opt.tabstop = 2
 
 -- Use terminal colours
-vim.o.termguicolors = true
+vim.opt.termguicolors = true
 
 -- Status line shows mode so we can stop showing the tradition mode
-vim.o.showmode = false
+vim.opt.showmode = false
 
 -- Lines to keep above/below & left/right of cursor
-vim.o.scrolloff = 8
-vim.o.sidescrolloff = 4
+vim.opt.scrolloff = 8
+vim.opt.sidescrolloff = 4
 
 -- Code folding via treesitter
-vim.o.foldmethod = "expr"
-vim.o.foldexpr = "nvim_treesitter#foldexpr()"
-vim.o.nofoldenable = true
-vim.o.foldlevel = 99
-vim.o.foldlevelstart = 99
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldenable = false
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
 vim.opt.fillchars = { eob = "-", fold = " " }
 
 -- Command mode completion
-vim.o.wildmode = "longest:full,full"
+vim.opt.wildmode = "longest:full,full"
 
 -- Sessions
 vim.opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize" }
 
 -- Spelling
-vim.o.spell = true
-vim.o.spelllang = "uk,en"
-vim.o.spelloptions = "camel"
+vim.opt.spell = true
+vim.opt.spelllang = "uk,en"
+vim.opt.spelloptions = "camel"
 vim.opt.complete:append("kspell")
 
 -- Floating status lines, works well with `incline.nvim`
-vim.o.laststatus = 3
+vim.opt.laststatus = 3
 
 -- Treat dash separated words as a word text object
 vim.opt.iskeyword:append("-")
 
 -- NeoVim 9+
 if vim.fn.has("nvim-0.9.0") == 1 then
-  vim.o.splitkeep = "screen"
+  vim.opt.splitkeep = "screen"
   vim.opt.shortmess:append({ C = true })
 end
 
 -- Title string
-vim.o.title = true
-vim.o.titlestring = "nvim: %<%F%="
+vim.opt.title = true
+vim.opt.titlestring = "nvim: %<%F%="
 
 -- Don't load the plugins below
 local builtins = {

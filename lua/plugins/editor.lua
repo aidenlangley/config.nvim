@@ -99,10 +99,30 @@ return {
         },
       })
 
-      vim.keymap.set("n", "<C-a>", require("dial.map").inc_normal(), { desc = "Dial: Increment" })
-      vim.keymap.set("n", "<C-x>", require("dial.map").dec_normal(), { desc = "Dial: Decrement" })
-      vim.keymap.set("v", "<C-a>", require("dial.map").inc_visual(), { desc = "Dial: Increment" })
-      vim.keymap.set("v", "<C-x>", require("dial.map").dec_visual(), { desc = "Dial: Decrement" })
+      vim.keymap.set(
+        "n",
+        "<C-a>",
+        require("dial.map").inc_normal(),
+        { desc = "Dial: Increment" }
+      )
+      vim.keymap.set(
+        "n",
+        "<C-x>",
+        require("dial.map").dec_normal(),
+        { desc = "Dial: Decrement" }
+      )
+      vim.keymap.set(
+        "v",
+        "<C-a>",
+        require("dial.map").inc_visual(),
+        { desc = "Dial: Increment" }
+      )
+      vim.keymap.set(
+        "v",
+        "<C-x>",
+        require("dial.map").dec_visual(),
+        { desc = "Dial: Decrement" }
+      )
     end,
   },
   {

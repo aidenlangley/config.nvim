@@ -43,10 +43,13 @@ return {
           -- Whole buffer
           G = function()
             local from = { line = 1, col = 1 }
+
+            local last_line = vim.fn.line("$")
             local to = {
-              line = vim.fn.line("$"),
-              col = math.max(vim.fn.getline("$"):len(), 1),
+              line = last_line,
+              col = math.max(last_line:len(), 1),
             }
+
             return { from = from, to = to }
           end,
         },
@@ -82,15 +85,7 @@ return {
         return #vim.api.nvim_tabpage_list_wins(tabpage_id) > 1
       end
 
-      ---@module 'mini.animate'
-      ---@class MiniAnimate
-      ---@field setup fun(config: table)
-      ---@field config table
-      ---@field gen_timing { linear: fun(opts: table): fun(power: integer, opts: table) }
-      ---@field gen_subscroll { equal: fun(opts: table): fun() }
-      ---@field gen_winconfig { wipe: fun(opts: table): fun() }
       local animate = require("mini.animate")
-
       return {
         scroll = {
           ---@type fun(a, b): integer
@@ -193,6 +188,15 @@ return {
     end,
   },
   {
+    "echasnovski/mini.completion",
+    enabled = false,
+    event = { "InsertEnter" },
+    opts = {},
+    config = function(_, opts)
+      require("mini.completion").setup(opts)
+    end,
+  },
+  {
     "echasnovski/mini.cursorword",
     event = { "BufAdd" },
     config = function()
@@ -237,6 +241,7 @@ return {
     enabled = false,
     event = { "BufAdd" },
     opts = function()
+      ---@diagnostic disable-next-line: no-unknown
       local map = require("mini.map")
       return {
         integrations = {
@@ -284,7 +289,11 @@ return {
       return {
         evaluate_single = true,
         header = function()
-          return string.format("%s\n\n%s", title, stats_str(require("lazy").stats()))
+          return string.format(
+            "%s\n\n%s",
+            title,
+            stats_str(require("lazy").stats())
+          )
         end,
         items = {
           { name = "Home", action = "Lazy", section = "Lazy" },
@@ -321,7 +330,11 @@ return {
           },
           starter.sections.recent_files(9),
           { name = "New", action = "enew", section = "Actions" },
-          { name = "Settings", action = "e ~/.config/nvim/init.lua", section = "Actions" },
+          {
+            name = "Settings",
+            action = "e ~/.config/nvim/init.lua",
+            section = "Actions",
+          },
           { name = "Quit", action = "qa!", section = "Actions" },
         },
         footer = "",

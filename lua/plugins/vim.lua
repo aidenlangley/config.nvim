@@ -65,4 +65,5 @@ return {
       vim.g.startuptime_tries = 10
     end,
   },
+  { "fladson/vim-kitty", ft = "kitty" },
 }

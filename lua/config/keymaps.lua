@@ -8,11 +8,26 @@ vim.keymap.set(
 )
 
 -- Move through buffers
-vim.keymap.set("n", "H", utils.cmd("bp"), { desc = "Previous buffer", silent = true })
-vim.keymap.set("n", "L", utils.cmd("bn"), { desc = "Next buffer", silent = true })
+vim.keymap.set(
+  "n",
+  "{",
+  utils.cmd("bp"),
+  { desc = "Previous buffer", silent = true }
+)
+vim.keymap.set(
+  "n",
+  "}",
+  utils.cmd("bn"),
+  { desc = "Next buffer", silent = true }
+)
 
 -- Close buffers
-vim.keymap.set("n", "<Leader>D", utils.cmd("%bd|e#|bd#"), { desc = "(D)elete other bufferss" })
+vim.keymap.set(
+  "n",
+  "<Leader>D",
+  utils.cmd("%bd|e#|bd#"),
+  { desc = "(D)elete other bufferss" }
+)
 
 -- Write buffers
 vim.keymap.set("n", "<C-s>", utils.cmd("w"), { desc = "Write buffer" })
@@ -41,16 +56,51 @@ vim.keymap.set("n", "<Leader>gg", function()
 end, { desc = "Lazy(G)it" })
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
-vim.keymap.set("n", "n", "'Nn'[v:searchforward]", { desc = "Search forwards", expr = true })
-vim.keymap.set("x", "n", "'Nn'[v:searchforward]", { desc = "Search forwards", expr = true })
-vim.keymap.set("o", "n", "'Nn'[v:searchforward]", { desc = "Search forwards", expr = true })
-vim.keymap.set("n", "N", "'nN'[v:searchforward]", { desc = "Search backwards", expr = true })
-vim.keymap.set("x", "N", "'nN'[v:searchforward]", { desc = "Search backwards", expr = true })
-vim.keymap.set("o", "N", "'nN'[v:searchforward]", { desc = "Search backwards", expr = true })
+vim.keymap.set(
+  "n",
+  "n",
+  "'Nn'[v:searchforward]",
+  { desc = "Search forwards", expr = true }
+)
+vim.keymap.set(
+  "x",
+  "n",
+  "'Nn'[v:searchforward]",
+  { desc = "Search forwards", expr = true }
+)
+vim.keymap.set(
+  "o",
+  "n",
+  "'Nn'[v:searchforward]",
+  { desc = "Search forwards", expr = true }
+)
+vim.keymap.set(
+  "n",
+  "N",
+  "'nN'[v:searchforward]",
+  { desc = "Search backwards", expr = true }
+)
+vim.keymap.set(
+  "x",
+  "N",
+  "'nN'[v:searchforward]",
+  { desc = "Search backwards", expr = true }
+)
+vim.keymap.set(
+  "o",
+  "N",
+  "'nN'[v:searchforward]",
+  { desc = "Search backwards", expr = true }
+)
 
 -- Move lines
 vim.keymap.set("n", "<M-j>", ":m .+1<CR>==", { desc = "Move line down" })
-vim.keymap.set("v", "<M-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
+vim.keymap.set(
+  "v",
+  "<M-j>",
+  ":m '>+1<CR>gv=gv",
+  { desc = "Move selection down" }
+)
 vim.keymap.set("i", "<M-j>", "<Esc>:m .+1<CR>==gi", { desc = "Move line down" })
 vim.keymap.set("n", "<M-k>", ":m .-2<CR>==", { desc = "Move line up" })
 vim.keymap.set("v", "<M-k>", ":m '<-2<CR>gv=gv", { desc = "move selection up" })
@@ -58,35 +108,76 @@ vim.keymap.set("i", "<M-k>", "<Esc>:m .-2<CR>==gi", { desc = "move line up" })
 
 local M = {}
 
-function M.lsp(_, _)
-  vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, { desc = "Rename" })
-  vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover" })
-  vim.keymap.set("n", "gs", vim.lsp.buf.signature_help, { desc = "(S)ignature help" })
+function M.lsp(_, bufnr)
+  vim.keymap.set(
+    "n",
+    "<F2>",
+    vim.lsp.buf.rename,
+    { desc = "Rename", buffer = bufnr }
+  )
+  vim.keymap.set(
+    "n",
+    "K",
+    vim.lsp.buf.hover,
+    { desc = "Hover", buffer = bufnr }
+  )
+  vim.keymap.set(
+    "n",
+    "gs",
+    vim.lsp.buf.signature_help,
+    { desc = "(S)ignature help", buffer = bufnr }
+  )
 
   vim.keymap.set(
     "n",
     "gi",
     utils.cmd("Telescope lsp_implementations"),
-    { desc = "Goto (I)mplementations..." }
+    { desc = "Goto (I)mplementations...", buffer = bufnr }
   )
   vim.keymap.set(
     "n",
     "gr",
     utils.cmd("Telescope lsp_references"),
-    { desc = "Goto (R)eferences..." }
+    { desc = "Goto (R)eferences...", buffer = bufnr }
+  )
+  vim.keymap.set(
+    "n",
+    "gd",
+    vim.lsp.buf.definition,
+    { desc = "Goto (D)efinition", buffer = bufnr }
   )
   vim.keymap.set(
     "n",
     "gt",
     utils.cmd("Telescope lsp_type_definitions"),
-    { desc = "Goto (T)ype definitions..." }
+    { desc = "Goto (T)ype definitions...", buffer = bufnr }
   )
 
-  vim.keymap.set("n", "gd", vim.diagnostic.open_float, { desc = "Show (D)iagnostic" })
-  vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next (D)iagnostic" })
-  vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous (D)iagnostic" })
+  vim.keymap.set(
+    "n",
+    "gD",
+    vim.diagnostic.open_float,
+    { desc = "Show (D)iagnostic", buffer = bufnr }
+  )
+  vim.keymap.set(
+    "n",
+    "]d",
+    vim.diagnostic.goto_next,
+    { desc = "Next (D)iagnostic", buffer = bufnr }
+  )
+  vim.keymap.set(
+    "n",
+    "[d",
+    vim.diagnostic.goto_prev,
+    { desc = "Previous (D)iagnostic", buffer = bufnr }
+  )
 
-  vim.keymap.set("n", "<Leader>sl", utils.cmd("LspInfo"), { desc = "LSP: Info" })
+  vim.keymap.set(
+    "n",
+    "<Leader>sl",
+    utils.cmd("LspInfo"),
+    { desc = "LSP: Info", buffer = bufnr }
+  )
 end
 
 return M

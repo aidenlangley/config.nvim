@@ -27,10 +27,17 @@ return {
     },
     opts = function()
       local null_ls = require("null-ls")
+
+      local function has_package_json(utils)
+        return utils.root_has_file({ "package.json" })
+      end
+
       return {
         debounce = 150,
         sources = {
-          -- Web dev
+          -- Web dev - other tools that are generally only used for a single
+          -- filetype should be defined in `after/ftplugin` and registered via
+          -- `utils.register_null_ls_source`.
           null_ls.builtins.formatting.prettier.with({
             filetypes = {
               "css",
@@ -43,32 +50,20 @@ return {
               "jsonc",
               "less",
               "scss",
-              "svelte",
               "typescript",
               "typescriptreact",
               "vue",
             },
             only_local = "node_modules/.bin",
-            condition = function(nls_utils)
-              nls_utils.root_has_file({ "node_modules" })
-            end,
+            condition = has_package_json,
           }),
           null_ls.builtins.diagnostics.eslint.with({
-            extra_filetypes = { "svelte" },
-            prefer_local = "node_modules/.bin",
-            condition = function(nls_utils)
-              nls_utils.root_has_file({ "node_modules" })
-            end,
+            only_local = "node_modules/.bin",
+            condition = has_package_json,
           }),
           null_ls.builtins.code_actions.eslint.with({
-            extra_filetypes = { "svelte" },
-            prefer_local = "node_modules/.bin",
-            condition = function(nls_utils)
-              nls_utils.root_has_file({ "node_modules" })
-            end,
-          }),
-          require("typescript.extensions.null-ls.code-actions").with({
-            extra_filetypes = { "svelte", "vue" },
+            only_local = "node_modules/.bin",
+            condition = has_package_json,
           }),
         },
         diagnostics_format = "[#{c}] #{m} (#{s})",

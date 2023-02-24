@@ -52,7 +52,6 @@ return {
         "denols",
         "dockerls",
         "emmet_ls",
-        "eslint",
         "gopls",
         "html",
         "jsonls",
@@ -73,32 +72,54 @@ return {
     "folke/neodev.nvim",
     dependencies = { "saadparwaiz1/cmp_luasnip" },
     ft = "lua",
-    config = function()
-      require("neodev").setup()
+    opts = {
+      debug = true,
+      experimental = { pathStrict = true },
+    },
+    config = function(_, opts)
+      require("neodev").setup(opts)
 
       require("lspconfig").lua_ls.setup({
         capabilities = require("lsp").capabilities,
-        on_attach = function(client, bufnr)
-          require("config.keymaps").lsp(client, bufnr)
-
-          local cmp = require("cmp")
-          cmp.setup.filetype("lua", {
-            sources = cmp.config.sources({
-              { name = "luasnip" },
-            }, require("completions").sources),
-          })
-        end,
-        single_file_support = true,
+        on_attach = require("lsp").on_attach,
         settings = {
           Lua = {
-            diagnostics = { globals = { "vim" } },
-            completion = {
-              autoRequired = true,
-              displayContext = 1,
+            workspace = { checkThirdParty = false },
+            diagnostics = {
+              groupSeverity = {
+                strong = "Warning",
+                strict = "Warning",
+              },
+              groupFileStatus = {
+                ["ambiguity"] = "Opened",
+                ["await"] = "Opened",
+                ["codestyle"] = "None",
+                ["duplicate"] = "Opened",
+                ["global"] = "Opened",
+                ["luadoc"] = "Opened",
+                ["redefined"] = "Opened",
+                ["strict"] = "Opened",
+                ["strong"] = "Opened",
+                ["type-check"] = "Opened",
+                ["unbalanced"] = "Opened",
+                ["unused"] = "Opened",
+              },
+              unusedLocalExclude = { "_*" },
+              libraryFiles = "Enable",
+              workspaceRate = 65,
             },
-            codeLens = { enable = 1 },
-            hint = { enable = true },
+            completion = {
+              workspaceWord = true,
+              callSnippet = "Replace",
+            },
+            hint = {
+              enable = true,
+              arrayIndex = "Disable",
+              setType = true,
+            },
             telemetry = { enable = false },
+            misc = { parameters = { "--loglevel=trace" } },
+            format = { enable = false },
           },
         },
       })
@@ -107,38 +128,39 @@ return {
   {
     "simrat39/rust-tools.nvim",
     ft = "rust",
-    opts = function()
-      local rt = require("rust-tools")
-      return {
-        tools = { hover_actions = { border = "none" } },
-        server = {
-          on_attach = function(client, bufnr)
-            require("lsp").on_attach(client, bufnr)
-            rt.inlay_hints.enable()
+    opts = {
+      tools = {
+        inlay_hints = { auto = false },
+        hover_actions = { border = "none" },
+      },
+      server = {
+        capabilities = require("lsp").capabilities,
+        on_attach = function(client, bufnr)
+          require("lsp").on_attach(client, bufnr)
 
-            vim.keymap.set(
-              "n",
-              "<C-.>",
-              rt.code_action_group.code_action_group,
-              { desc = "Code actions..." }
-            )
-            vim.keymap.set(
-              "n",
-              "<C-a>",
-              rt.hover_actions.hover_actions,
-              { desc = "Hover actions..." }
-            )
-          end,
-          standalone = true,
-          settings = {
-            ["rust-analyzer"] = {
-              checkOnSave = { command = "clippy" },
-              inlayHints = { locationLinks = false },
-            },
+          local rt = require("rust-tools")
+          vim.keymap.set(
+            "n",
+            "<C-.>",
+            rt.code_action_group.code_action_group,
+            { desc = "Code actions...", buffer = bufnr }
+          )
+          vim.keymap.set(
+            "n",
+            "<C-a>",
+            rt.hover_actions.hover_actions,
+            { desc = "Hover actions...", buffer = bufnr }
+          )
+        end,
+        standalone = false,
+        settings = {
+          ["rust-analyzer"] = {
+            checkOnSave = { command = "clippy" },
+            inlayHints = { locationLinks = false },
           },
         },
-      }
-    end,
+      },
+    },
   },
   {
     "Saecki/crates.nvim",
@@ -168,94 +190,203 @@ return {
   },
   {
     "jose-elias-alvarez/typescript.nvim",
-    dependencies = { "jose-elias-alvarez/null-ls.nvim" },
-    ft = "typescript",
+    ft = {
+      "javascript",
+      "javascriptreact",
+      "javascript.jsx",
+      "svelte",
+      "typescript",
+      "typescriptreact",
+      "typescript.tsx",
+    },
     opts = {
       server = {
+        capabilities = require("lsp").capabilities,
         on_attach = function(client, bufnr)
           require("lsp").on_attach(client, bufnr)
-          require("utils").register_null_ls_source(
-            -- https://github.com/jose-elias-alvarez/typescript.nvim#null-ls
-            require("typescript.extensions.null-ls.code-actions")
+
+          vim.keymap.set(
+            "n",
+            "gd",
+            require("utils").cmd("TypescriptGoToSourceDefinition"),
+            { desc = "Goto (D)efinition", buffer = bufnr }
           )
+
+          client.server_capabilities.documentFormattingProvider = false
         end,
-        root_dir = function()
-          require("lspconfig").util.root_pattern("package.json")
-        end,
+        filetypes = {
+          "javascript",
+          "javascriptreact",
+          "javascript.jsx",
+          "svelte",
+          "typescript",
+          "typescriptreact",
+          "typescript.tsx",
+        },
+        settings = {
+          initializationOptions = {
+            preferences = {
+              includeInlayEnumMemberValueHints = true,
+              includeInlayFunctionParameterTypeHints = true,
+              includeInlayFunctionLikeReturnTypeHints = true,
+              includeInlayParameterNameHints = "all",
+              includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+              includeInlayPropertyDeclarationTypeHints = true,
+              includeInlayVariableTypeHints = true,
+              includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+            },
+          },
+          typescript = {
+            inlayHints = {
+              includeInlayEnumMemberValueHints = true,
+              includeInlayFunctionParameterTypeHints = true,
+              includeInlayFunctionLikeReturnTypeHints = true,
+              includeInlayParameterNameHints = "all",
+              includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+              includeInlayPropertyDeclarationTypeHints = true,
+              includeInlayVariableTypeHints = true,
+              includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+            },
+          },
+          javascript = {
+            inlayHints = {
+              includeInlayEnumMemberValueHints = true,
+              includeInlayFunctionParameterTypeHints = true,
+              includeInlayFunctionLikeReturnTypeHints = true,
+              includeInlayParameterNameHints = "all",
+              includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+              includeInlayPropertyDeclarationTypeHints = true,
+              includeInlayVariableTypeHints = true,
+              includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+            },
+          },
+        },
       },
     },
   },
   "akinsho/flutter-tools.nvim",
-  { "evanleck/vim-svelte", ft = "svelte" },
-  { "fladson/vim-kitty", ft = "kitty" },
   {
     "neovim/nvim-lspconfig",
     dependencies = {
       "williamboman/mason-lspconfig.nvim",
-      --
-      -- Completions
-      "hrsh7th/nvim-cmp",
-      "hrsh7th/cmp-omni",
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-nvim-lsp-document-symbol",
-      "hrsh7th/cmp-nvim-lsp-signature-help",
-
-      -- JSON
       "b0o/SchemaStore.nvim",
-
-      -- Utility
       "folke/lsp-colors.nvim",
-      "j-hui/fidget.nvim",
+      { "j-hui/fidget.nvim", config = true },
+      {
+        "lvimuser/lsp-inlayhints.nvim",
+        config = function(_, opts)
+          require("lsp-inlayhints").setup(opts)
+          vim.api.nvim_set_hl(0, "LspInlayHint", { link = "@comment" })
+        end,
+      },
     },
+    event = { "BufReadPre" },
     keys = {
       {
         "<Leader>sl",
         require("utils").cmd("LspInfo"),
-        desc = "LSP: Info",
+        desc = "LSP = false, Info",
       },
     },
-    opts = {
-      diagnostics = {
-        underline = true,
-        update_in_insert = false,
-        severity_sort = true,
-      },
-      servers = {
-        jsonls = {
-          on_new_config = function(config)
-            config.settings.json["schemas"] = config.settings.json.schemas or {}
-            ---@diagnostic disable-next-line: missing-parameter
-            vim.list_extend(
-              config.settings.json.schemas,
-              require("schemastore").json.schemas()
-            )
-          end,
-          settings = {
-            json = {
-              format = { enable = true },
-              validate = { enable = true },
+    opts = function()
+      local lsp_util = require("lspconfig").util
+
+      return {
+        diagnostics = {
+          underline = true,
+          update_in_insert = false,
+          severity_sort = true,
+        },
+        servers = {
+          denols = {
+            root_dir = function(fname)
+              return lsp_util.root_pattern("deno.json*")(fname)
+            end,
+          },
+          gopls = { settings = { gofumpt = true } },
+          jsonls = {
+            on_new_config = function(config)
+              config.settings.json["schemas"] = config.settings.json.schemas
+                or {}
+              ---@diagnostic disable-next-line = false, missing-parameter
+              vim.list_extend(
+                config.settings.json.schemas,
+                require("schemastore").json.schemas()
+              )
+            end,
+            settings = {
+              json = {
+                format = { enable = true },
+                validate = { enable = true },
+              },
             },
           },
+          svelte = {
+            settings = {
+              initializationOptions = {
+                configuration = {
+                  svelte = {
+                    plugin = {
+                      typescript = { semanticTokens = { enable = false } },
+                    },
+                  },
+                },
+                preferences = {
+                  includeInlayEnumMemberValueHints = true,
+                  includeInlayFunctionParameterTypeHints = true,
+                  includeInlayFunctionLikeReturnTypeHints = true,
+                  includeInlayParameterNameHints = "all",
+                  includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                  includeInlayPropertyDeclarationTypeHints = true,
+                  includeInlayVariableTypeHints = true,
+                  includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+                },
+              },
+              typescript = {
+                inlayHints = {
+                  includeInlayEnumMemberValueHints = true,
+                  includeInlayFunctionParameterTypeHints = true,
+                  includeInlayFunctionLikeReturnTypeHints = true,
+                  includeInlayParameterNameHints = "all",
+                  includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                  includeInlayPropertyDeclarationTypeHints = true,
+                  includeInlayVariableTypeHints = true,
+                  includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+                },
+              },
+              javascript = {
+                inlayHints = {
+                  includeInlayEnumMemberValueHints = true,
+                  includeInlayFunctionParameterTypeHints = true,
+                  includeInlayFunctionLikeReturnTypeHints = true,
+                  includeInlayParameterNameHints = "all",
+                  includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                  includeInlayPropertyDeclarationTypeHints = true,
+                  includeInlayVariableTypeHints = true,
+                  includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+                },
+              },
+            },
+          },
+          tailwindcss = {
+            root_dir = function(fname)
+              return lsp_util.root_pattern("tailwind.config.*")(fname)
+            end,
+          },
         },
-        gopls = { settings = { gofumpt = true } },
-        denols = {
-          root_dir = function()
-            require("lspconfig").util.root_pattern("deno.json", "deno.jsonc")
-          end,
-        },
-      },
-    },
+      }
+    end,
     config = function(_, opts)
       local lsp = require("lsp")
-      local capabilities = lsp.capabilities
       local on_attach = lsp.on_attach
+      local capabilities = lsp.capabilities
 
       ---@type table
       local handlers = {
         function(server_name)
           require("lspconfig")[server_name].setup({
-            capabilities = capabilities,
             on_attach = on_attach,
+            capabilities = capabilities,
           })
         end,
       }
@@ -263,19 +394,17 @@ return {
       ---@param server string
       ---@param config table<string, any>
       for server, config in pairs(opts.servers) do
-        config["capabilities"] = capabilities
-        config["on_attach"] = on_attach
+        config["on_attach"] = config["on_attach"] or on_attach
+        config["capabilities"] = config["capabilities"] or capabilities
 
-        ---@type fun(server_name?: string)
-        handlers[server] = function(_server_name)
-          require("lspconfig")[server].setup(config)
+        ---@type fun(server_name?, string)
+        handlers[server] = function(server_name)
+          require("lspconfig")[server_name].setup(config)
         end
       end
 
       vim.diagnostic.config(opts.diagnostics)
       require("mason-lspconfig").setup_handlers(handlers)
-
-      require("fidget").setup({})
     end,
   },
   {
@@ -284,7 +413,7 @@ return {
       {
         "<Leader>S",
         require("utils").cmd("SymbolsOutline"),
-        desc = "LSP: [S]ymbols",
+        desc = "LSP = false, [S]ymbols",
       },
     },
     config = true,
