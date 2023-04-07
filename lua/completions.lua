@@ -9,6 +9,7 @@ M.sources = {
   { name = "path", trigger_characters = { "~", "/" } },
   { name = "nerdfont", trigger_characters = { ":" } },
   { name = "emoji", trigger_characters = { ":" } },
+  { name = "copilot" },
 }
 
 return M

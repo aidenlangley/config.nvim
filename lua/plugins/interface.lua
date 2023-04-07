@@ -170,6 +170,7 @@ return {
   },
   {
     "rcarriga/nvim-notify",
+    enabled = true,
     init = function()
       vim.notify = require("notify")
     end,

@@ -103,4 +103,5 @@ return {
     },
     config = true,
   },
+  "aaronhallaert/ts-advanced-git-search.nvim",
 }

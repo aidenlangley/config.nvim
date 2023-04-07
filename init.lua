@@ -1,6 +1,9 @@
 -- vim options
 require("config.options")
 
+-- local specs = require("core.specs")
+-- require("core.lazy").setup(require("core.specs"))
+
 -- Starts dashboard when Lazy has started.
 vim.api.nvim_create_autocmd("User", {
   pattern = "LazyVimStarted",

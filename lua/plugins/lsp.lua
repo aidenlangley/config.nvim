@@ -70,12 +70,8 @@ return {
   },
   {
     "folke/neodev.nvim",
-    dependencies = { "saadparwaiz1/cmp_luasnip" },
     ft = "lua",
-    opts = {
-      debug = true,
-      experimental = { pathStrict = true },
-    },
+    opts = { experimental = { pathStrict = true } },
     config = function(_, opts)
       require("neodev").setup(opts)
 

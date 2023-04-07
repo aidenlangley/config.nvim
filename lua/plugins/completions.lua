@@ -1,7 +1,10 @@
 return {
   { "saadparwaiz1/cmp_luasnip", ft = "lua" },
-
   { "mtoohey31/cmp-fish", ft = "fish" },
+  {
+    "github/copilot.vim",
+    cmd = { "Copilot" },
+  },
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
@@ -82,6 +85,7 @@ return {
         nvim_lsp_signature_help = "(Signature)",
         -- omni = "(Omni)",
         path = "(Path)",
+        copilot = "(Copilot)",
       }
 
       local cmp = require("cmp")
@@ -89,13 +93,13 @@ return {
       local luasnip = require("luasnip")
 
       return {
-        completion = { completeopt = "menuone,noinsert,noselect" },
         snippet = {
           expand = function(args)
             luasnip.lsp_expand(args.body)
           end,
         },
         enabled = function()
+          ---@type boolean
           local console_mode = vim.api.nvim_get_mode().mode == "c"
           local buftype = vim.api.nvim_buf_get_option(0, "buftype")
           if console_mode or buftype == "" then

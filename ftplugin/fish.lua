@@ -3,6 +3,7 @@ local utils = require("utils")
 
 require("cmp").setup.filetype("fish", {
   { name = "fish" },
+  ---@diagnostic disable-next-line: redundant-parameter
 }, require("completions").sources)
 
 utils.register_null_ls_sources({

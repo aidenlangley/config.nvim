@@ -3,8 +3,12 @@ return {
     "nvim-telescope/telescope.nvim",
     version = false,
     dependencies = {
-      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+      {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        build = "make",
+      },
       "debugloop/telescope-undo.nvim",
+      "aaronhallaert/ts-advanced-git-search.nvim",
     },
     cmd = { "Telescope" },
     keys = {
@@ -217,11 +221,15 @@ return {
       local ts = require("telescope")
       ts.setup(opts)
 
-      pcall(ts.load_extension, "fzf")
-      pcall(ts.load_extension, "notify")
-      pcall(ts.load_extension, "projects")
-      pcall(ts.load_extension, "refactoring")
-      pcall(ts.load_extension, "undo")
+      local ok, load_extension = pcall(ts.load_extension)
+      if ok then
+        load_extension("fzf")
+        load_extension("notify")
+        load_extension("projects")
+        load_extension("refactoring")
+        load_extension("undo")
+        load_extension("advanced_git_search")
+      end
     end,
   },
 }
