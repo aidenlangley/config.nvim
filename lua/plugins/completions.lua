@@ -1,10 +1,10 @@
 return {
   { "saadparwaiz1/cmp_luasnip", ft = "lua" },
   { "mtoohey31/cmp-fish", ft = "fish" },
-  {
-    "github/copilot.vim",
-    cmd = { "Copilot" },
-  },
+  -- {
+  --   "github/copilot.vim",
+  --   cmd = { "Copilot" },
+  -- },
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
