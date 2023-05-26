@@ -1,215 +1,182 @@
-local utils = require("utils")
-
--- Open `~/.config/nvim/init.lua`
+-- Better up/down
 vim.keymap.set(
-  "n",
-  "<Leader>so",
-  utils.cmd("e ~/.config/nvim/init.lua"),
-  { desc = "Open `init.lua`" }
+  'n',
+  'j',
+  "v:count == 0 ? 'gj' : 'j'",
+  { expr = true, silent = true }
 )
+vim.keymap.set(
+  'n',
+  'k',
+  "v:count == 0 ? 'gk' : 'k'",
+  { expr = true, silent = true }
+)
+
+-- Buffers
+vim.keymap.set('n', '<C-s>', ':w<CR>', { desc = 'Write buffer' })
+vim.keymap.set('n', 'ww', ':w!<CR>', { desc = 'Write buffer (force)' })
+vim.keymap.set('n', 'wa', ':wa<CR>', { desc = 'Write all buffers' })
+vim.keymap.set('n', 'waa', ':wa!<CR>', { desc = 'Write all buffers (force)' })
+
+-- Use mini.bufremove to delete buffers
+vim.keymap.set('n', '<C-w>', function()
+  require('mini.bufremove').delete(0, false)
+end, { desc = 'Delete buffer', noremap = true })
+vim.keymap.set('n', 'bdd', function()
+  require('mini.bufremove').delete(0, true)
+end, { desc = 'Delete buffer (force)', noremap = true })
+
+-- Delete other buffers
+vim.keymap.set('n', 'bda', ':%bd|e#|bd#<CR>', { desc = 'Delete other buffers' })
 
 -- Move through buffers
-vim.keymap.set(
-  "n",
-  "{",
-  utils.cmd("bp"),
-  { desc = "Previous buffer", silent = true }
-)
-vim.keymap.set(
-  "n",
-  "}",
-  utils.cmd("bn"),
-  { desc = "Next buffer", silent = true }
-)
-
--- Close buffers
-vim.keymap.set(
-  "n",
-  "<Leader>D",
-  utils.cmd("%bd|e#|bd#"),
-  { desc = "(D)elete other bufferss" }
-)
-
--- Write buffers
-vim.keymap.set("n", "<C-s>", utils.cmd("w"), { desc = "Write buffer" })
-vim.keymap.set("n", "<Leader>w", utils.cmd("w!"), { desc = "(W)rite buffer" })
-vim.keymap.set("n", "<Leader>W", utils.cmd("wa!"), { desc = "(W)rite all" })
-
--- New buffer
-vim.keymap.set("n", "<Leader>n", utils.cmd("enew"), { desc = "(N)ew buffer" })
-
--- Navigate windows
-vim.keymap.set("n", "<C-h>", utils.cmd("wincmd h"), { desc = " window" })
-vim.keymap.set("n", "<C-j>", utils.cmd("wincmd j"), { desc = " window" })
-vim.keymap.set("n", "<C-k>", utils.cmd("wincmd k"), { desc = " window" })
-vim.keymap.set("n", "<C-l>", utils.cmd("wincmd l"), { desc = " window" })
+vim.keymap.set('n', '}', ':bn<CR>', { desc = 'Next buffer', silent = true })
+vim.keymap.set('n', '{', ':bp<CR>', { desc = 'Prev buffer', silent = true })
+vim.keymap.set('n', '<S-l>', ':bn<CR>', { desc = 'Next buffer', silent = true })
+vim.keymap.set('n', '<S-h>', ':bp<CR>', { desc = 'Prev buffer', silent = true })
 
 -- Quit if not modified, else request confirmation
-vim.keymap.set("n", "<C-q>", utils.smart_quit, { desc = "(Q)uit" })
+vim.keymap.set('n', '<C-q>', function(bufnr)
+  local prompt = 'You have unsaved changes. Quit anyway? (y/N) '
+  local callback = function(input)
+    if input == 'y' then
+      vim.cmd('q!')
+    end
+  end
+
+  bufnr = bufnr or vim.api.nvim_get_current_buf()
+  local modified = vim.api.nvim_buf_get_option(bufnr, 'modified')
+
+  if modified then
+    vim.ui.input({ prompt = prompt }, callback)
+  else
+    vim.cmd('q!')
+  end
+end, { desc = 'Quit' })
+
+-- Windows
+vim.keymap.set(
+  'n',
+  '<C-h>',
+  ':wincmd h<CR>',
+  { desc = ' window', silent = true }
+)
+vim.keymap.set(
+  'n',
+  '<C-j>',
+  ':wincmd j<CR>',
+  { desc = ' window', silent = true }
+)
+vim.keymap.set(
+  'n',
+  '<C-k>',
+  ':wincmd k<CR>',
+  { desc = ' window', silent = true }
+)
+vim.keymap.set(
+  'n',
+  '<C-l>',
+  ':wincmd l<CR>',
+  { desc = ' window', silent = true }
+)
+
+vim.keymap.set(
+  'n',
+  'ws',
+  ':wincmd s<CR>',
+  { desc = 'Split window', silent = true }
+)
+vim.keymap.set(
+  'n',
+  'wv',
+  ':wincmd v<CR>',
+  { desc = 'Split window (vertical)', silent = true }
+)
 
 -- Code actions & formatting can function without a language server
 vim.keymap.set(
-  "n",
-  "<C-.>",
+  'n',
+  '<C-.>',
   vim.lsp.buf.code_action,
-  { desc = "Code actions..." }
-)
-
--- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
-vim.keymap.set(
-  "n",
-  "n",
-  "'Nn'[v:searchforward]",
-  { desc = "Search forwards", expr = true }
-)
-vim.keymap.set(
-  "x",
-  "n",
-  "'Nn'[v:searchforward]",
-  { desc = "Search forwards", expr = true }
-)
-vim.keymap.set(
-  "o",
-  "n",
-  "'Nn'[v:searchforward]",
-  { desc = "Search forwards", expr = true }
-)
-vim.keymap.set(
-  "n",
-  "N",
-  "'nN'[v:searchforward]",
-  { desc = "Search backwards", expr = true }
-)
-vim.keymap.set(
-  "x",
-  "N",
-  "'nN'[v:searchforward]",
-  { desc = "Search backwards", expr = true }
-)
-vim.keymap.set(
-  "o",
-  "N",
-  "'nN'[v:searchforward]",
-  { desc = "Search backwards", expr = true }
+  { desc = 'Code actions...' }
 )
 
 -- Move lines
-local move_lines_desc = "Move line down"
-vim.keymap.set("n", "<M-j>", ":m .+1<CR>==", { desc = move_lines_desc })
-vim.keymap.set("v", "<M-j>", ":m '>+1<CR>gv=gv", { desc = move_lines_desc })
-vim.keymap.set("i", "<M-j>", "<Esc>:m .+1<CR>==gi", { desc = move_lines_desc })
+local move_lines_desc = 'Move line down'
+vim.keymap.set('n', '<A-j>', ':m .+1<CR>==', { desc = move_lines_desc })
+vim.keymap.set('v', '<A-j>', ":m '>+1<CR>gv=gv", { desc = move_lines_desc })
+vim.keymap.set('i', '<A-j>', '<Esc>:m .+1<CR>==gi', { desc = move_lines_desc })
 
-move_lines_desc = "Move line up"
-vim.keymap.set("n", "<M-k>", ":m .-2<CR>==", { desc = move_lines_desc })
-vim.keymap.set("v", "<M-k>", ":m '<-2<CR>gv=gv", { desc = move_lines_desc })
-vim.keymap.set("i", "<M-k>", "<Esc>:m .-2<CR>==gi", { desc = move_lines_desc })
+move_lines_desc = 'Move line up'
+vim.keymap.set('n', '<A-k>', ':m .-2<CR>==', { desc = move_lines_desc })
+vim.keymap.set('v', '<A-k>', ":m '<-2<CR>gv=gv", { desc = move_lines_desc })
+vim.keymap.set('i', '<A-k>', '<Esc>:m .-2<CR>==gi', { desc = move_lines_desc })
 
--- Telescope
-local ts_keymaps = {
-  {
-    "<Leader><Space>",
-    function()
-      require("telescope.builtin").buffers()
-    end,
-    desc = "Buffers...",
-  },
-  {
-    "t:",
-    function()
-      require("telescope.builtin").command_history()
-    end,
-    desc = "Command History...",
-  },
-  {
-    "ta",
-    function()
-      require("telescope.builtin").autocommands()
-    end,
-    desc = "(A)utocommands...",
-  },
-  {
-    "tC",
-    function()
-      require("telescope.builtin").commands()
-    end,
-    desc = "(C)ommands...",
-  },
-  {
-    "td",
-    function()
-      require("telescope.builtin").diagnostics()
-    end,
-    desc = "(D)iagnostics...",
-  },
-  {
-    "tf",
-    function()
-      require("telescope.builtin").find_files()
-    end,
-    desc = "(F)ind files...",
-  },
-  {
-    "th",
-    function()
-      require("telescope.builtin").help_tags()
-    end,
-    desc = "(H)elp...",
-  },
+-- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
+vim.keymap.set(
+  'n',
+  'n',
+  "'Nn'[v:searchforward]",
+  { desc = 'Search forwards', expr = true }
+)
+vim.keymap.set(
+  'x',
+  'n',
+  "'Nn'[v:searchforward]",
+  { desc = 'Search forwards', expr = true }
+)
+vim.keymap.set(
+  'o',
+  'n',
+  "'Nn'[v:searchforward]",
+  { desc = 'Search forwards', expr = true }
+)
+vim.keymap.set(
+  'n',
+  'N',
+  "'nN'[v:searchforward]",
+  { desc = 'Search backwards', expr = true }
+)
+vim.keymap.set(
+  'x',
+  'N',
+  "'nN'[v:searchforward]",
+  { desc = 'Search backwards', expr = true }
+)
+vim.keymap.set(
+  'o',
+  'N',
+  "'nN'[v:searchforward]",
+  { desc = 'Search backwards', expr = true }
+)
 
-  {
-    "tm",
-    function()
-      require("telescope.builtin").marks()
-    end,
-    desc = "(M)arks...",
-  },
-  {
-    "tp",
-    utils.cmd("Telescope projects"),
-    desc = "(P)rojects...",
-  },
-  {
-    "tr",
-    function()
-      require("telescope.builtin").oldfiles()
-    end,
-    desc = "(R)ecent files...",
-  },
-  {
-    "tk",
-    function()
-      require("telescope.builtin").keymaps()
-    end,
-    desc = "(K)eymaps...",
-  },
-  {
-    "tt",
-    function()
-      require("telescope.builtin").builtin()
-    end,
-    desc = "Buil(t)ins...",
-  },
-  {
-    "<Leader>sf",
-    function()
-      require("telescope.builtin").find_files({
-        cwd = require("lazy.core.config").options.root,
-      })
-    end,
-    desc = "Plugins: (F)ind...",
-  },
-}
+-- Open the dashboard
+vim.keymap.set('n', '<Leader>da', function()
+  require('mini.starter').open()
+end, { desc = 'Dashboard' })
 
-for _, keymap in ipairs(ts_keymaps) do
-  vim.keymap.set(
-    keymap.mode or "n",
-    keymap[1],
-    keymap[2],
-    { desc = keymap.desc or string.format("Telescope%n", #ts_keymaps + 1) }
-  )
-end
+-- Lazy
+vim.keymap.set('n', '<Leader>la', ':Lazy<CR>', { desc = 'Open Lazy' })
+vim.keymap.set('n', '<Leader>sy', ':Lazy sync<CR>', { desc = 'Sync plugins' })
+vim.keymap.set(
+  'n',
+  '<Leader>su',
+  ':Lazy update<CR>',
+  { desc = 'Update plugins' }
+)
 
--- Go back to the dashboard
-vim.keymap.set("n", "<Leader>;", function()
-  require("mini.starter").open()
-end, { desc = "Dashboard" })
+-- Mason
+vim.keymap.set('n', '<Leader>ma', ':Mason<CR>', { desc = 'Open Mason' })
+
+-- Open settings
+vim.keymap.set(
+  'n',
+  '<Leader>so',
+  ':e ~/.config/nvim/init.lua<CR>',
+  { desc = 'Open `init.lua`' }
+)
+
+-- Open a lazygit terminal
+vim.keymap.set('n', '<Leader>gg', function()
+  require('utils').float_term('lazygit'):toggle()
+end, { desc = 'LazyGit' })
