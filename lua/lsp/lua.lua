@@ -39,7 +39,7 @@ return {
             },
             completion = {
               workspaceWord = true,
-              callSnippet = 'Replace',
+              callSnippet = 'Both',
             },
             hint = {
               enable = true,

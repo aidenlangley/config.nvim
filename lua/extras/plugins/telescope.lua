@@ -1,6 +1,7 @@
 return {
   {
     'nvim-telescope/telescope.nvim',
+    name = 'telescope-full',
     dependencies = {
       {
         'nvim-telescope/telescope-fzf-native.nvim',
@@ -14,8 +15,6 @@ return {
         main = 'project_nvim',
       },
     },
-    optional = true,
-    module = false,
     lazy = true,
     keys = {
       { '<Leader><Space>', mode = 'n' },
@@ -28,98 +27,66 @@ return {
         path_display = { 'smart' },
         dynamic_preview_title = true,
       },
-      pickers = {},
     },
     config = function(_, opts)
-      for _, v in ipairs({
-        'buffers',
-        'builtin',
-        'current_buffer_fuzzy_find',
-        'find_files',
-        'live_grep',
-      }) do
-        opts.pickers[v] = { theme = 'dropdown' }
-      end
-
-      for _, v in ipairs({
-        'diagnostics',
-      }) do
-        opts.pickers[v] = { theme = 'ivy' }
-      end
-
-      require('telescope').setup(opts)
-
-      local ts_keymaps = {
+      for i, v in ipairs({
         {
           'tt',
-          function()
-            require('telescope.builtin').builtin()
-          end,
-          desc = 'Builtins...',
+          require('telescope.builtin').builtin,
+          desc = 'Builtins',
         },
         {
           '<Leader><Space>',
-          function()
-            require('telescope.builtin').buffers()
-          end,
-          desc = 'Buffers...',
+          require('telescope.builtin').buffers,
+          desc = 'Buffers',
         },
         {
           'tf',
-          function()
-            require('telescope.builtin').find_files()
-          end,
-          desc = 'Find files...',
+          require('telescope.builtin').find_files,
+          desc = 'Find files',
         },
         {
           'tg',
-          function()
-            require('telescope.builtin').live_grep()
-          end,
-          desc = 'Live grep...',
+          require('telescope.builtin').live_grep,
+          desc = 'Live grep',
         },
         {
           '<C-f>',
-          function()
-            require('telescope.builtin').current_buffer_fuzzy_find()
-          end,
-          desc = 'Fuzzy find...',
+          require('telescope.builtin').current_buffer_fuzzy_find,
+          desc = 'Fuzzy find',
         },
         {
           'td',
-          function()
-            require('telescope.builtin').diagnostics()
-          end,
-          desc = 'Diagnostics...',
+          require('telescope.builtin').diagnostics,
+          desc = 'Diagnostics',
         },
         {
           'tr',
-          function()
-            require('telescope.builtin').oldfiles()
-          end,
-          desc = 'Recent files...',
+          require('telescope.builtin').oldfiles,
+          desc = 'Recent files',
         },
         {
           'th',
-          function()
-            require('telescope.builtin').help_tags()
-          end,
-          desc = 'Help...',
+          require('telescope.builtin').help_tags,
+          desc = 'Help',
+        },
+        {
+          'tk',
+          require('telescope.builtin').keymaps,
+          desc = 'Projects',
         },
         {
           'tp',
-          function()
-            require('telescope').extensions.projects.projects({})
-          end,
-          desc = 'Projects...',
+          require('telescope').extensions.projects.projects,
+          desc = 'Projects',
         },
-      }
-
-      for _, keymap in ipairs(ts_keymaps) do
-        vim.keymap.set(keymap.mode or 'n', keymap[1], keymap[2], {
-          desc = keymap.desc or string.format('Telescope%n', #ts_keymaps + 1),
+      }) do
+        vim.keymap.set(v.mode or 'n', v[1], v[2], {
+          desc = v.desc or string.format('Telescope%n', i),
         })
       end
+
+      require('telescope').setup(opts)
     end,
   },
 }

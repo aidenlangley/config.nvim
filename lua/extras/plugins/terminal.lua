@@ -5,8 +5,8 @@ return {
     keys = { '<C-\\>' },
     opts = {
       open_mapping = '<C-\\>',
-      shade_terminals = false,
       direction = 'float',
+      shell = '/usr/bin/fish',
     },
   },
 }

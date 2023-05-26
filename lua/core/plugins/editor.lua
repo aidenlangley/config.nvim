@@ -21,7 +21,7 @@ return {
   },
   {
     'https://git.sr.ht/~nedia/auto-format.nvim',
-    event = 'InsertLeavePre',
+    event = { 'BufReadPre', 'BufNewFile' },
     config = true,
   },
 }

@@ -14,7 +14,7 @@ return {
         function()
           local ls = require('luasnip')
           if ls.jumpable(1) then
-            return ls.jump(1)
+            ls.jump(1)
           else
             return '<Down>'
           end
@@ -28,7 +28,7 @@ return {
         function()
           local ls = require('luasnip')
           if ls.expand_or_jumpable() then
-            return ls.jump(-1)
+            ls.jump(-1)
           else
             return '<Up>'
           end
@@ -41,7 +41,7 @@ return {
   },
   {
     'hrsh7th/nvim-cmp',
-    version = false, -- last release is way too old
+    version = false,
     dependencies = {
       'L3MON4D3/LuaSnip',
       'hrsh7th/cmp-buffer',
@@ -71,18 +71,22 @@ return {
             or not buftype == 'prompt'
         end,
         mapping = cmp.mapping.preset.insert({
-          ['<Tab>'] = function()
+          ['<Tab>'] = function(fallback)
             if cmp.visible() then
               cmp.select_next_item()
             elseif ls.expand_or_jumpable() then
               ls.expand_or_jump()
+            else
+              fallback()
             end
           end,
-          ['<S-Tab>'] = function()
+          ['<S-Tab>'] = function(fallback)
             if cmp.visible() then
               cmp.select_prev_item()
             elseif ls.jumpable(-1) then
               ls.jump(-1)
+            else
+              fallback()
             end
           end,
           ['<C-Space>'] = cmp.mapping.complete(),
@@ -99,7 +103,7 @@ return {
           format = function(_, item)
             local icons = require('icons').kinds
             if icons[item.kind] then
-              item.kind = icons[item.kind] .. item.kind
+              item.kind = string.format('%s %s', icons[item.kind], item.kind)
             end
             return item
           end,
@@ -119,36 +123,34 @@ return {
       local colours = require('colours')
       for name, hl in pairs({
         CmpItemAbbrDeprecated = { fg = colours.grey, strikethrough = true },
-        CmpItemAbbrMatch = { fg = colours.blue, bold = true },
-        CmpItemAbbrMatchFuzzy = { fg = colours.blue, bold = true },
-        CmpItemKindClass = { fg = colours.purple },
-        CmpItemKindColor = { fg = colours.teal },
-        CmpItemKindConstant = { fg = colours.red },
-        CmpItemKindConstructor = { fg = colours.red },
-        CmpItemKindEnum = { fg = colours.green },
-        CmpItemKindEnumMember = { fg = colours.yellow },
-        CmpItemKindEvent = { fg = colours.brpink },
-        CmpItemKindField = { fg = colours.yellow },
-        CmpItemKindFile = { fg = colours.brpurple },
-        CmpItemKindFolder = { fg = colours.brpink },
-        CmpItemKindFunction = { fg = colours.blue },
-        CmpItemKindInterface = { fg = colours.teal },
-        CmpItemKindKeyword = { fg = colours.green },
-        CmpItemKindMethod = { fg = colours.blue },
-        CmpItemKindModule = { fg = colours.red },
-        CmpItemKindOperator = { fg = colours.red },
-        CmpItemKindProperty = { fg = colours.yellow },
-        CmpItemKindReference = { fg = colours.red },
-        CmpItemKindSnippet = { fg = colours.blue },
-        CmpItemKindStruct = { fg = colours.purple },
-        CmpItemKindText = { fg = colours.green },
-        CmpItemKindTypeParameter = { fg = colours.teal },
-        CmpItemKindUnit = { fg = colours.yellow },
+        CmpItemAbbrMatch = { fg = colours.neutral_blue, bold = true },
+        CmpItemAbbrMatchFuzzy = { fg = colours.neutral_blue, bold = true },
+        CmpItemKindClass = { fg = colours.neutral_purple },
+        CmpItemKindColor = { fg = colours.neutral_aqua },
+        CmpItemKindConstant = { fg = colours.neutral_red },
+        CmpItemKindConstructor = { fg = colours.neutral_red },
+        CmpItemKindEnum = { fg = colours.neutral_green },
+        CmpItemKindEnumMember = { fg = colours.neutral_yellow },
+        CmpItemKindEvent = { fg = colours.bright_purple },
+        CmpItemKindField = { fg = colours.neutral_yellow },
+        CmpItemKindFile = { fg = colours.bright_purple },
+        CmpItemKindFolder = { fg = colours.bright_purple },
+        CmpItemKindFunction = { fg = colours.neutral_blue },
+        CmpItemKindInterface = { fg = colours.neutral_aqua },
+        CmpItemKindKeyword = { fg = colours.neutral_green },
+        CmpItemKindMethod = { fg = colours.neutral_blue },
+        CmpItemKindModule = { fg = colours.neutral_red },
+        CmpItemKindOperator = { fg = colours.neutral_red },
+        CmpItemKindProperty = { fg = colours.neutral_yellow },
+        CmpItemKindReference = { fg = colours.neutral_red },
+        CmpItemKindSnippet = { fg = colours.neutral_blue },
+        CmpItemKindStruct = { fg = colours.neutral_purple },
+        CmpItemKindText = { fg = colours.neutral_green },
+        CmpItemKindTypeParameter = { fg = colours.neutral_aqua },
+        CmpItemKindUnit = { fg = colours.neutral_yellow },
         CmpItemKindValue = { fg = colours.fg },
         CmpItemKindVariable = { fg = colours.fg },
-        CmpItemMenu = { fg = colours.purple },
-        Pmenu = { fg = colours.fg, bg = colours.bg },
-        PmenuSel = { bg = colours.brbg },
+        CmpItemMenu = { fg = colours.neutral_purple },
       }) do
         vim.api.nvim_set_hl(0, name, hl)
       end

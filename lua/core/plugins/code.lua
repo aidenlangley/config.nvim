@@ -9,6 +9,7 @@ return {
         sources = {
           nls.builtins.diagnostics.fish,
           nls.builtins.diagnostics.flake8,
+          nls.builtins.diagnostics.selene,
           nls.builtins.diagnostics.shellcheck,
           nls.builtins.formatting.black,
           nls.builtins.formatting.fish_indent,

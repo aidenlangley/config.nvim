@@ -1,9 +1,10 @@
--- I use fish, but better vim uses sh
-vim.o.shell = '/usr/bin/sh'
+-- Set our leader keys prior to any keymaps.
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
 
 -- Backups please
 vim.opt.backup = true
-vim.opt.backupdir = vim.fn.stdpath('cache') .. '/backups'
+vim.opt.backupdir = vim.fn.stdpath('state') .. '/backups'
 
 -- Set highlight on search
 vim.opt.hlsearch = false
@@ -42,7 +43,7 @@ vim.wo.signcolumn = 'yes'
 vim.opt.completeopt = { 'menuone', 'noinsert', 'noselect' }
 
 -- Highlight current line
-vim.opt.cursorline = false
+vim.opt.cursorline = true
 
 -- Split logically - not before the current window, but afterwards
 vim.opt.splitbelow = true
@@ -71,6 +72,12 @@ vim.opt.shiftwidth = 2
 vim.opt.smartindent = true
 vim.opt.tabstop = 2
 
+-- Writes buffer on :next, :rewind, etc.
+vim.opt.autowrite = true
+
+-- Use ripgrep w/ --vimgrep arg.
+vim.opt.grepprg = 'rg --vimgrep'
+
 -- Status line shows mode so we can stop showing the tradition mode
 vim.opt.showmode = false
 
@@ -78,13 +85,18 @@ vim.opt.showmode = false
 vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 4
 
--- Code folding via treesitter
-vim.opt.foldmethod = 'expr'
-vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+-- Code folding
 vim.opt.foldenable = false
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
-vim.opt.fillchars = { eob = '-', fold = ' ' }
+vim.opt.fillchars = {
+  foldopen = '',
+  foldclose = '',
+  fold = ' ',
+  foldsep = ' ',
+  diff = '╱',
+  eob = '-',
+}
 
 -- Command mode completion
 vim.opt.wildmode = 'longest:full,full'
@@ -92,30 +104,30 @@ vim.opt.wildmode = 'longest:full,full'
 -- Sessions
 vim.opt.sessionoptions = { 'buffers', 'curdir', 'tabpages', 'winsize' }
 
--- Spelling
-vim.opt.spell = true
-vim.opt.spelllang = 'uk,en'
-vim.opt.spelloptions = 'camel'
-vim.opt.complete:append('kspell')
-
 -- Floating status lines, works well with `incline.nvim`
 vim.opt.laststatus = 3
 
 -- Treat dash separated words as a word text object
 vim.opt.iskeyword:append('-')
 
--- NeoVim 9+
+-- Title string
+vim.opt.title = true
+vim.opt.titlestring = 'nvim: %<%F%='
+
+-- nvim 9+
 if vim.fn.has('nvim-0.9.0') == 1 then
   vim.opt.splitkeep = 'screen'
   vim.opt.shortmess:append({ C = true })
 end
 
--- Title string
-vim.opt.title = true
-vim.opt.titlestring = 'nvim: %<%F%='
-
--- Pass notifications onto plugin
-local _, ok = pcall(require, 'notify')
-if ok then
-  vim.notify = require('notify')
+-- Make all keymaps silent by default
+local keymap_set = vim.keymap.set
+vim.keymap.set = function(mode, lhs, rhs, opts)
+  opts = opts or {}
+  opts.desc = opts.desc or string.format('%s -> $s', lhs, rhs)
+  opts.silent = opts.silent ~= false
+  return keymap_set(mode, lhs, rhs, opts)
 end
+
+-- Fix markdown indentation settings
+vim.g.markdown_recommended_style = 0

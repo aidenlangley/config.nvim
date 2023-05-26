@@ -21,25 +21,23 @@ return function(_, bufnr)
     'n',
     'gs',
     vim.lsp.buf.signature_help,
-    { desc = '+goto signature help', buffer = bufnr }
+    { desc = 'Goto signature help', buffer = bufnr }
   )
-
   vim.keymap.set(
     'n',
     'gdg',
     vim.lsp.buf.definition,
-    { desc = '+goto Definition', buffer = bufnr }
+    { desc = 'Goto definition', buffer = bufnr }
   )
-
   vim.keymap.set('n', 'gi', function()
     require('telescope.builtin').lsp_implementations()
-  end, { desc = '+goto implementations...', buffer = bufnr })
+  end, { desc = 'Goto implementations...', buffer = bufnr })
 
   vim.keymap.set('n', 'gr', function()
     require('telescope.builtin').lsp_references()
-  end, { desc = '+goto references...', buffer = bufnr })
+  end, { desc = 'Goto references...', buffer = bufnr })
 
   vim.keymap.set('n', 'gt', function()
     require('telescope.builtin').lsp_type_definitions()
-  end, { desc = '+goto type definitions...', buffer = bufnr })
+  end, { desc = 'Goto type definitions...', buffer = bufnr })
 end

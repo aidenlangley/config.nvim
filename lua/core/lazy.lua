@@ -18,7 +18,9 @@ M.bootstrap = function()
 end
 
 M.opts = {
-  install = { colorscheme = { 'gruvbox' } },
+  install = {
+    colorscheme = { 'gruvbox' },
+  },
   checker = { enabled = true },
   change_detection = { notify = false },
   dev = { path = '~/Code' },

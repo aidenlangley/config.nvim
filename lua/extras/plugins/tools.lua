@@ -4,14 +4,11 @@ return {
     build = 'deno task --quiet build:fast',
     lazy = true,
     ft = 'markdown',
-    keys = {
-      {},
-    },
     opts = { theme = 'dark' },
     config = function(_, opts)
       require('peek').setup(opts)
 
-      vim.keymap.set('n', '<Leader>op', function()
+      vim.keymap.set('n', '<Leader>pe', function()
         local peek = require('peek')
         if peek.is_open() then
           peek.close()

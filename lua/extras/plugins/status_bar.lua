@@ -1,219 +1,125 @@
 return {
-  'feline-nvim/feline.nvim',
-  lazy = true,
-  event = 'VeryLazy',
-  config = function()
-    local colours = require('colours')
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    lazy = true,
+    event = 'VeryLazy',
+    opts = function()
+      local icons = require('icons')
+      local colours = require('colours')
 
-    local mode_provider = {
-      provider = 'vi_mode',
-      icon = '',
-      hl = function()
-        return {
-          name = require('feline.providers.vi_mode').get_mode_highlight_name(),
-          bg = colours.brbg,
-          fg = require('feline.providers.vi_mode').get_mode_color(),
-          style = 'bold',
-        }
-      end,
-      left_sep = 'block',
-      right_sep = 'block',
-    }
-
-    local file_encoding_provider = {
-      enabled = function()
-        return require('feline.providers.file').file_encoding() ~= 'UTF-8'
-      end,
-      provider = 'file_encoding',
-      hl = { bg = 'gray' },
-      left_sep = 'block',
-    }
-
-    local file_type_provider = {
-      provider = {
-        name = 'file_type',
-        opts = {
-          filetype_icon = true,
-          case = 'lowercase',
-        },
-      },
-      hl = { bg = colours.brbg },
-      left_sep = 'block',
-    }
-
-    local attached_clients_provider = {
-      provider = function()
-        local clients = {}
-        for _, client in
-          ipairs(vim.lsp.get_active_clients({
-            bufnr = vim.api.nvim_get_current_buf(),
-          }))
-        do
-          -- When handling null-ls clients, we have to further inspect the sources
-          if client.name == 'null-ls' then
-            for _, source in
-              ipairs(require('null-ls.sources').get_available(vim.bo.filetype))
-            do
-              clients[#clients + 1] = source.name
-            end
-          else
-            clients[#clients + 1] = client.name
-          end
-        end
-
-        -- Removing duplicates from clients table.
-        -- Add duplicated values here, we check against this as we loop through
-        -- `clients`.
-        local duplicates = {}
-
-        -- Resulting table with duplicates removed.
-        local squashed = {}
-
-        for _, v in ipairs(clients) do
-          if not duplicates[v] then
-            squashed[#squashed + 1] = v
-            duplicates[v] = true
-          end
-        end
-
-        return table.concat(squashed, ' '), ' '
-      end,
-      hl = { fg = 'gray' },
-      left_sep = 'block',
-      right_sep = 'block',
-      update = { 'FileType' },
-      priority = -1,
-    }
-
-    local scroll_bar_provider = {
-      provider = 'scroll_bar',
-      hl = { fg = 'cyan' },
-    }
-
-    local position_provider = {
-      provider = {
-        name = 'position',
-        opts = { format = '{col}' },
-      },
-      hl = { bg = colours.brbg },
-      left_sep = 'block',
-      right_sep = 'block',
-    }
-
-    local git_branch_provider = {
-      provider = 'git_branch',
-      right_sep = 'block',
-      left_sep = 'block',
-    }
-
-    local git_diff_added_provider = {
-      provider = 'git_diff_added',
-      hl = { fg = 'green' },
-      icon = {
-        str = '+',
-        hl = { fg = 'green' },
-      },
-      right_sep = 'block',
-    }
-
-    local git_diff_removed_provider = {
-      provider = 'git_diff_removed',
-      hl = { fg = 'red' },
-      icon = {
-        str = '-',
-        hl = { fg = 'red' },
-      },
-      right_sep = 'block',
-    }
-
-    local git_diff_changed_provider = {
-      provider = 'git_diff_changed',
-      hl = { fg = 'yellow' },
-      icon = {
-        str = '~',
-        hl = { fg = 'yellow' },
-      },
-      right_sep = 'block',
-    }
-
-    local diag_errors_provider = {
-      provider = 'diagnostic_errors',
-      hl = { fg = 'red' },
-    }
-
-    local diag_warnings_provider = {
-      provider = 'diagnostic_warnings',
-      hl = { fg = 'yellow' },
-    }
-
-    local diag_hints_provider = {
-      provider = 'diagnostic_hints',
-    }
-
-    local diag_info_provider = {
-      provider = 'diagnostic_info',
-      hl = { fg = 'gray' },
-    }
-
-    require('feline').setup({
-      components = {
-        active = {
-          -- LEFT
-          {
-            mode_provider,
-            diag_errors_provider,
-            diag_warnings_provider,
-            diag_hints_provider,
-            diag_info_provider,
+      return {
+        options = {
+          component_separators = '',
+          section_separators = '',
+          disabled_filetypes = {
+            statusline = {
+              'neo-tree',
+              'TelescopePrompt',
+            },
           },
-          -- MIDDLE
-          {},
-          -- RIGHT
-          {
-            attached_clients_provider,
-            git_branch_provider,
-            git_diff_changed_provider,
-            git_diff_removed_provider,
-            git_diff_added_provider,
-            file_encoding_provider,
-            file_type_provider,
-            position_provider,
-            scroll_bar_provider,
+          ignore_focus = { 'neo-tree' },
+          refresh = { statusline = 250 },
+        },
+        extensions = { 'toggleterm' },
+        sections = {
+          lualine_a = { 'mode' },
+          lualine_b = {
+            {
+              'filetype',
+              colored = true,
+              icon_only = true,
+            },
+            {
+              'filename',
+              file_status = true,
+              newfile_status = false,
+              path = 1,
+              shorting_target = 40,
+              symbols = {
+                modified = icons.git.modified,
+                readonly = icons.git.removed,
+                unnamed = '[No Name]',
+                newfile = icons.git.added,
+              },
+            },
           },
+          lualine_c = {
+            {
+              'diagnostics',
+              sources = { 'nvim_lsp', 'nvim_diagnostic' },
+              sections = { 'error', 'warn', 'info', 'hint' },
+              symbols = {
+                error = icons.diagnostics.Error,
+                warn = icons.diagnostics.Warn,
+                info = icons.diagnostics.Info,
+                hint = icons.diagnostics.Hint,
+              },
+              diagnostics_color = {
+                color_error = { fg = colours.neutral_red },
+                color_warn = { fg = colours.neutral_yellow },
+                color_info = { fg = colours.neutral_aqua },
+                color_hint = { fg = colours.neutral_grey },
+              },
+            },
+          },
+          lualine_x = {
+            {
+              'clients',
+              fmt = function()
+                local clients = {}
+                for _, c in
+                  ipairs(vim.lsp.get_active_clients({
+                    bufnr = vim.api.nvim_get_current_buf(),
+                  }))
+                do
+                  -- When handling null-ls clients, we have to further inspect the sources
+                  if c.name == 'null-ls' then
+                    for _, s in
+                      ipairs(
+                        require('null-ls.sources').get_available(
+                          vim.bo.filetype
+                        )
+                      )
+                    do
+                      clients[#clients + 1] = s.name
+                    end
+                  else
+                    clients[#clients + 1] = c.name
+                  end
+                end
+
+                local duplicates = {}
+                local squashed = {}
+                for _, v in ipairs(clients) do
+                  if not duplicates[v] then
+                    squashed[#squashed + 1] = v
+                    duplicates[v] = true
+                  end
+                end
+
+                return table.concat(squashed, ' '), ' '
+              end,
+            },
+            {
+              'diff',
+              colored = true,
+              diff_color = {
+                color_added = { fg = colours.neutral_green },
+                color_modified = { fg = colours.neutral_yellow },
+                color_removed = { fg = colours.neutral_red },
+              },
+              symbols = {
+                added = icons.git.added .. ' ',
+                modified = icons.git.modified .. ' ',
+                removed = icons.git.removed .. ' ',
+              },
+            },
+          },
+          lualine_y = { 'branch' },
+          lualine_z = { 'location' },
         },
-        inactive = {
-          -- LEFT
-          {},
-          -- MIDDLE
-          {},
-          -- RIGHT
-          {},
-        },
-      },
-      vi_mode_colors = {
-        NORMAL = '#ebdbb2',
-        OP = '#fb4934',
-        COMMAND = '#fb4934',
-        INSERT = '#b8bb26',
-        VISUAL = '#83a598',
-        TERM = '#fabd2f',
-      },
-      disable = {
-        filetypes = {
-          '^NvimTree$',
-          '^Outline$',
-          '^fugitive$',
-          '^fugitiveblame$',
-          '^help$',
-          '^neo-tree$',
-          '^packer$',
-          '^qf$',
-          '^startify$',
-        },
-        buftypes = {
-          '^terminal$',
-        },
-      },
-    })
-  end,
+      }
+    end,
+  },
 }

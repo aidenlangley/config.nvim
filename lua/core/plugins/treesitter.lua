@@ -8,9 +8,14 @@ return {
     },
     build = ':TSUpdate<CR>',
     lazy = true,
-    event = 'BufReadPre',
+    event = { 'BufReadPre', 'BufNewFile' },
     opts = {
       auto_install = true,
+      ensure_installed = {
+        'markdown_inline',
+        'regex',
+        'vim',
+      },
       autotag = { enable = true },
       highlight = { enable = true },
       context_commentstring = { enable = true },
@@ -24,7 +29,6 @@ return {
             [']z'] = {
               query = '@fold',
               query_group = 'folds',
-              desc = 'Next fold start',
             },
           },
           goto_next_end = {
@@ -33,7 +37,6 @@ return {
             [']Z'] = {
               query = '@fold',
               query_group = 'folds',
-              desc = 'Next fold end',
             },
           },
           goto_previous_start = {
@@ -42,7 +45,6 @@ return {
             ['[z'] = {
               query = '@fold',
               query_group = 'folds',
-              desc = 'Next fold start',
             },
           },
           goto_previous_end = {
@@ -51,16 +53,15 @@ return {
             ['[Z'] = {
               query = '@fold',
               query_group = 'folds',
-              desc = 'Next fold end',
             },
           },
           goto_next = {
             [']g'] = '@call.outer',
-            [']p'] = '@paramater.outer',
+            [']p'] = '@parameter.outer',
           },
           goto_previous = {
             ['[g'] = '@call.outer',
-            ['[p'] = '@paramater.outer',
+            ['[p'] = '@parameter.outer',
           },
         },
         swap = {
@@ -75,6 +76,10 @@ return {
       },
     },
     config = function(_, opts)
+      -- Code folding via treesitter
+      vim.opt.foldmethod = 'expr'
+      vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+
       require('nvim-treesitter.configs').setup(opts)
     end,
   },

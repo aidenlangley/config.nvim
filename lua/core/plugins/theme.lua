@@ -1,15 +1,21 @@
 return {
   {
-    'morhetz/gruvbox',
+    'ellisonleao/gruvbox.nvim',
     enabled = true,
     lazy = false,
     priority = 1000,
-    config = function()
-      vim.o.background = 'dark'
-      vim.g.gruvbox_transparent_bg = '1'
-      vim.g.gruvbox_contrast_dark = 'hard'
-      vim.g.gruvbox_invert_selection = '0'
-      vim.g.gruvbox_sign_column = 'bg0'
+    opts = {
+      italic = {
+        strings = false,
+        comments = false,
+        operators = false,
+        folds = false,
+      },
+      contrast = 'hard',
+      transparent_mode = true,
+    },
+    config = function(_, opts)
+      require('gruvbox').setup(opts)
       vim.cmd('colorscheme gruvbox')
     end,
   },
@@ -18,12 +24,8 @@ return {
     enabled = false,
     priority = 1000,
     config = function()
-      require('github-theme').setup({
-        options = {
-          transparent = false,
-        },
-      })
-      vim.cmd('colorscheme github_dark_high_contrast')
+      require('github-theme').setup({ options = { transparent = false } })
+      vim.cmd('colorscheme github_dark_dimmed')
     end,
   },
   {
@@ -31,8 +33,6 @@ return {
     enabled = false,
     priority = 1000,
     config = function()
-      vim.g.adwaita_darker = false
-      vim.g.adwaita_disable_cursorline = true
       vim.g.adwaita_transparent = true
       vim.cmd('colorscheme adwaita')
     end,

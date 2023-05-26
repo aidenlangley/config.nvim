@@ -93,14 +93,6 @@ vim.keymap.set(
   { desc = 'Split window (vertical)', silent = true }
 )
 
--- Code actions & formatting can function without a language server
-vim.keymap.set(
-  'n',
-  '<C-.>',
-  vim.lsp.buf.code_action,
-  { desc = 'Code actions...' }
-)
-
 -- Move lines
 local move_lines_desc = 'Move line down'
 vim.keymap.set('n', '<A-j>', ':m .+1<CR>==', { desc = move_lines_desc })
@@ -148,6 +140,34 @@ vim.keymap.set(
   'N',
   "'nN'[v:searchforward]",
   { desc = 'Search backwards', expr = true }
+)
+
+-- Code actions & formatting can function without a language server
+vim.keymap.set(
+  'n',
+  '<C-.>',
+  vim.lsp.buf.code_action,
+  { desc = 'Code actions...' }
+)
+
+-- Diagnostics
+vim.keymap.set(
+  'n',
+  ']d',
+  vim.diagnostic.goto_next,
+  { desc = 'Goto next diagnostic' }
+)
+vim.keymap.set(
+  'n',
+  '[d',
+  vim.diagnostic.goto_prev,
+  { desc = 'Goto previous diagnostic' }
+)
+vim.keymap.set(
+  { 'n', 'x' },
+  'gdd',
+  vim.diagnostic.open_float,
+  { desc = 'Show diagnostic' }
 )
 
 -- Open the dashboard

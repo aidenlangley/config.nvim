@@ -3,7 +3,7 @@ return {
     'echasnovski/mini.ai',
     dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
     lazy = true,
-    event = 'BufReadPre',
+    event = { 'BufReadPre', 'BufNewFile' },
     opts = function()
       local ai = require('mini.ai')
       return {
@@ -147,14 +147,6 @@ return {
     end,
   },
   {
-    'echasnovski/mini.doc',
-    lazy = true,
-    event = 'VeryLazy',
-    config = function()
-      require('mini.doc').setup({})
-    end,
-  },
-  {
     'echasnovski/mini.indentscope',
     lazy = true,
     event = 'BufReadPost',
@@ -220,7 +212,7 @@ return {
   {
     'echasnovski/mini.tabline',
     lazy = true,
-    event = 'VeryLazy',
+    event = { 'BufReadPre', 'BufNewFile' },
     config = function()
       require('mini.tabline').setup({})
     end,

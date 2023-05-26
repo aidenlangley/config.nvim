@@ -10,26 +10,24 @@ vim.api.nvim_create_autocmd('User', {
   end,
 })
 
--- Set our leader keys prior to any keymaps.
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
-
--- Use terminal colours before plugins also.
-vim.opt.termguicolors = true
+-- Configure vim.
+require('core.options')
+require('core.keymaps')
 
 -- Bootstrap lazy - if it's not installed, install it.
 local lazy = require('core.lazy')
 lazy.bootstrap()
 
--- Setup lazy & our core plugins
+-- Setup lazy & our plugin specs.
 require('lazy').setup({
-  { import = 'core.plugins.dashboard' },
   { import = 'core.plugins.cmp' },
   { import = 'core.plugins.code' },
+  { import = 'core.plugins.dashboard' },
   { import = 'core.plugins.editor' },
   { import = 'core.plugins.lsp' },
   { import = 'core.plugins.mini' },
   { import = 'core.plugins.movement' },
+  { import = 'core.plugins.telescope' },
   { import = 'core.plugins.theme' },
   { import = 'core.plugins.treesitter' },
   { import = 'core.plugins.ui' },
@@ -41,12 +39,12 @@ require('lazy').setup({
   { import = 'extras.plugins.status_bar' },
   { import = 'extras.plugins.telescope' },
   { import = 'extras.plugins.terminal' },
+  { import = 'extras.plugins.tools' },
   { import = 'extras.plugins.ui' },
   { import = 'extras.plugins.which_key' },
   { import = 'lsp.flutter' },
   { import = 'lsp.lua' },
 }, lazy.opts)
 
--- Configure vim.
-require('core.options')
-require('core.keymaps')
+-- Add spelling.
+require('extras.spelling')

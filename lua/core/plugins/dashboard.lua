@@ -1,12 +1,6 @@
 return {
   {
     'echasnovski/mini.starter',
-    dependencies = {
-      {
-        'nvim-telescope/telescope.nvim',
-        dependencies = { 'nvim-lua/plenary.nvim' },
-      },
-    },
     opts = function()
       local title = table.concat({
         [[                   |         |         ]],
