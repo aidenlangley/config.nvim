@@ -11,7 +11,8 @@ return {
     event = 'BufWrite',
   },
   {
-    'https://git.sr.ht/~nedia/auto-save.nvim',
+    -- 'https://git.sr.ht/~nedia/auto-save.nvim',
+    'aidenlangley/auto-save.nvim',
     event = 'BufReadPre',
     opts = {
       events = { 'InsertLeave', 'BufLeave' },
@@ -20,7 +21,8 @@ return {
     },
   },
   {
-    'https://git.sr.ht/~nedia/auto-format.nvim',
+    -- 'https://git.sr.ht/~nedia/auto-format.nvim',
+    'aidenlangley/auto-format.nvim',
     event = { 'BufReadPre', 'BufNewFile' },
     config = true,
   },

@@ -114,6 +114,10 @@ vim.opt.iskeyword:append('-')
 vim.opt.title = true
 vim.opt.titlestring = 'nvim: %<%F%='
 
+-- Disable status bar until later
+vim.opt.laststatus = 0
+vim.opt.statusline = ''
+
 -- nvim 9+
 if vim.fn.has('nvim-0.9.0') == 1 then
   vim.opt.splitkeep = 'screen'

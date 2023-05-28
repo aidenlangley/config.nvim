@@ -6,12 +6,15 @@ return {
       'windwp/nvim-ts-autotag',
       'JoosepAlviste/nvim-ts-context-commentstring',
     },
-    build = ':TSUpdate<CR>',
+    build = ':TSUpdate',
     lazy = true,
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
       auto_install = true,
       ensure_installed = {
+        'bash',
+        'lua',
+        'markdown',
         'markdown_inline',
         'regex',
         'vim',

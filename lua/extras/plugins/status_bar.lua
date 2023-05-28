@@ -3,7 +3,7 @@ return {
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     lazy = true,
-    event = 'VeryLazy',
+    event = { 'BufReadPre', 'BufNewFile' },
     opts = function()
       local icons = require('icons')
       local colours = require('colours')
@@ -89,16 +89,16 @@ return {
                   end
                 end
 
-                local duplicates = {}
-                local squashed = {}
-                for _, v in ipairs(clients) do
-                  if not duplicates[v] then
-                    squashed[#squashed + 1] = v
-                    duplicates[v] = true
-                  end
-                end
-
-                return table.concat(squashed, ' '), ' '
+                -- local duplicates = {}
+                -- local squashed = {}
+                -- for _, v in ipairs(clients) do
+                --   if not duplicates[v] then
+                --     squashed[#squashed + 1] = v
+                --     duplicates[v] = true
+                --   end
+                -- end
+                --
+                return table.concat(clients, ' '), ' '
               end,
             },
             {
