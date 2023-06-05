@@ -180,7 +180,7 @@ vim.keymap.set('n', '<Leader>la', ':Lazy<CR>', { desc = 'Open Lazy' })
 vim.keymap.set('n', '<Leader>sy', ':Lazy sync<CR>', { desc = 'Sync plugins' })
 vim.keymap.set(
   'n',
-  '<Leader>su',
+  '<Leader>up',
   ':Lazy update<CR>',
   { desc = 'Update plugins' }
 )
@@ -191,7 +191,7 @@ vim.keymap.set('n', '<Leader>ma', ':Mason<CR>', { desc = 'Open Mason' })
 -- Open settings
 vim.keymap.set(
   'n',
-  '<Leader>so',
+  '<Leader>in',
   ':e ~/.config/nvim/init.lua<CR>',
   { desc = 'Open `init.lua`' }
 )
