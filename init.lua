@@ -44,6 +44,7 @@ require('lazy').setup({
   { import = 'extras.plugins.which_key' },
   { import = 'lsp.flutter' },
   { import = 'lsp.lua' },
+  { import = 'lsp.rust' },
 }, lazy.opts)
 
 -- Add spelling.
