@@ -20,7 +20,10 @@ return {
         'vim',
       },
       autotag = { enable = true },
-      highlight = { enable = true },
+      highlight = {
+        enable = true,
+        -- disable = { 'sql' },
+      },
       context_commentstring = { enable = true },
       textobjects = {
         move = {

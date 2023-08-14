@@ -22,6 +22,7 @@ return {
   {
     'projekt0n/github-nvim-theme',
     enabled = false,
+    lazy = false,
     priority = 1000,
     config = function()
       require('github-theme').setup({ options = { transparent = false } })
@@ -31,10 +32,22 @@ return {
   {
     'Mofiqul/adwaita.nvim',
     enabled = false,
+    lazy = false,
     priority = 1000,
     config = function()
       vim.g.adwaita_transparent = true
       vim.cmd('colorscheme adwaita')
+    end,
+  },
+  {
+    'dasupradyumna/midnight.nvim',
+    enabled = false,
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.o.termguicolors = true
+      require('midnight').setup()
+      vim.cmd('colorscheme midnight')
     end,
   },
 }

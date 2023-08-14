@@ -1,6 +1,7 @@
 return {
   {
     'echasnovski/mini.ai',
+    version = false,
     dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
     lazy = true,
     event = { 'BufReadPre', 'BufNewFile' },
@@ -62,7 +63,8 @@ return {
   },
   {
     'echasnovski/mini.animate',
-    enabled = false,
+    version = false,
+    enabled = true,
     lazy = true,
     event = 'BufAdd',
     opts = function()
@@ -115,10 +117,12 @@ return {
   },
   {
     'echasnovski/mini.bufremove',
+    version = false,
     lazy = true,
   },
   {
     'echasnovski/mini.comment',
+    version = false,
     dependencies = { 'JoosepAlviste/nvim-ts-context-commentstring' },
     lazy = true,
     event = 'BufReadPost',
@@ -140,6 +144,7 @@ return {
   },
   {
     'echasnovski/mini.cursorword',
+    version = false,
     lazy = true,
     event = 'BufAdd',
     config = function()
@@ -148,6 +153,7 @@ return {
   },
   {
     'echasnovski/mini.indentscope',
+    version = false,
     lazy = true,
     event = 'BufReadPost',
     opts = {
@@ -174,6 +180,7 @@ return {
   },
   {
     'echasnovski/mini.surround',
+    version = false,
     lazy = true,
     keys = {
       { 'ys', mode = { 'n', 'v', 'o' } },
@@ -211,6 +218,7 @@ return {
   },
   {
     'echasnovski/mini.tabline',
+    version = false,
     lazy = true,
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()

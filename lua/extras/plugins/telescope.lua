@@ -17,10 +17,14 @@ return {
     },
     lazy = true,
     keys = {
-      { '<Leader><Space>', mode = 'n' },
       { '<C-f>', mode = 'n' },
-      { 't', mode = 'n' },
+      { '<Leader><Space>', mode = 'n' },
+      { '[', mode = 'n' },
+      { ']', mode = 'n' },
+      { 'b', mode = 'n' },
       { 'g', mode = { 'n', 'v' } },
+      { 't', mode = 'n' },
+      { 'w', mode = 'n' },
     },
     opts = {
       defaults = {

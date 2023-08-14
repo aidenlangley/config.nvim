@@ -82,8 +82,8 @@ vim.opt.grepprg = 'rg --vimgrep'
 vim.opt.showmode = false
 
 -- Lines to keep above/below & left/right of cursor
-vim.opt.scrolloff = 8
-vim.opt.sidescrolloff = 4
+vim.opt.scrolloff = 0
+vim.opt.sidescrolloff = 0
 
 -- Code folding
 vim.opt.foldenable = false
