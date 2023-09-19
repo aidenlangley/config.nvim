@@ -25,7 +25,7 @@ return function(_, bufnr)
   )
   vim.keymap.set(
     'n',
-    'gdg',
+    'gdd',
     vim.lsp.buf.definition,
     { desc = 'Goto definition', buffer = bufnr }
   )

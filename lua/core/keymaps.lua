@@ -14,20 +14,15 @@ vim.keymap.set(
 
 -- Buffers
 vim.keymap.set('n', '<C-s>', ':w<CR>', { desc = 'Write buffer' })
-vim.keymap.set('n', 'ww', ':w!<CR>', { desc = 'Write buffer (force)' })
-vim.keymap.set('n', 'wa', ':wa<CR>', { desc = 'Write all buffers' })
-vim.keymap.set('n', 'waa', ':wa!<CR>', { desc = 'Write all buffers (force)' })
+vim.keymap.set('n', 'bw', ':wa<CR>', { desc = 'Write all buffers' })
 
 -- Use mini.bufremove to delete buffers
-vim.keymap.set('n', '<C-w>', function()
+vim.keymap.set('n', 'bd', function()
   require('mini.bufremove').delete(0, false)
 end, { desc = 'Delete buffer', noremap = true })
-vim.keymap.set('n', 'bdd', function()
-  require('mini.bufremove').delete(0, true)
-end, { desc = 'Delete buffer (force)', noremap = true })
 
 -- Delete other buffers
-vim.keymap.set('n', 'bda', ':%bd|e#|bd#<CR>', { desc = 'Delete other buffers' })
+vim.keymap.set('n', 'bD', ':%bd|e#|bd#<CR>', { desc = 'Delete other buffers' })
 
 -- Move through buffers
 vim.keymap.set('n', '}', ':bn<CR>', { desc = 'Next buffer', silent = true })
@@ -78,19 +73,6 @@ vim.keymap.set(
   '<C-l>',
   ':wincmd l<CR>',
   { desc = ' window', silent = true }
-)
-
-vim.keymap.set(
-  'n',
-  'ws',
-  ':wincmd s<CR>',
-  { desc = 'Split window', silent = true }
-)
-vim.keymap.set(
-  'n',
-  'wv',
-  ':wincmd v<CR>',
-  { desc = 'Split window (vertical)', silent = true }
 )
 
 -- Move lines
@@ -162,12 +144,6 @@ vim.keymap.set(
   '[d',
   vim.diagnostic.goto_prev,
   { desc = 'Goto previous diagnostic' }
-)
-vim.keymap.set(
-  { 'n', 'x' },
-  'gdd',
-  vim.diagnostic.open_float,
-  { desc = 'Show diagnostic' }
 )
 
 -- Open the dashboard

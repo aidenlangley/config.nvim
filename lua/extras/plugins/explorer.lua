@@ -3,8 +3,22 @@ return {
     'ahmedkhalf/project.nvim',
     lazy = true,
     event = { 'BufReadPre', 'BufNewFile' },
-    config = function()
-      require('project_nvim').setup()
+    opts = {
+      patterns = {
+        '.bzr',
+        '.git',
+        '.gitattributes',
+        '.gitignore',
+        '.hg',
+        '.svn',
+        'Makefile',
+        '_darcs',
+        'package.json',
+        'pubspec.yaml',
+      },
+    },
+    config = function(_, opts)
+      require('project_nvim').setup(opts)
     end,
   },
   {

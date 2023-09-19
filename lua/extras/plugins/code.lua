@@ -10,7 +10,7 @@ return {
         RRGGBB = true,
         names = false,
         RRGGBBAA = true,
-        AARRGGBB = false,
+        AARRGGBB = true,
         rgb_fn = true,
         hsl_fn = true,
         css = false,

@@ -40,7 +40,7 @@ return {
     lazy = true,
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
-      autoformat = false,
+      inlay_hints = { enabled = true },
       diagnostics = {
         underline = true,
         update_in_insert = false,
@@ -50,7 +50,6 @@ return {
           source = 'if_many',
         },
       },
-      servers = {},
     },
     config = function(_, opts)
       for name, icon in pairs(require('icons').diagnostics) do
@@ -59,14 +58,16 @@ return {
       end
       vim.diagnostic.config(opts.diagnostics)
 
-      require('mason-lspconfig').setup_handlers({
+      local handlers = {
         function(server_name)
           require('lspconfig')[server_name].setup({
             on_attach = require('lsp._on_attach'),
             capabilities = require('lsp._capabilities'),
           })
         end,
-      })
+      }
+
+      require('mason-lspconfig').setup_handlers(handlers)
     end,
   },
   {

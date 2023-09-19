@@ -23,6 +23,8 @@ return {
   {
     'https://git.sr.ht/~nedia/auto-format.nvim',
     -- 'aidenlangley/auto-format.nvim',
+    enabled = false,
+    dev = true,
     event = { 'BufReadPre', 'BufNewFile' },
     config = true,
   },

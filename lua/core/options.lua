@@ -112,7 +112,7 @@ vim.opt.iskeyword:append('-')
 
 -- Title string
 vim.opt.title = true
-vim.opt.titlestring = 'nvim: %<%F%='
+vim.opt.titlestring = 'nvim: %<%F'
 
 -- Disable status bar until later
 vim.opt.laststatus = 0

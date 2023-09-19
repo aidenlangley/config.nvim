@@ -51,6 +51,7 @@ return {
   },
   {
     'b0o/incline.nvim',
+    enabled = false,
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     lazy = true,
     event = 'BufAdd',
@@ -126,7 +127,7 @@ return {
         desc = 'Noice: All',
       },
       {
-        '<Leader>snd',
+        '<Leader>dd',
         function()
           require('noice').cmd('dismiss')
         end,

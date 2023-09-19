@@ -67,26 +67,11 @@ return {
             {
               'clients',
               fmt = function()
-                local clients = {}
-                for _, c in
-                  ipairs(vim.lsp.get_active_clients({
-                    bufnr = vim.api.nvim_get_current_buf(),
-                  }))
-                do
-                  -- When handling null-ls clients, we have to further inspect the sources
-                  if c.name == 'null-ls' then
-                    for _, s in
-                      ipairs(
-                        require('null-ls.sources').get_available(
-                          vim.bo.filetype
-                        )
-                      )
-                    do
-                      clients[#clients + 1] = s.name
-                    end
-                  else
-                    clients[#clients + 1] = c.name
-                  end
+                local bufnr = vim.api.nvim_get_current_buf()
+                local clients =
+                  require('conform').list_formatters_for_buffer(bufnr)
+                for _, c in ipairs(vim.lsp.get_active_clients({ bufnr })) do
+                  clients[#clients + 1] = c.name
                 end
 
                 return table.concat(clients, ' '), ' '

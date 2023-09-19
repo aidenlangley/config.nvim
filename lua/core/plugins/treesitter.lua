@@ -22,7 +22,7 @@ return {
       autotag = { enable = true },
       highlight = {
         enable = true,
-        -- disable = { 'sql' },
+        -- disable = { 'dart' },
       },
       context_commentstring = { enable = true },
       textobjects = {

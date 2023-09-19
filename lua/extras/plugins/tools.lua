@@ -18,4 +18,20 @@ return {
       end, { desc = 'Open Markdown Preview' })
     end,
   },
+  {
+    'm4xshen/hardtime.nvim',
+    enabled = false,
+    lazy = true,
+    event = 'BufRead',
+    dependencies = {
+      'MunifTanjim/nui.nvim',
+      'nvim-lua/plenary.nvim',
+    },
+    opts = {
+      ['<Up>'] = {},
+      ['<Down>'] = {},
+      ['<Left>'] = {},
+      ['<Right>'] = {},
+    },
+  },
 }

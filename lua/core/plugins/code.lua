@@ -1,6 +1,7 @@
 return {
   {
     'jose-elias-alvarez/null-ls.nvim',
+    enabled = false,
     lazy = true,
     event = { 'BufReadPre', 'BufNewFile' },
     opts = function()
@@ -20,5 +21,24 @@ return {
         },
       }
     end,
+  },
+  {
+    'stevearc/conform.nvim',
+    lazy = true,
+    event = { 'BufReadPre', 'BufNewFile' },
+    opts = {
+      formatters_by_ft = {
+        bash = { 'shellcheck', 'shfmt' },
+        fish = { 'fish_indent' },
+        javascript = { 'prettier' },
+        lua = { 'stylua' },
+        python = { 'isort', 'black' },
+        sh = { 'shellcheck', 'shfmt' },
+      },
+      format_on_save = {
+        lsp_fallback = true,
+        timeout_ms = 500,
+      },
+    },
   },
 }
