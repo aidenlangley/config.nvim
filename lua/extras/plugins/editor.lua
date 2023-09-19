@@ -102,4 +102,11 @@ return {
       highlight = { timer = 150 },
     },
   },
+  {
+    'nvim-pack/nvim-spectre',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    lazy = true,
+    event = { 'BufReadPre', 'BufNewFile' },
+    config = true,
+  },
 }

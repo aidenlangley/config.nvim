@@ -179,6 +179,24 @@ return {
     end,
   },
   {
+    'echasnovski/mini.hipatterns',
+    enabled = false,
+    version = false,
+    lazy = true,
+    event = { 'BufReadPre', 'BufNewFile' },
+    opts = function()
+      local hipatterns = require('mini.hipatterns')
+      return {
+        highlighters = {
+          hex_color = hipatterns.gen_highlighter.hex_color(),
+        },
+      }
+    end,
+    config = function(_, opts)
+      require('mini.indentscope').setup(opts)
+    end,
+  },
+  {
     'echasnovski/mini.surround',
     version = false,
     lazy = true,
