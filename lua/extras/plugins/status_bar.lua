@@ -68,13 +68,27 @@ return {
               'clients',
               fmt = function()
                 local bufnr = vim.api.nvim_get_current_buf()
-                local clients =
-                  require('conform').list_formatters_for_buffer(bufnr)
-                for _, c in ipairs(vim.lsp.get_active_clients({ bufnr })) do
-                  clients[#clients + 1] = c.name
+                local clients = {}
+                for _, client in
+                  ipairs(vim.lsp.get_active_clients({ bufnr = bufnr }))
+                do
+                  clients[#clients + 1] = client.name
                 end
 
-                return table.concat(clients, ' '), ' '
+                for _, formatter in
+                  ipairs(require('conform').list_formatters_for_buffer(bufnr))
+                do
+                  table.insert(clients, formatter)
+                end
+
+                local linters = require('lint').linters_by_ft[vim.bo.filetype]
+                if linters then
+                  for _, linter in ipairs(linters) do
+                    table.insert(clients, linter)
+                  end
+                end
+
+                return table.concat(clients, ' '), '  '
               end,
             },
             {

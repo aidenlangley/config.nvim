@@ -2,13 +2,16 @@ return {
   {
     'stevearc/conform.nvim',
     lazy = true,
+    dev = false,
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
       formatters_by_ft = {
         bash = { 'shfmt' },
         fish = { 'fish_indent' },
+        go = { 'gofumpt', 'goimports', 'golines' },
         javascript = { 'prettier' },
         lua = { 'stylua' },
+        php = { 'php_cs_fixer' },
         python = { 'isort', 'black' },
         sh = { 'shfmt' },
         yaml = { 'prettier' },
@@ -16,6 +19,16 @@ return {
       format_on_save = {
         lsp_fallback = true,
         timeout_ms = 500,
+      },
+      formatters = {
+        php_cs_fixer = {
+          command = require('utils').path_or(
+            { 'vendor/bin/php-cs-fixer' },
+            'php-cs-fixer'
+          ),
+          args = { 'fix', '$FILENAME' },
+          stdin = false,
+        },
       },
     },
   },
@@ -33,7 +46,9 @@ return {
     config = function(_, _)
       require('lint').linters_by_ft = {
         bash = { 'shellcheck' },
+        go = { 'golangcilint' },
         lua = { 'selene' },
+        php = { 'phpstan' },
         python = { 'flake8' },
         sh = { 'shellcheck' },
       }
