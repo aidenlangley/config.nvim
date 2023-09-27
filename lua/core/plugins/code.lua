@@ -1,11 +1,25 @@
 return {
+  -- {
+  --   'stevearc/conform.nvim',
+  --   lazy = true,
+  --   event = { 'BufReadPre', 'BufNewFile' },
+  --   opts = {
+  --     formatters_by_ft = {
+  --       lua = { 'stylua' },
+  --     },
+  --     format_on_save = {
+  --       timeout_ms = 500,
+  --       lsp_fallback = true,
+  --     },
+  --   },
+  -- },
   {
     'stevearc/conform.nvim',
     lazy = true,
     dev = false,
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
-      log_level = vim.log.levels.DEBUG,
+      log_level = vim.log.levels.TRACE,
       formatters_by_ft = {
         bash = { 'shfmt' },
         fish = { 'fish_indent' },
