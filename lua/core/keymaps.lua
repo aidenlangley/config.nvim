@@ -152,17 +152,22 @@ vim.keymap.set('n', '<Leader>da', function()
 end, { desc = 'Dashboard' })
 
 -- Lazy
-vim.keymap.set('n', '<Leader>la', ':Lazy<CR>', { desc = 'Open Lazy' })
-vim.keymap.set('n', '<Leader>sy', ':Lazy sync<CR>', { desc = 'Sync plugins' })
+vim.keymap.set('n', '<Leader>la', ':Lazy<CR>', { desc = 'Lazy' })
+vim.keymap.set(
+  'n',
+  '<Leader>sy',
+  ':Lazy sync<CR>',
+  { desc = 'Lazy: Sync plugins' }
+)
 vim.keymap.set(
   'n',
   '<Leader>up',
   ':Lazy update<CR>',
-  { desc = 'Update plugins' }
+  { desc = 'Lazy: Update plugins' }
 )
 
 -- Mason
-vim.keymap.set('n', '<Leader>ma', ':Mason<CR>', { desc = 'Open Mason' })
+vim.keymap.set('n', '<Leader>ma', ':Mason<CR>', { desc = 'Mason' })
 
 -- Open settings
 vim.keymap.set(
@@ -176,3 +181,7 @@ vim.keymap.set(
 vim.keymap.set('n', '<Leader>gg', function()
   require('utils').float_term('lazygit'):toggle()
 end, { desc = 'LazyGit' })
+
+-- Navigate tabs
+vim.keymap.set('n', ']t', ':tabnext<CR>', { desc = 'Next tab' })
+vim.keymap.set('n', '[t', ':tabprevious<CR>', { desc = 'Previous tab' })

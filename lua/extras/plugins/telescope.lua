@@ -33,7 +33,7 @@ return {
       },
     },
     config = function(_, opts)
-      for i, v in ipairs({
+      local keymaps = {
         {
           'tt',
           require('telescope.builtin').builtin,
@@ -77,17 +77,24 @@ return {
         {
           'tk',
           require('telescope.builtin').keymaps,
-          desc = 'Projects',
+          desc = 'Keymaps',
         },
         {
           'tp',
           require('telescope').extensions.projects.projects,
           desc = 'Projects',
         },
-      }) do
-        vim.keymap.set(v.mode or 'n', v[1], v[2], {
-          desc = v.desc or string.format('Telescope%n', i),
-        })
+      }
+
+      for i, v in ipairs(keymaps) do
+        local desc
+        if v.desc then
+          desc = string.format('Telescope: %s', v.desc)
+        else
+          desc = string.format('Telescope%n', i)
+        end
+
+        vim.keymap.set(v.mode or 'n', v[1], v[2], { desc = desc })
       end
 
       require('telescope').setup(opts)

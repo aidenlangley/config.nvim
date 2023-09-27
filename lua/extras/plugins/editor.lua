@@ -109,4 +109,36 @@ return {
     event = { 'BufReadPre', 'BufNewFile' },
     config = true,
   },
+  {
+    'ThePrimeagen/harpoon',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    lazy = true,
+    keys = {
+      {
+        '<Leader>ka',
+        ':lua require("harpoon.mark").add_file()<CR>',
+        mode = { 'n' },
+        desc = 'Harpoon: Mark file',
+      },
+      {
+        '<Leader>kk',
+        ':lua require("harpoon.ui").toggle_quick_menu()<CR>',
+        mode = { 'n' },
+        desc = 'Harpoon: Toggle UI',
+      },
+      {
+        ']k',
+        ':lua require("harpoon.ui").nav_next()<CR>',
+        mode = { 'n' },
+        desc = 'Harpoon: Next mark',
+      },
+      {
+        '[k',
+        ':lua require("harpoon.ui").nav_prev()<CR>',
+        mode = { 'n' },
+        desc = 'Harpoon: Previous mark',
+      },
+    },
+    config = true,
+  },
 }

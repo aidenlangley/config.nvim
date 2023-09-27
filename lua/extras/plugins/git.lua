@@ -13,61 +13,61 @@ return {
           function()
             require('gitsigns').next_hunk()
           end,
-          desc = 'Next hunk',
+          desc = 'Git: Next hunk',
         },
         {
           '[h',
           function()
             require('gitsigns').prev_hunk()
           end,
-          desc = 'Previous hunk',
+          desc = 'Git: Previous hunk',
         },
         {
           '<Leader>gb',
           function()
             require('gitsigns').blame_line({ full = true })
           end,
-          desc = 'Blame',
+          desc = 'Git: Blame',
         },
         {
           '<Leader>gD',
           function()
             require('gitsigns').toggle_deleted()
           end,
-          desc = 'Toggle Deleted',
+          desc = 'Git: Toggle deleted',
         },
         {
           '<Leader>gR',
           function()
             require('gitsigns').reset_buffer()
           end,
-          desc = 'Reset buffer',
+          desc = 'Git: Reset buffer',
         },
         {
           '<Leader>gS',
           function()
             require('gitsigns').stage_buffer()
           end,
-          desc = 'Stage buffer',
+          desc = 'Git: Stage buffer',
         },
         {
           '<Leader>gu',
           function()
             require('gitsigns').undo_stage_hunk()
           end,
-          desc = 'Undo stage',
+          desc = 'Git: Undo stage',
         },
         {
           '<Leader>gs',
           ':Gitsigns stage_hunk<CR>',
           mode = { 'n', 'v' },
-          desc = 'Stage hunk',
+          desc = 'Git: Stage hunk',
         },
         {
           '<Leader>gr',
           ':Gitsigns reset_hunk<CR>',
           mode = { 'n', 'v' },
-          desc = 'Reset hunk',
+          desc = 'Git: Reset hunk',
         },
       }
 
