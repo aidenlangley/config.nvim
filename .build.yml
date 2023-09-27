@@ -1,0 +1,10 @@
+image: alpine/edge
+secrets:
+  - 18715e4b-950c-4c47-8600-49ac187dc08b
+tasks:
+  - known_hosts: |
+      ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+  - push: |
+      cd config.nvim
+      git remote add gh git@github.com:aidenlangley/config.nvim.git
+      git push gh main
