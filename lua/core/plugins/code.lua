@@ -1,18 +1,4 @@
 return {
-  -- {
-  --   'stevearc/conform.nvim',
-  --   lazy = true,
-  --   event = { 'BufReadPre', 'BufNewFile' },
-  --   opts = {
-  --     formatters_by_ft = {
-  --       lua = { 'stylua' },
-  --     },
-  --     format_on_save = {
-  --       timeout_ms = 500,
-  --       lsp_fallback = true,
-  --     },
-  --   },
-  -- },
   {
     'stevearc/conform.nvim',
     lazy = true,
@@ -29,29 +15,29 @@ return {
         php = { 'php_cs_fixer' },
         python = { 'isort', 'black' },
         sh = { 'shfmt' },
-        yaml = { 'prettier' },
-      },
-      formatters = {
-        php_cs_fixer = {
-          command = require('utils').path_or(
-            { 'vendor/bin/php-cs-fixer' },
-            'php-cs-fixer'
-          ),
-          args = { 'fix', '$FILENAME' },
-          stdin = false,
-        },
+        yaml = { 'prettier_yaml' },
       },
       format_on_save = function(bufnr)
         if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
           vim.notify('Conform: format_on_save disabled', vim.log.levels.INFO)
           return
         end
-
         return {
           timeout_ms = 500,
           lsp_fallback = true,
         }
       end,
+      formatters = {
+        prettier_yaml = function()
+          local p = require('conform.formatters.prettier')
+          return vim.tbl_deep_extend('force', p, {
+            args = require('conform.util').extend_args(
+              p.args,
+              { '--no-bracket-spacing' }
+            ),
+          })
+        end,
+      },
     },
     config = function(_, opts)
       require('conform').setup(opts)

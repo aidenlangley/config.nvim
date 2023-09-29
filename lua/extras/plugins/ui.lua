@@ -3,8 +3,7 @@ return {
     'lukas-reineke/indent-blankline.nvim',
     event = 'BufReadPost',
     opts = {
-      char = '│',
-      filetype_exclude = {
+      exclude = {
         'help',
         'alpha',
         'dashboard',
@@ -12,9 +11,10 @@ return {
         'Trouble',
         'lazy',
       },
-      show_trailing_blankline_indent = false,
-      show_current_context = false,
     },
+    config = function(_, opts)
+      require('ibl').setup(opts)
+    end,
   },
   {
     'petertriho/nvim-scrollbar',

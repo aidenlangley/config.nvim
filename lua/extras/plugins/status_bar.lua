@@ -23,26 +23,16 @@ return {
         },
         extensions = { 'toggleterm' },
         sections = {
-          lualine_a = { 'mode' },
+          lualine_a = {
+            {
+              'mode',
+              fmt = function(str)
+                return str:sub(1, 1)
+              end,
+            },
+          },
           lualine_b = {
-            {
-              'filetype',
-              colored = true,
-              icon_only = true,
-            },
-            {
-              'filename',
-              file_status = true,
-              newfile_status = false,
-              path = 1,
-              shorting_target = 40,
-              symbols = {
-                modified = icons.git.modified,
-                readonly = icons.git.removed,
-                unnamed = '[No Name]',
-                newfile = icons.git.added,
-              },
-            },
+            'filename',
           },
           lualine_c = {
             {
@@ -68,7 +58,7 @@ return {
               'clients',
               fmt = function()
                 local bufnr = vim.api.nvim_get_current_buf()
-                local clients = {}
+                local clients = { ' ' }
                 for _, client in
                   ipairs(vim.lsp.get_active_clients({ bufnr = bufnr }))
                 do
@@ -88,9 +78,11 @@ return {
                   end
                 end
 
-                return table.concat(clients, ' '), '  '
+                return table.concat(clients, ' ')
               end,
             },
+          },
+          lualine_y = {
             {
               'diff',
               colored = true,
@@ -105,9 +97,9 @@ return {
                 removed = icons.git.removed .. ' ',
               },
             },
+            'branch',
           },
-          lualine_y = { 'branch' },
-          lualine_z = { 'location' },
+          lualine_z = { 'location', 'progress' },
         },
       }
     end,

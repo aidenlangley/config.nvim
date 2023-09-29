@@ -153,6 +153,7 @@ return {
   },
   {
     'echasnovski/mini.indentscope',
+    enabled = false,
     version = false,
     lazy = true,
     event = 'BufReadPost',
