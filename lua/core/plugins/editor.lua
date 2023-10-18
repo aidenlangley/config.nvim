@@ -13,6 +13,7 @@ return {
   {
     'https://git.sr.ht/~nedia/auto-save.nvim',
     -- 'aidenlangley/auto-save.nvim',
+    dev = false,
     event = 'BufReadPre',
     opts = {
       events = { 'InsertLeave', 'BufLeave' },

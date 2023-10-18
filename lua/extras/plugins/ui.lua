@@ -1,20 +1,20 @@
 return {
   {
     'lukas-reineke/indent-blankline.nvim',
+    main = 'ibl',
     event = 'BufReadPost',
     opts = {
       exclude = {
-        'help',
-        'alpha',
-        'dashboard',
-        'neo-tree',
-        'Trouble',
-        'lazy',
+        filetypes = {
+          'help',
+          'alpha',
+          'dashboard',
+          'neo-tree',
+          'Trouble',
+          'lazy',
+        },
       },
     },
-    config = function(_, opts)
-      require('ibl').setup(opts)
-    end,
   },
   {
     'petertriho/nvim-scrollbar',

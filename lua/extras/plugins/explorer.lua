@@ -60,7 +60,7 @@ return {
           filtered_items = { visible = true },
         },
         window = {
-          position = 'right',
+          -- position = 'right',
           width = 32,
         },
         default_component_configs = {
