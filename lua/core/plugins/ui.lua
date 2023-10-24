@@ -38,6 +38,21 @@ return {
             ':Noice telescope<CR>',
             desc = 'Message history',
           },
+          {
+            '<Leader>dm',
+            ':Noice dismiss<CR>',
+            desc = 'Dismiss notifications',
+          },
+          {
+            '<Leader>nof',
+            ':Noice disable<CR>',
+            desc = 'Disable notifications',
+          },
+          {
+            '<Leader>non',
+            ':Noice enable<CR>',
+            desc = 'Enable notifications',
+          },
         },
         config = function(_, _)
           require('telescope').load_extension('noice')
