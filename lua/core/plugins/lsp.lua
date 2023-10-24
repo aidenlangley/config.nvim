@@ -79,4 +79,11 @@ return {
       virtual_text = { enabled = true, text = '' },
     },
   },
+  {
+    'smjonas/inc-rename.nvim',
+    main = 'inc_rename',
+    lazy = true,
+    cmd = 'IncRename',
+    config = true,
+  },
 }

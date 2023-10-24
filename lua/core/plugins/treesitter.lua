@@ -20,15 +20,12 @@ return {
         'vim',
       },
       autotag = { enable = true },
-      highlight = {
-        enable = true,
-        -- disable = { 'dart' },
-      },
+      highlight = { enable = true },
       context_commentstring = { enable = true },
       textobjects = {
         move = {
           enable = true,
-          set_jumps = false,
+          set_jumps = true,
           goto_next_start = {
             [']c'] = '@class.outer',
             [']f'] = '@function.outer',
@@ -61,23 +58,13 @@ return {
               query_group = 'folds',
             },
           },
-          goto_next = {
-            [']g'] = '@call.outer',
-            [']p'] = '@parameter.outer',
-          },
-          goto_previous = {
-            ['[g'] = '@call.outer',
-            ['[p'] = '@parameter.outer',
-          },
+          goto_next = { [']p'] = '@parameter.outer' },
+          goto_previous = { ['[p'] = '@parameter.outer' },
         },
         swap = {
           enable = true,
-          swap_next = {
-            ['>p'] = '@parameter.inner',
-          },
-          swap_previous = {
-            ['<p'] = '@parameter.inner',
-          },
+          swap_next = { ['>p'] = '@parameter.inner' },
+          swap_previous = { ['<p'] = '@parameter.inner' },
         },
       },
     },

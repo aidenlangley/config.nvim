@@ -43,7 +43,7 @@ vim.wo.signcolumn = 'yes'
 vim.opt.completeopt = { 'menuone', 'noinsert', 'noselect' }
 
 -- Highlight current line
-vim.opt.cursorline = false
+vim.opt.cursorline = true
 
 -- Split logically - not before the current window, but afterwards
 vim.opt.splitbelow = true

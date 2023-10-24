@@ -5,7 +5,7 @@ return {
     dev = false,
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
-      log_level = vim.log.levels.TRACE,
+      -- log_level = vim.log.levels.TRACE,
       formatters_by_ft = {
         bash = { 'shfmt' },
         fish = { 'fish_indent' },
@@ -22,6 +22,7 @@ return {
           vim.notify('Conform: format_on_save disabled', vim.log.levels.INFO)
           return
         end
+
         return {
           timeout_ms = 500,
           lsp_fallback = true,
@@ -50,7 +51,7 @@ return {
           vim.g['disable_autoformat'] = not vim.g.disable_autoformat
         end
       end, {
-        desc = 'Conform: Toggle format on save',
+        desc = 'Toggle auto-format on save',
         bang = true,
       })
     end,

@@ -19,35 +19,4 @@ return {
       vim.cmd('colorscheme gruvbox')
     end,
   },
-  {
-    'projekt0n/github-nvim-theme',
-    enabled = false,
-    lazy = false,
-    priority = 1000,
-    config = function()
-      require('github-theme').setup({ options = { transparent = false } })
-      vim.cmd('colorscheme github_dark_dimmed')
-    end,
-  },
-  {
-    'Mofiqul/adwaita.nvim',
-    enabled = false,
-    lazy = false,
-    priority = 1000,
-    config = function()
-      vim.g.adwaita_transparent = true
-      vim.cmd('colorscheme adwaita')
-    end,
-  },
-  {
-    'dasupradyumna/midnight.nvim',
-    enabled = false,
-    lazy = false,
-    priority = 1000,
-    config = function()
-      vim.o.termguicolors = true
-      require('midnight').setup()
-      vim.cmd('colorscheme midnight')
-    end,
-  },
 }

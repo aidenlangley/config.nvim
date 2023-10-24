@@ -31,9 +31,7 @@ return {
               end,
             },
           },
-          lualine_b = {
-            'filename',
-          },
+          lualine_b = { 'filename' },
           lualine_c = {
             {
               'diagnostics',

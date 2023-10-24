@@ -1,6 +1,7 @@
 return {
   {
     'echasnovski/mini.starter',
+    dependencies = { 'ahmedkhalf/project.nvim' },
     opts = function()
       local title = table.concat({
         [[                   |         |         ]],
@@ -32,7 +33,6 @@ return {
           { name = 'Lazy', action = 'Lazy', section = 'Lazy' },
           { name = 'Sync', action = 'Lazy sync', section = 'Lazy' },
           { name = 'Update', action = 'Lazy update', section = 'Lazy' },
-          { name = 'Profile', action = 'Lazy profile', section = 'Lazy' },
           { name = 'Log', action = 'Lazy log', section = 'Lazy' },
 
           { name = 'New', action = 'enew', section = 'Menu' },
@@ -56,6 +56,11 @@ return {
           {
             name = 'Recent',
             action = 'Telescope oldfiles',
+            section = 'Telescope',
+          },
+          {
+            name = 'Projects',
+            action = 'Telescope projects',
             section = 'Telescope',
           },
           {

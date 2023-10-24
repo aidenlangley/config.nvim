@@ -22,30 +22,38 @@ return {
         'n',
         '<C-a>',
         require('dial.map').inc_normal(),
-        { desc = 'Dial: Increment' }
+        { desc = 'Increment value' }
       )
       vim.keymap.set(
         'n',
         '<C-x>',
         require('dial.map').dec_normal(),
-        { desc = 'Dial: Decrement' }
+        { desc = 'Decrement value' }
       )
       vim.keymap.set(
         'v',
         '<C-a>',
         require('dial.map').inc_visual(),
-        { desc = 'Dial: Increment' }
+        { desc = 'Increment value' }
       )
       vim.keymap.set(
         'v',
         '<C-x>',
         require('dial.map').dec_visual(),
-        { desc = 'Dial: Decrement' }
+        { desc = 'Decrement value' }
       )
     end,
   },
   {
     'gbprod/yanky.nvim',
+    dependencies = {
+      {
+        'nvim-telescope/telescope.nvim',
+        config = function(_, _)
+          require('telescope').load_extension('yank_history')
+        end,
+      },
+    },
     lazy = true,
     keys = {
       {
@@ -90,8 +98,8 @@ return {
       },
       {
         'ty',
-        ':YankyRingHistory<CR>',
-        desc = 'Yanky history...',
+        ':Telescope yank_history<CR>',
+        desc = 'Yanky history',
       },
     },
     opts = {
@@ -101,44 +109,5 @@ return {
       },
       highlight = { timer = 150 },
     },
-  },
-  {
-    'nvim-pack/nvim-spectre',
-    dependencies = { 'nvim-lua/plenary.nvim' },
-    lazy = true,
-    event = { 'BufReadPre', 'BufNewFile' },
-    config = true,
-  },
-  {
-    'ThePrimeagen/harpoon',
-    dependencies = { 'nvim-lua/plenary.nvim' },
-    lazy = true,
-    keys = {
-      {
-        '<Leader>ka',
-        ':lua require("harpoon.mark").add_file()<CR>',
-        mode = { 'n' },
-        desc = 'Harpoon: Mark file',
-      },
-      {
-        '<Leader>kk',
-        ':lua require("harpoon.ui").toggle_quick_menu()<CR>',
-        mode = { 'n' },
-        desc = 'Harpoon: Toggle UI',
-      },
-      {
-        ']k',
-        ':lua require("harpoon.ui").nav_next()<CR>',
-        mode = { 'n' },
-        desc = 'Harpoon: Next mark',
-      },
-      {
-        '[k',
-        ':lua require("harpoon.ui").nav_prev()<CR>',
-        mode = { 'n' },
-        desc = 'Harpoon: Previous mark',
-      },
-    },
-    config = true,
   },
 }

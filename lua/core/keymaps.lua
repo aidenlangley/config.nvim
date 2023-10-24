@@ -25,10 +25,30 @@ end, { desc = 'Delete buffer', noremap = true })
 vim.keymap.set('n', 'bD', ':%bd|e#|bd#<CR>', { desc = 'Delete other buffers' })
 
 -- Move through buffers
-vim.keymap.set('n', '}', ':bn<CR>', { desc = 'Next buffer', silent = true })
-vim.keymap.set('n', '{', ':bp<CR>', { desc = 'Prev buffer', silent = true })
-vim.keymap.set('n', '<S-l>', ':bn<CR>', { desc = 'Next buffer', silent = true })
-vim.keymap.set('n', '<S-h>', ':bp<CR>', { desc = 'Prev buffer', silent = true })
+vim.keymap.set(
+  'n',
+  '}',
+  ':bn<CR>',
+  { desc = 'Goto next buffer', silent = true }
+)
+vim.keymap.set(
+  'n',
+  '{',
+  ':bp<CR>',
+  { desc = 'Goto prev buffer', silent = true }
+)
+vim.keymap.set(
+  'n',
+  '<S-l>',
+  ':bn<CR>',
+  { desc = 'Goto next buffer', silent = true }
+)
+vim.keymap.set(
+  'n',
+  '<S-h>',
+  ':bp<CR>',
+  { desc = 'Goto prev buffer', silent = true }
+)
 
 -- Quit if not modified, else request confirmation
 vim.keymap.set('n', '<C-q>', function(bufnr)
@@ -125,12 +145,7 @@ vim.keymap.set(
 )
 
 -- Code actions & formatting can function without a language server
-vim.keymap.set(
-  'n',
-  '<C-.>',
-  vim.lsp.buf.code_action,
-  { desc = 'Code actions...' }
-)
+vim.keymap.set('n', '<C-.>', vim.lsp.buf.code_action, { desc = 'Code actions' })
 
 -- Diagnostics
 vim.keymap.set(
@@ -143,45 +158,40 @@ vim.keymap.set(
   'n',
   '[d',
   vim.diagnostic.goto_prev,
-  { desc = 'Goto previous diagnostic' }
+  { desc = 'Goto prev diagnostic' }
 )
 
 -- Open the dashboard
 vim.keymap.set('n', '<Leader>da', function()
   require('mini.starter').open()
-end, { desc = 'Dashboard' })
+end, { desc = 'Open dashboard' })
 
 -- Lazy
-vim.keymap.set('n', '<Leader>la', ':Lazy<CR>', { desc = 'Lazy' })
-vim.keymap.set(
-  'n',
-  '<Leader>sy',
-  ':Lazy sync<CR>',
-  { desc = 'Lazy: Sync plugins' }
-)
+vim.keymap.set('n', '<Leader>la', ':Lazy<CR>', { desc = 'Open Lazy' })
+vim.keymap.set('n', '<Leader>sy', ':Lazy sync<CR>', { desc = 'Sync plugins' })
 vim.keymap.set(
   'n',
   '<Leader>up',
   ':Lazy update<CR>',
-  { desc = 'Lazy: Update plugins' }
+  { desc = 'Update plugins' }
 )
 
 -- Mason
-vim.keymap.set('n', '<Leader>ma', ':Mason<CR>', { desc = 'Mason' })
+vim.keymap.set('n', '<Leader>ma', ':Mason<CR>', { desc = 'Open Mason' })
 
 -- Open settings
 vim.keymap.set(
   'n',
-  '<Leader>in',
+  '<Leader>se',
   ':e ~/.config/nvim/init.lua<CR>',
-  { desc = 'Open `init.lua`' }
+  { desc = 'Settings' }
 )
 
 -- Open a lazygit terminal
 vim.keymap.set('n', '<Leader>gg', function()
   require('utils').float_term('lazygit'):toggle()
-end, { desc = 'LazyGit' })
+end, { desc = 'Open LazyGit' })
 
 -- Navigate tabs
-vim.keymap.set('n', ']t', ':tabnext<CR>', { desc = 'Next tab' })
-vim.keymap.set('n', '[t', ':tabprevious<CR>', { desc = 'Previous tab' })
+vim.keymap.set('n', ']t', ':tabnext<CR>', { desc = 'Goto next tab' })
+vim.keymap.set('n', '[t', ':tabprevious<CR>', { desc = 'Goto prev tab' })

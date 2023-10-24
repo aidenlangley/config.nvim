@@ -1,7 +1,23 @@
 return {
   {
     'ahmedkhalf/project.nvim',
+    main = 'project_nvim',
+    dependencies = {
+      {
+        'nvim-telescope/telescope.nvim',
+        config = function(_, _)
+          require('telescope').load_extension('projects')
+        end,
+      },
+    },
     lazy = true,
+    keys = {
+      {
+        'tp',
+        ':Telescope projects<CR>',
+        desc = 'Projects',
+      },
+    },
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
       patterns = {
@@ -17,9 +33,6 @@ return {
         'pubspec.yaml',
       },
     },
-    config = function(_, opts)
-      require('project_nvim').setup(opts)
-    end,
   },
   {
     'nvim-neo-tree/neo-tree.nvim',
@@ -40,8 +53,6 @@ return {
       },
     },
     init = function()
-      vim.g.neo_tree_remove_legacy_commands = 1
-
       -- Opening a directory will load neo-tree.
       -- hijack_netrw_behavior = "open_default" does the rest.
       if vim.fn.argc() == 1 then
@@ -50,6 +61,16 @@ return {
           require('neo-tree')
         end
       end
+
+      vim.g.neo_tree_remove_legacy_commands = 1
+      vim.api.nvim_create_autocmd('TermClose', {
+        pattern = '*lazygit',
+        callback = function()
+          if package.loaded['neo-tree.sources.git_status'] then
+            require('neo-tree.sources.git_status').refresh()
+          end
+        end,
+      })
     end,
     opts = function()
       local icons = require('icons')
@@ -61,7 +82,7 @@ return {
         },
         window = {
           -- position = 'right',
-          width = 32,
+          width = 28,
         },
         default_component_configs = {
           indent = {
@@ -85,18 +106,6 @@ return {
           },
         },
       }
-    end,
-    config = function(_, opts)
-      require('neo-tree').setup(opts)
-
-      vim.api.nvim_create_autocmd('TermClose', {
-        pattern = '*lazygit',
-        callback = function()
-          if package.loaded['neo-tree.sources.git_status'] then
-            require('neo-tree.sources.git_status').refresh()
-          end
-        end,
-      })
     end,
   },
 }
