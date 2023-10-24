@@ -21,7 +21,7 @@ return {
       { 'tf', ':Telescope fd theme=dropdown<CR>', desc = 'Find files' },
       { 'td', ':Telescope diagnostics theme=ivy<CR>', desc = 'Diagnostics' },
       { 'tr', ':Telescope oldfiles theme=dropdown<CR>', desc = 'Recent files' },
-      { 'th', ':Telescope help<CR>', desc = 'Help' },
+      { 'th', ':Telescope help_tags<CR>', desc = 'Help' },
       { '[', mode = 'n' },
       { ']', mode = 'n' },
       { 'g', mode = { 'n', 'v' } },

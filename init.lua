@@ -41,6 +41,7 @@ require('lazy').setup({
   { import = 'extras.plugins.terminal' },
   { import = 'extras.plugins.tools' },
   { import = 'extras.plugins.ui' },
+  { import = 'extras.plugins.web' },
   { import = 'extras.plugins.which_key' },
   { import = 'lsp.flutter' },
   { import = 'lsp.lua' },

@@ -31,7 +31,15 @@ return {
               end,
             },
           },
-          lualine_b = { 'filename' },
+          lualine_b = {
+            'filename',
+            {
+              'lazy',
+              fmt = require('lazy.status').updates,
+              cond = require('lazy.status').has_updates,
+              color = { fg = colours.bright_orange },
+            },
+          },
           lualine_c = {
             {
               'diagnostics',
@@ -97,7 +105,7 @@ return {
             },
             'branch',
           },
-          lualine_z = { 'location', 'progress' },
+          lualine_z = { 'selectioncount', 'location', 'progress' },
         },
       }
     end,
