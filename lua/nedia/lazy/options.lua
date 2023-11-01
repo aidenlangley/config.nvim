@@ -1,6 +1,6 @@
 ---@type table
 return {
-  change_detection = { notify = true },
+  change_detection = { notify = false },
   checker = { enabled = true },
   concurrency = 4,
   defaults = { lazy = true },
@@ -19,7 +19,7 @@ return {
     },
   },
   profiling = {
-    loader = true,
-    require = true,
+    loader = false,
+    require = false,
   },
 }

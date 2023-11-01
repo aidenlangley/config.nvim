@@ -23,3 +23,11 @@ end
 
 -- Configure diagnostics
 vim.diagnostic.config(Lsp.diagnostic_config)
+
+local utils = require('nedia.utils')
+local leader, cmd = utils.leader, utils.cmd
+leader('n', 'lsp', cmd('LspInfo'), { desc = 'LPS info' })
+leader('n', 'lst', cmd('LspStart'), { desc = 'Start LSP server' })
+leader('n', 'lsx', cmd('LspStop'), { desc = 'Stop LSP server' })
+leader('n', 'lsr', cmd('LspRestart'), { desc = 'Restart LSP server' })
+leader('n', 'lsl', cmd('LspLog'), { desc = 'LPS log' })

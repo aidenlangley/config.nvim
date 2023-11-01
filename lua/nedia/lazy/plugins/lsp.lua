@@ -1,19 +1,61 @@
----@diagnostic disable: no-unknown
 return {
-
   {
     'williamboman/mason.nvim',
-    config = true,
+    build = ':MasonUpdate',
+    opts = {
+      ensure_installed = {
+        'black',
+        'isort',
+        'luacheck',
+        'prettier',
+        'shfmt',
+        'stylua',
+      },
+    },
+    config = function(_, opts)
+      require('mason').setup(opts)
+
+      local registry = require('mason-registry')
+      registry:on('package:install:success', function()
+        vim.defer_fn(function()
+          -- Trigger FileType event to load this newly installed LSP server
+          require('lazy.core.handler.event').trigger({
+            event = 'FileType',
+            buf = vim.api.nvim_get_current_buf(),
+          })
+        end, 100)
+      end)
+
+      local function ensure_installed()
+        ---@param tool string
+        for _, tool in ipairs(opts.ensure_installed) do
+          local p = registry.get_package(tool)
+          if not p:is_installed() then
+            p:install()
+            require('logger').trace(
+              string.format('Mason installed %s ', tool)
+            )
+          end
+        end
+      end
+
+      if registry.refresh then
+        registry.refresh(ensure_installed)
+      else
+        ensure_installed()
+      end
+
+      local utils = require('nedia.utils')
+      utils.leader('n', 'ma', utils.cmd('Mason'), { desc = 'Mason' })
+    end,
   },
   {
     'williamboman/mason-lspconfig.nvim',
-    dependencies = {
-      'williamboman/mason.nvim',
-    },
     opts = {
       ensure_installed = {
         'bashls',
         'dockerls',
+        'gopls',
         'jsonls',
         'lua_ls',
         'pyright',
@@ -23,8 +65,15 @@ return {
     },
   },
   {
-    'folke/neodev.nvim',
-    config = true,
+    'neovim/nvim-lspconfig',
+    dependencies = {
+      'williamboman/mason.nvim',
+      'williamboman/mason-lspconfig.nvim',
+    },
+    event = { 'BufReadPre', 'BufNewFile' },
+    config = function(_, _)
+      require('nedia.config.lsp')
+    end,
   },
   {
     'smjonas/inc-rename.nvim',
@@ -40,20 +89,11 @@ return {
       virtual_text = { enabled = true, text = '' },
     },
   },
+  'b0o/SchemaStore.nvim',
   {
-    'neovim/nvim-lspconfig',
-    dependencies = {
-      'williamboman/mason-lspconfig.nvim',
-      'folke/neodev.nvim',
-      'smjonas/inc-rename.nvim',
-      'kosayoda/nvim-lightbulb',
-      'hrsh7th/cmp-nvim-lsp',
-      'b0o/SchemaStore.nvim',
-    },
-    event = { 'BufReadPre', 'BufNewFile' },
-    config = function(_, _)
-      require('nedia.config.lsp')
-    end,
+    'folke/neodev.nvim',
+    ft = 'lua',
+    config = true,
   },
   {
     'akinsho/flutter-tools.nvim',
@@ -83,11 +123,11 @@ return {
       tools = { inlay_hints = { highlight = 'DevIconDefault' } },
     },
   },
-  {
-    'https://git.sr.ht/~sircmpwn/hare.vim',
-    dependencies = {
-      'https://git.sr.ht/~torresjrjr/vim-haredoc',
-    },
-    ft = 'hare',
-  },
+  -- {
+  --   'https://git.sr.ht/~sircmpwn/hare.vim',
+  --   dependencies = {
+  --     'https://git.sr.ht/~torresjrjr/vim-haredoc',
+  --   },
+  --   ft = 'hare',
+  -- },
 }

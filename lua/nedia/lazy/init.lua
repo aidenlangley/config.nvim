@@ -31,4 +31,7 @@ vim.api.nvim_create_autocmd('User', {
   end,
 })
 
+local utils = require('nedia.utils')
+utils.leader('n', 'la', utils.cmd('Lazy'), { desc = 'Lazy' })
+
 return require('nedia.lazy.options')

@@ -7,22 +7,54 @@ Utils.leader = Keymap.leader
 
 -- Quit if not modified, else request confirmation
 ---@param bufnr number? Buffer identifier, if nil then `nvim_get_current_buf`
-Utils.smart_quit = function(bufnr)
-  local modified = vim.api.nvim_buf_get_option(
-    bufnr or vim.api.nvim_get_current_buf(),
-    'modified'
-  )
-
-  if modified then
-    local p, c =
-      'You have unsaved changes. Quit anyway? (y/N) ', function(input)
-        if input == 'y' then
-          vim.cmd('q!')
-        end
-      end
-    vim.ui.input({ prompt = p }, c)
+---@param quit_fn function? Function to quit (or perhaps delete buffer)
+Utils.smart_quit = function()
+  if vim.bo.modified then
+    local choice = vim.fn.confirm(
+      ('Save changes to %q?'):format(vim.fn.bufname()),
+      '&Yes\n&No\n&Cancel'
+    )
+    if choice == 1 then -- Yes
+      vim.cmd.write()
+      vim.cmd('q')
+    elseif choice == 2 then -- No
+      vim.cmd('q!')
+    end
   else
-    vim.cmd('q!')
+    vim.cmd('q')
+  end
+end
+
+Utils.safe_delete = function()
+  ---@type function
+  local bd
+
+  local ok, bufremove = pcall(require, 'mini.bufremove')
+  if ok then
+    bd = bufremove.delete
+  else
+    bd = function(_, force)
+      if force then
+        vim.cmd('bd!')
+      else
+        vim.cmd('bd')
+      end
+    end
+  end
+
+  if vim.bo.modified then
+    local choice = vim.fn.confirm(
+      ('Save changes to %q?'):format(vim.fn.bufname()),
+      '&Yes\n&No\n&Cancel'
+    )
+    if choice == 1 then -- Yes
+      vim.cmd.write()
+      bd(0)
+    elseif choice == 2 then -- No
+      bd(0, true)
+    end
+  else
+    bd(0)
   end
 end
 
@@ -40,8 +72,7 @@ end
 -- Get linters for this buffer
 ---@param bufnr number? Buffer identifier
 ---@return string linters Active formatters as space separated string
-Utils.active_linters = function(bufnr)
-  bufnr = bufnr or vim.api.nvim_get_current_buf()
+Utils.active_linters = function()
   return table.concat(require('lint').linters_by_ft[vim.bo.filetype] or {}, ' ')
 end
 

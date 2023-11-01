@@ -33,6 +33,29 @@ end
 ---@type table
 Lsp.capabilities = vim.lsp.protocol.make_client_capabilities()
 
+---@return table capabilities Updated capabilities
+Lsp.update_capabilities = function()
+  local has_cmp, cmp_lsp = pcall(require, 'cmp_nvim_lsp')
+  Lsp.capabilities = vim.tbl_deep_extend(
+    'force',
+    {},
+    Lsp.capabilities,
+    has_cmp and cmp_lsp.default_capabilities() or {}
+  )
+  return Lsp.capabilities
+end
+
+---@param server string Name of the server
+---@param config table Table of settings
+Lsp.setup_server = function(server, config)
+  config['capabilities'] = Lsp.update_capabilities()
+  config['on_attach'] = Lsp.on_attach
+  return function()
+    require('lspconfig')[server].setup(config)
+    require('logger').trace(string.format('Setup %s ', server), { config })
+  end
+end
+
 ---@type table<string, table>
 Lsp.servers = {
   gopls = require('nedia.lsp.servers.go'),
@@ -67,14 +90,6 @@ Lsp.diagnostic_config = {
     source = 'if_many',
   },
 }
-
----@param server string Name of the server
----@param config table Table of settings
-Lsp.setup_server = function(server, config)
-  config['on_attach'] = Lsp.on_attach
-  config['capabilities'] = Lsp.capabilities
-  require('lspconfig')[server].setup(config)
-end
 
 -- Get LSP clients for this buffer
 ---@param bufnr number? Buffer identifier

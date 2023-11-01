@@ -7,7 +7,7 @@ return {
         strings = false,
         comments = false,
         operators = false,
-        folds = false,
+        folds = true,
       },
       contrast = 'hard',
       transparent_mode = true,
@@ -78,24 +78,21 @@ return {
         { 'n', '<C-f>', 'current_buffer_fuzzy_find', { desc = 'Fuzzy find' } },
         { 'n', { 'tg', '<CS-f>' }, 'live_grep', { desc = 'Grep' } },
         { 'n', 'tf', 'fd theme=dropdown', { desc = 'Find files' } },
-        { 'n', 'td', 'diagnostics theme=ivy', { desc = 'Errors' } },
+        { 'n', 'td', 'diagnostics theme=dropdown', { desc = 'Errors' } },
         { 'n', 'tr', 'oldfiles theme=dropdown', { desc = 'Recent files' } },
+        { 'n', 'tn', 'noice', { desc = 'Notifications' } },
       }
 
       local utils = require('nedia.utils')
+      local keymap, cmd = utils.keymap, utils.cmd
       for _, key in ipairs(keymaps) do
-        utils.keymap(
-          key[1],
-          key[2],
-          utils.cmd('Telescope' .. (key[3] or 'Telescope')),
-          key[4]
-        )
+        keymap(key[1], key[2], cmd('Telescope ' .. key[3]), key[4])
       end
     end,
   },
   {
     'folke/which-key.nvim',
-    event = 'VeryLazy',
+    keys = { '<Leader>', 'g', 'z', 't', '[', ']', '<', '>', '`' },
     opts = {
       key_labels = {
         ['<leader>'] = 'SPC',
@@ -113,16 +110,41 @@ return {
         },
       },
     },
+    config = function()
+      local wk = require('which-key')
+      wk.register({
+        ['<Leader>'] = {
+          g = {
+            name = '+git',
+          },
+          l = {
+            name = '+lsp',
+            o = { name = '+log' },
+            s = { name = '+lsp' },
+          },
+          n = {
+            name = '+notifs',
+            o = { name = '+toggle' },
+          },
+          r = {
+            name = '+refactor',
+            i = { name = '+inline' },
+          },
+        },
+      }, { mode = { 'n', 'x' } })
+    end,
   },
   {
     'lukas-reineke/indent-blankline.nvim',
     main = 'ibl',
-    dependencies = { 'nvim-treesitter/nvim-treesitter' },
-    event = 'BufReadPost',
+    event = { 'BufReadPre', 'BufNewFile' },
     opts = {
+      indent = {
+        char = '│',
+        tab_char = '│',
+      },
       scope = {
-        show_start = false,
-        show_end = false,
+        enabled = false,
       },
       exclude = {
         filetypes = {
@@ -142,27 +164,24 @@ return {
     config = true,
   },
   {
+    'rcarriga/nvim-notify',
+    opts = { background_colour = require('nedia.colours').bg },
+  },
+  {
     'folke/noice.nvim',
     dependencies = {
       'MunifTanjim/nui.nvim',
+      'rcarriga/nvim-notify',
       'smjonas/inc-rename.nvim',
-      {
-        'rcarriga/nvim-notify',
-        opts = { background_colour = require('nedia.colours').bg },
-      },
     },
     event = 'VeryLazy',
-    keys = {
-      { '<Leader>dm', ':Noice dismiss<CR>', desc = 'Dismiss notifications' },
-      { '<Leader>nof', ':Noice disable<CR>', desc = 'Disable notifications' },
-      { '<Leader>non', ':Noice enable<CR>', desc = 'Enable notifications' },
-    },
     opts = {
       presets = {
         bottom_search = true,
         command_palette = true,
-        long_message_to_split = true,
         inc_rename = true,
+        long_message_to_split = true,
+        lsp_doc_border = true,
       },
       lsp = {
         progress = { enabled = true },
@@ -183,10 +202,28 @@ return {
         },
       },
     },
+    config = function(_, opts)
+      require('noice').setup(opts)
+
+      local keymaps = {
+        { 'n', 'na', 'all', { desc = 'All notifs' } },
+        { 'n', 'nl', 'last', { desc = 'Last notif' } },
+        { 'n', 'nd', 'dismiss', { desc = 'Dismiss notifs' } },
+        { 'n', 'nof', 'disable', { desc = 'Disable notifs' } },
+        { 'n', 'non', 'enable', { desc = 'Enable notifs' } },
+      }
+
+      local utils = require('nedia.utils')
+      local leader = utils.leader
+      local cmd = utils.cmd
+      for _, key in ipairs(keymaps) do
+        leader(key[1], key[2], cmd('Noice ' .. key[3]), key[4])
+      end
+    end,
   },
   {
     'NvChad/nvim-colorizer.lua',
-    event = 'BufReadPre',
+    event = { 'BufReadPre', 'BufNewFile' },
     opts = {
       filetypes = { '*', '!lazy' },
       buftype = { '*', '!prompt', '!nofile' },

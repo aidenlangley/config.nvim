@@ -42,6 +42,13 @@ Keymap.keymap = function(mode, keys, cmd, opts)
   else
     vim.keymap.set(mode, keys, cmd, o)
   end
+
+  -- vim.defer_fn(function()
+  --   local ok, logger = pcall(require, 'logger')
+  --   if ok then
+  --     logger.trace('keymap set', { mode, keys = keys, cmd, opts = o })
+  --   end
+  -- end, 100)
 end
 
 Keymap.leader = function(mode, keys, cmd, opts)

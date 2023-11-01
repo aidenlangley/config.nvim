@@ -4,17 +4,18 @@
 vim.g.mapleader = ' '
 
 -- General ====================================================================
-vim.o.mouse       = 'a'           -- Enable mouse
-vim.o.updatetime  = 250           -- Update faster
-vim.o.timeoutlen  = 500           -- Time out sooner
-vim.o.backup      = false         -- No backups
+vim.o.mouse       = 'a'            -- Enable mouse
+vim.o.updatetime  = 250            -- Update faster
+vim.o.timeoutlen  = 500            -- Time out sooner
+vim.o.backup      = false          -- No backups
 vim.o.writebackup = false
-vim.o.undofile    = true          -- Persistent undo
-vim.o.clipboard   = 'unnamedplus' -- Share clipboard with system
-vim.o.autowrite   = true          -- Writes buffer on :next, :rewind, etc
+vim.o.undofile    = true           -- Persistent undo
+vim.o.clipboard   = 'unnamedplus'  -- Share clipboard with system
+vim.o.autowrite   = true           -- Writes buffer on :next, :rewind, etc
+vim.o.grepprg     = 'rg --vimgrep' -- ripgrep baby
 
 -- Command mode completion
-vim.o.wildmode = 'longest:full,full'
+-- vim.o.wildmode = 'longest:full,full'
 
 -- Enable all filetype plugins
 vim.cmd([[filetype plugin indent on]])
@@ -47,6 +48,9 @@ if vim.fn.has('nvim-0.9') == 1 then
   vim.o.splitkeep = 'screen'     -- Reduce scroll during window split
 end
 
+if vim.fn.has("nvim-0.10") == 1 then
+  vim.o.smoothscroll = true
+end
 
 -- Colors =====================================================================
 vim.o.termguicolors = true

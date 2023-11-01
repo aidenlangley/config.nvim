@@ -6,8 +6,8 @@ local leader = Utils.leader
 
 keymap('n', '<C-s>', cmd('w'), { desc = 'Write buffer' })
 keymap('n', 'bw', cmd('wa'), { desc = 'Write all buffers' })
-keymap('n', 'bd', cmd('bd'), { desc = 'Delete buffer', noremap = false })
-keymap('n', 'bD', cmd('%bd|e#|bd#'), { desc = 'Delete other buffers' })
+keymap('n', 'bd', Utils.safe_delete, { desc = 'Delete buffer' })
+keymap('n', 'bD', cmd('bd!'), { desc = 'Delete buffer (force)' })
 keymap('n', { '}', '<S-l>' }, cmd('bn'), { desc = 'Goto next buffer' })
 keymap('n', { '{', '<S-h>' }, cmd('bp'), { desc = 'Goto prev buffer' })
 keymap('n', '<C-h>', cmd('wincmd h'), { desc = ' window' })
@@ -20,7 +20,8 @@ keymap('n', ']d', vim.diagnostic.goto_next, { desc = 'Goto next diagnostic' })
 keymap('n', '[d', vim.diagnostic.goto_prev, { desc = 'Goto prev diagnostic' })
 leader('n', 'se', cmd('e ~/.config/nvim/init.lua'), { desc = 'Settings' })
 leader('n', 'gc', cmd('e .git/config'), { desc = 'Git config' })
-leader('n', 'lo', cmd('e $NVIM_LOG_FILE'), { desc = 'Neovim log' })
+leader('n', 'log', cmd('e $NVIM_LOG_FILE'), { desc = 'Neovim log' })
+leader('n', 'slo', cmd('e ~/.config/nvim/log.txt'), { desc = 'Structured log' })
 
 -- Smarter up & down
 keymap('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true })
@@ -42,5 +43,5 @@ keymap(modes, 'n', "'Nn'[v:searchforward]", { expr = true })
 keymap(modes, 'N', "'nN'[v:searchforward]", { expr = true })
 
 leader('n', 'gg', function()
-  float_term('lazygit')
+  float_term('lazygit'):toggle()
 end, { desc = 'LazyGit' })

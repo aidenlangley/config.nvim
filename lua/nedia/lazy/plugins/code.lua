@@ -2,7 +2,15 @@ return {
   {
     'windwp/nvim-autopairs',
     event = 'InsertEnter',
-    config = true,
+    opts = {
+      check_ts = true,
+      enable_check_bracket_line = false,
+    },
+    config = function(_, opts)
+      local autopairs = require('nvim-autopairs')
+      autopairs.setup(opts)
+      autopairs.enable()
+    end,
   },
   {
     'stevearc/conform.nvim',
@@ -49,6 +57,9 @@ return {
         scope['disable_autoformat'] = toggle
         vim.notify(msg, vim.log.levels.INFO)
       end, { desc = 'Toggle format on save', bang = true })
+
+      local utils = require('nedia.utils')
+      utils.leader('n', 'co', utils.cmd('ConformInfo'), { desc = 'Conform' })
     end,
   },
   {
@@ -59,7 +70,7 @@ return {
       require('lint').linters_by_ft = {
         bash = { 'shellcheck' },
         go = { 'golangcilint' },
-        lua = { 'selene' },
+        lua = { 'selene', 'luacheck' },
         php = { 'phpstan' },
         python = { 'flake8' },
         sh = { 'shellcheck' },
@@ -85,7 +96,7 @@ return {
     'https://git.sr.ht/~nedia/auto-save.nvim',
     -- 'aidenlangley/auto-save.nvim',
     dev = false,
-    event = 'BufReadPre',
+    event = { 'BufReadPre', 'BufNewFile' },
     opts = {
       events = { 'InsertLeave', 'BufLeave' },
       silent = false,
@@ -93,8 +104,24 @@ return {
     },
   },
   {
+    'ggandor/leap.nvim',
+    config = function(_, _)
+      local hl = vim.api.nvim_set_hl
+      hl(0, 'LeapBackdrop', { link = '@comment' })
+      hl(0, 'LeapMatch', { fg = 'white', bold = true, nocombine = true })
+
+      local colours = require('nedia.colours')
+      local red, ora = colours.bright_red, colours.bright_orange
+      hl(0, 'LeapLabelPrimary', { fg = red, bold = true, nocombine = true })
+      hl(0, 'LeapLabelSecondary', { fg = ora, bold = true, nocombine = true })
+    end,
+  },
+  {
     'ggandor/flit.nvim',
-    dependencies = { 'ggandor/leap.nvim' },
+    dependencies = {
+      'ggandor/leap.nvim',
+      'tpope/vim-repeat',
+    },
     keys = {
       { 'f', mode = { 'n', 'x', 'o' } },
       { 'F', mode = { 'n', 'x', 'o' } },
@@ -107,9 +134,9 @@ return {
   {
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
+      'JoosepAlviste/nvim-ts-context-commentstring',
       'nvim-treesitter/nvim-treesitter-textobjects',
       'windwp/nvim-ts-autotag',
-      'JoosepAlviste/nvim-ts-context-commentstring',
     },
     build = ':TSUpdate',
     event = { 'BufReadPre', 'BufNewFile' },
@@ -178,6 +205,88 @@ return {
       vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
 
       require('nvim-treesitter.configs').setup(opts)
+    end,
+  },
+  {
+    'monaqa/dial.nvim',
+    keys = {
+      { '<C-a>', mode = { 'n', 'v' } },
+      { '<C-x>', mode = { 'n', 'v' } },
+    },
+    config = function()
+      local augend = require('dial.augend')
+      require('dial.config').augends:register_group({
+        default = {
+          augend.integer.alias.decimal,
+          augend.integer.alias.hex,
+          augend.date.alias['%Y/%m/%d'],
+          augend.constant.alias.bool,
+          augend.semver.alias.semver,
+        },
+      })
+
+      local utils = require('nedia.utils')
+      local keymap = utils.keymap
+      local dial = require('dial.map')
+
+      keymap('n', '<C-a>', dial.inc_normal(), { desc = 'Increment value' })
+      keymap('n', '<C-x>', dial.dec_normal(), { desc = 'Decrement value' })
+      keymap('v', '<C-a>', dial.inc_visual(), { desc = 'Increment value' })
+      keymap('v', '<C-x>', dial.dec_visual(), { desc = 'Decrement value' })
+    end,
+  },
+  {
+    'ThePrimeagen/refactoring.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-treesitter/nvim-treesitter',
+    },
+    event = 'BufReadPost',
+    opts = {
+      prompt_func_return_type = {
+        go = true,
+      },
+      prompt_func_param_type = {
+        go = true,
+      },
+    },
+    config = function(_, opts)
+      require('refactoring').setup(opts)
+
+      local utils = require('nedia.utils')
+      local leader = utils.leader
+
+      leader({ 'n', 'x' }, 'rr', function()
+        require('refactoring').select_refactor({})
+      end, { desc = 'Refactor' })
+      leader('x', 'ref', function()
+        require('refactoring').refactor('Extract Function')
+      end, { desc = 'Extract func' })
+      leader('x', 'rev', function()
+        require('refactoring').refactor('Extract Variable')
+      end, { desc = 'Extract var' })
+      leader('n', 'rif', function()
+        require('refactoring').refactor('Inline Function')
+      end, { desc = 'Inline func' })
+      leader({ 'n', 'x' }, 'riv', function()
+        require('refactoring').refactor('Inline Variable')
+      end, { desc = 'Inline var' })
+      leader('n', 'rbb', function()
+        require('refactoring').refactor('Extract Block')
+      end, { desc = 'Extract block' })
+      leader('n', 'rbf', function()
+        require('refactoring').refactor('Extract Block To File')
+      end, { desc = 'Extract block to file' })
+
+      leader('n', 'rp', function()
+        require('refactoring').debug.printf({ below = false })
+      end, { desc = 'Insert printf' })
+      leader({ 'x', 'n' }, 'rv', function()
+        require('refactoring').debug.print_var({})
+      end, { desc = 'Print var' })
+      leader('n', 'rc', function()
+        require('refactoring').debug.cleanup({})
+      end, { desc = 'Clean up' })
     end,
   },
 }

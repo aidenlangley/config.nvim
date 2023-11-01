@@ -1,84 +1,55 @@
 return {
   {
     'lewis6991/gitsigns.nvim',
-    lazy = true,
-    event = { 'BufReadPre' },
-    cmd = 'Gitsigns',
-    keys = {
-      {
-        ']g',
-        "&diff ? ']g' : ':Gitsigns next_hunk<CR>'",
-        mode = 'n',
-        expr = true,
-        desc = 'Goto next hunk',
-      },
-      {
-        '[g',
-        "&diff ? '[g' : ':Gitsigns prev_hunk<CR>'",
-        mode = 'n',
-        expr = true,
-        desc = 'Goto prev hunk',
-      },
-      {
-        '<Leader>gb',
-        ':Gitsigns blame_line<CR>',
-        mode = 'n',
-        desc = 'Blame line',
-      },
-      {
-        '<Leader>gB',
-        ':Gitsigns toggle_current_line_blame<CR>',
-        mode = 'n',
-        desc = 'Toggled blame',
-      },
-      {
-        '<Leader>gd',
-        ':Gitsigns toggle_deleted<CR>',
-        mode = 'n',
-        desc = 'Toggled deleted',
-      },
-      {
-        '<Leader>gD',
-        ':Gitsigns diffthis<CR>',
-        desc = 'Show diff',
-      },
-      {
-        '<Leader>gp',
-        ':Gitsigns preview_hunk<CR>',
-        mode = 'n',
-        desc = 'Preview hunk',
-      },
-      {
-        '<Leader>gs',
-        ":execute 'Gitsigns stage_hunk' | Gitsigns next_hunk<CR>",
-        mode = { 'n', 'v' },
-        desc = 'Stage hunk',
-      },
-      {
-        '<Leader>gu',
-        ":execute 'Gitsigns undo_stage_hunk' | Gitsigns prev_hunk<CR>",
-        mode = { 'n', 'v' },
-        desc = 'Undo stage hunk',
-      },
-      {
-        '<Leader>gr',
-        ':Gitsigns reset_hunk<CR>',
-        mode = { 'n', 'v' },
-        desc = 'Reset hunk',
-      },
-      {
-        '<Leader>gS',
-        ':Gitsigns stage_buffer<CR>',
-        mode = 'n',
-        desc = 'Stage buffer',
-      },
-      {
-        '<Leader>gR',
-        ':Gitsigns reset_buffer<CR>',
-        mode = 'n',
-        desc = 'Reset buffer',
-      },
-    },
-    config = true,
+    event = { 'BufReadPre', 'BufNewFile' },
+    config = function()
+      local keymaps = {
+        { 'n', 'gb', 'blame_line', { desc = 'Blame line' } },
+        { 'n', 'gB', 'toggle_current_line_blame', { desc = 'Toggled blame' } },
+        { 'n', 'gd', 'toggle_deleted', { desc = 'Toggled deleted' } },
+        { 'n', 'gD', 'diffthis', { desc = 'Show diff' } },
+        { 'n', 'gp', 'preview_hunk', { desc = 'Preview hunk' } },
+        { 'n', 'gS', 'stage_buffer', { desc = 'Stage buffer' } },
+        { 'n', 'gR', 'reset_buffer', { desc = 'Reset buffer' } },
+        { { 'n', 'v' }, 'gr', 'reset_hunk', { desc = 'Reset hunk' } },
+      }
+
+      local utils = require('nedia.utils')
+      local keymap, leader, cmd = utils.keymap, utils.leader, utils.cmd
+      for _, key in ipairs(keymaps) do
+        leader(key[1], key[2], cmd('Gitsigns ' .. key[3]), key[4])
+      end
+
+      keymaps = {
+        {
+          'n',
+          ']g',
+          "&diff ? ']g' : 'next_hunk'",
+          { expr = true, desc = 'Goto next hunk' },
+        },
+        {
+          'n',
+          '[g',
+          "&diff ? '[g' : 'prev_hunk'",
+          { expr = true, desc = 'Goto prev hunk' },
+        },
+        {
+          { 'n', 'v' },
+          '<Leader>gs',
+          ":execute 'Gitsigns stage_hunk' | Gitsigns next_hunk",
+          { desc = 'Stage hunk' },
+        },
+        {
+          { 'n', 'v' },
+          '<Leader>gu',
+          ":execute 'Gitsigns undo_stage_hunk' | Gitsigns prev_hunk",
+          { desc = 'Undo stage hunk' },
+        },
+      }
+
+      for _, key in ipairs(keymaps) do
+        keymap(key[1], key[2], key[3], key[4])
+      end
+    end,
   },
 }

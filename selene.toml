@@ -1,1 +1,1 @@
-std = "vim"
+std = "lua52+vim"

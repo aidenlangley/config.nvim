@@ -42,6 +42,14 @@ return {
     'echasnovski/mini.bufremove',
     main = 'mini.bufremove',
     version = false,
+    keys = { 'b' },
+    config = function(_, opts)
+      require('mini.bufremove').setup(opts)
+
+      require('nedia.utils').keymap('n', 'bD', function()
+        require('mini.bufremove').delete(0, true)
+      end, { desc = 'Delete buffer (force)' })
+    end,
   },
   {
     'echasnovski/mini.comment',
@@ -61,8 +69,40 @@ return {
     'echasnovski/mini.cursorword',
     main = 'mini.cursorword',
     version = false,
-    event = 'BufReadPost',
+    event = { 'BufReadPre', 'BufNewFile' },
     config = true,
+  },
+  {
+    'echasnovski/mini.indentscope',
+    main = 'mini.indentscope',
+    version = false,
+    event = { 'BufReadPre', 'BufNewFile' },
+    init = function()
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = {
+          'help',
+          'alpha',
+          'dashboard',
+          'neo-tree',
+          'Trouble',
+          'trouble',
+          'lazy',
+          'mason',
+          'notify',
+          'toggleterm',
+          'lazyterm',
+        },
+        callback = function()
+          vim.b.miniindentscope_disable = true
+        end,
+      })
+    end,
+    opts = {
+      options = {
+        try_as_border = true,
+      },
+      symbol = '│',
+    },
   },
   {
     'echasnovski/mini.surround',

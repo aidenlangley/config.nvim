@@ -11,6 +11,14 @@ StatusLine.mode = {
   end,
 }
 
+StatusLine.filename = {
+  'filename',
+  path = 4,
+  symbols = {
+    readonly = require('nedia.icons').FileReadOnly,
+  },
+}
+
 StatusLine.diagnostics = {
   'diagnostics',
   sources = {
@@ -41,12 +49,14 @@ StatusLine.clients = {
   'clients',
   fmt = function()
     local bufnr = vim.api.nvim_get_current_buf()
-    return string.format(
-      ' %s %s %s',
-      require('nedia.lsp').active_clients(bufnr),
-      require('nedia.core.formatter').active_formatters(bufnr),
-      require('nedia.utils').active_linters(bufnr)
-    )
+    return string
+      .format(
+        '  %s %s %s',
+        require('nedia.lsp').active_clients(bufnr),
+        require('nedia.core.formatter').active_formatters(bufnr),
+        require('nedia.utils').active_linters()
+      )
+      :sub(0, 48)
   end,
 }
 

@@ -55,48 +55,10 @@ local function enabled()
   return buftype == '' and not in_comment
 end
 
----@type table<string, string>
-local icons = {
-  Array = '',
-  Boolean = '',
-  Class = '',
-  Color = '',
-  Constant = '',
-  Constructor = '',
-  Copilot = '',
-  Enum = '',
-  EnumMember = '',
-  Event = '',
-  Field = '',
-  File = '',
-  Folder = '',
-  Function = '',
-  Interface = '',
-  Key = '',
-  Keyword = '',
-  Method = '',
-  Module = '',
-  Namespace = '',
-  Null = '',
-  Number = '',
-  Object = '',
-  Operator = '',
-  Package = '',
-  Property = '',
-  Reference = '',
-  Snippet = '',
-  String = '',
-  Struct = '',
-  Text = '',
-  TypeParameter = '',
-  Unit = '',
-  Value = '',
-  Variable = '',
-}
-
 ---@param item table A `vim.CompletedItem` (see `cmp.types.vim`)
 ---@return table item Formatted `vim.CompletedItem`
 local function format(_, item)
+  local icons = require('nedia.icons')
   if icons[item.kind] then
     item.kind = string.format('%s %s', icons[item.kind], item.kind)
   end
@@ -138,10 +100,13 @@ local highlights = {
   CmpItemMenu = { fg = colours.neutral_purple },
 }
 
+---@diagnostic disable-next-line: missing-fields
 cmp.setup({
+  ---@diagnostic disable-next-line: missing-fields
   completion = { completeopt = 'menu,menuone,noinsert' },
   enabled = enabled,
-  experimental = { ghost_text = { hl_group = '@comment' } },
+  -- experimental = { ghost_text = { hl_group = '@comment' } },
+  ---@diagnostic disable-next-line: missing-fields
   formatting = { format = format },
   mapping = cmp.mapping.preset.insert(keymaps),
   snippet = { expand = expand },
